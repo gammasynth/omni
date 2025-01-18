@@ -1,0 +1,163 @@
+[gd_scene load_steps=12 format=3 uid="uid://xu87r8s00jp5"]
+
+[ext_resource type="Theme" uid="uid://dds3w4uocn8ku" path="res://core/resources/theme/darkscale_pixel_blurred.theme" id="1_a2x0n"]
+[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="1_tp0rl"]
+[ext_resource type="Texture2D" uid="uid://bh5mj4ywg4pvq" path="res://src/assets/texture/ui/file_browser/written_file.png" id="2_57re7"]
+[ext_resource type="Texture2D" uid="uid://buujtovujlc70" path="res://src/assets/texture/ui/file_browser/empty_folder.png" id="4_46yxe"]
+[ext_resource type="Texture2D" uid="uid://cg0ytk315rqrg" path="res://src/assets/texture/ui/file_browser/empty_markdown.png" id="5_chpar"]
+[ext_resource type="Texture2D" uid="uid://daak5qr3xn76h" path="res://src/assets/texture/ui/file_browser/markdown.png" id="6_8y4bo"]
+[ext_resource type="Texture2D" uid="uid://ch8cee68nmo0y" path="res://src/assets/texture/ui/file_browser/empty_code.png" id="7_x5gcy"]
+[ext_resource type="Texture2D" uid="uid://cq1yxkr5atkt6" path="res://src/assets/texture/ui/file_browser/code.png" id="8_qpv55"]
+[ext_resource type="Texture2D" uid="uid://b7dfof3rp05k2" path="res://src/assets/texture/ui/file_browser/folder_content.png" id="9_2k71d"]
+[ext_resource type="Texture2D" uid="uid://bvd0irmt4cuab" path="res://src/assets/texture/ui/file_browser/folder_group.png" id="10_1hw8t"]
+[ext_resource type="Texture2D" uid="uid://baoyko6t644yp" path="res://src/assets/texture/ui/box/black_box_exe_generic.png" id="11_uvlw8"]
+
+[node name="file_browser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_a2x0n")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 1
+columns = 3
+
+[node name="Button" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("2_57re7")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 63.0
+offset_right = 160.0
+offset_bottom = 83.0
+text = "file_name.png"
+
+[node name="Button2" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("1_tp0rl")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button2"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button3" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("4_46yxe")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button3"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button4" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("5_chpar")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button4"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button5" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("6_8y4bo")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button5"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button6" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("7_x5gcy")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button6"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button7" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("8_qpv55")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button7"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button8" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("9_2k71d")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button8"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button9" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("10_1hw8t")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button9"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"
+
+[node name="Button10" type="Button" parent="GridContainer"]
+layout_mode = 2
+icon = ExtResource("11_uvlw8")
+flat = true
+
+[node name="file_label" type="RichTextLabel" parent="GridContainer/Button10"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 62.0
+offset_right = 96.0
+offset_bottom = 82.0
+text = "file_name.png"

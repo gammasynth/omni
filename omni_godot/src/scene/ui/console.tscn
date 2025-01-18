@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://d3ffxjiwggxht"]
+[gd_scene load_steps=8 format=3 uid="uid://d3ffxjiwggxht"]
 
 [ext_resource type="Theme" uid="uid://dds3w4uocn8ku" path="res://core/resources/theme/darkscale_pixel_blurred.theme" id="1_7d8nd"]
 [ext_resource type="Script" path="res://src/scene/ui/console.gd" id="1_f5mrp"]
-[ext_resource type="Texture2D" uid="uid://clvuuifjc5kum" path="res://src/assets/texture/ui/console/trap_outline_symbol_shiny.png" id="3_upham"]
+[ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="3_eusw6"]
 [ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="4_6x54g"]
 [ext_resource type="FontFile" uid="uid://cmmmqdw3s8f3g" path="res://core/assets/font/frau-unifon.ttf" id="5_vp8qq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
+bg_color = Color(0, 0, 0, 0.392157)
 
 [sub_resource type="FontVariation" id="FontVariation_08cj1"]
 base_font = ExtResource("5_vp8qq")
@@ -16,11 +19,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_7d8nd")
 script = ExtResource("1_f5mrp")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="code" type="CodeEdit" parent="vbox"]
@@ -30,6 +35,7 @@ size_flags_vertical = 3
 [node name="spacer" type="Control" parent="vbox"]
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="line" type="LineEdit" parent="vbox"]
 layout_mode = 2
@@ -37,50 +43,74 @@ layout_mode = 2
 [node name="spacer2" type="Control" parent="vbox"]
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="sep" type="HSeparator" parent="vbox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="spacer3" type="Control" parent="vbox"]
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="menu" type="MenuBar" parent="vbox"]
 layout_mode = 2
 
-[node name="PopupMenu" type="PopupMenu" parent="vbox/menu"]
+[node name="action" type="PopupMenu" parent="vbox/menu"]
 
 [node name="sep2" type="HSeparator" parent="vbox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="spacer4" type="Control" parent="vbox"]
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="hbox" type="HBoxContainer" parent="vbox"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="console_menu_toggler" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-icon = ExtResource("3_upham")
+icon = ExtResource("3_eusw6")
 flat = true
 expand_icon = true
 
 [node name="sep" type="VSeparator" parent="vbox/hbox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="path_label" type="RichTextLabel" parent="vbox/hbox"]
+[node name="path_panel_container" type="PanelContainer" parent="vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8ug05")
+
+[node name="path_label" type="RichTextLabel" parent="vbox/hbox/path_panel_container"]
 layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 
+[node name="spacer" type="Control" parent="vbox/hbox"]
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 2
+mouse_filter = 2
+
 [node name="sep2" type="VSeparator" parent="vbox/hbox"]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="spacer" type="Control" parent="vbox/hbox"]
-custom_minimum_size = Vector2(25, 0)
+[node name="console_label" type="RichTextLabel" parent="vbox/hbox"]
 layout_mode = 2
+theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
+bbcode_enabled = true
+text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]__v. 0.0.0.1"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="omni_button" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(32, 32)
@@ -89,11 +119,7 @@ icon = ExtResource("4_6x54g")
 flat = true
 expand_icon = true
 
-[node name="console_label" type="RichTextLabel" parent="vbox/hbox"]
-layout_mode = 2
-theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
-bbcode_enabled = true
-text = "Amn1__v. 0.0.0.1"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
+[connection signal="button_down" from="vbox/hbox/console_menu_toggler" to="." method="_on_console_menu_toggler_button_down"]
+[connection signal="meta_clicked" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_clicked"]
+[connection signal="meta_hover_ended" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_ended"]
+[connection signal="meta_hover_started" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_started"]

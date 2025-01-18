@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvt7nxmmlpgj1"]
+[gd_scene load_steps=3 format=3 uid="uid://dvt7nxmmlpgj1"]
 
 [ext_resource type="Script" path="res://src/scene/ui/app_ui.gd" id="1_mwyax"]
+[ext_resource type="PackedScene" uid="uid://d3ffxjiwggxht" path="res://src/scene/ui/console.tscn" id="2_3rp5l"]
 
 [node name="app_ui" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_mwyax")
 
 [node name="v_split" type="VSplitContainer" parent="."]
@@ -18,6 +20,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+
+[node name="console" parent="v_split" instance=ExtResource("2_3rp5l")]
+layout_mode = 2
 
 [node name="h_split" type="HSplitContainer" parent="."]
 layout_mode = 1
@@ -26,3 +32,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
