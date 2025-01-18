@@ -1,0 +1,3 @@
+[submodule "omni_godot/core"]
+	path = omni_godot/core
+	url = https://github.com/gammasynth/core
