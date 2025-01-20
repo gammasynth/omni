@@ -1,4 +1,4 @@
-extends DatabaseControl
+extends MarginContainer
 
 class_name AppUI
 
@@ -10,6 +10,13 @@ var active_split: SplitContainer = v_split:
 		active_split = s
 		swap_splits_children()
 
+
+var console: Console
+var file_browser: FileBrowser
+
+
+func _ready():
+	file_browser.parse_directory(console.current_directory_path)
 
 
 func swap_splits() -> void:

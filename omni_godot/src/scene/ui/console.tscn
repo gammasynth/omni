@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3ffxjiwggxht"]
+[gd_scene load_steps=10 format=3 uid="uid://d3ffxjiwggxht"]
 
-[ext_resource type="Theme" uid="uid://dds3w4uocn8ku" path="res://core/resources/theme/darkscale_pixel_blurred.theme" id="1_7d8nd"]
 [ext_resource type="Script" path="res://src/scene/ui/console.gd" id="1_f5mrp"]
+[ext_resource type="FontFile" uid="uid://cnji0hctq4gul" path="res://core/assets/font/OfficeCodePro-Light.otf" id="2_gpftm"]
+[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="3_am2u4"]
 [ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="3_eusw6"]
 [ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="4_6x54g"]
+[ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="4_81fch"]
 [ext_resource type="FontFile" uid="uid://cmmmqdw3s8f3g" path="res://core/assets/font/frau-unifon.ttf" id="5_vp8qq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
@@ -14,13 +16,12 @@ base_font = ExtResource("5_vp8qq")
 spacing_top = 13
 
 [node name="console" type="PanelContainer"]
-anchors_preset = 15
+custom_minimum_size = Vector2(512, 65)
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 65.0
 grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
-theme = ExtResource("1_7d8nd")
 script = ExtResource("1_f5mrp")
 
 [node name="vbox" type="VBoxContainer" parent="."]
@@ -29,8 +30,19 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="code" type="CodeEdit" parent="vbox"]
+self_modulate = Color(0.300573, 0.302174, 0.317407, 1)
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("2_gpftm")
+theme_override_font_sizes/font_size = 9
+wrap_mode = 1
+indent_wrapped_lines = true
+scroll_smooth = true
+symbol_lookup_on_click = true
+line_folding = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [node name="spacer" type="Control" parent="vbox"]
 custom_minimum_size = Vector2(0, 1)
@@ -38,32 +50,45 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="line" type="LineEdit" parent="vbox"]
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_gpftm")
+theme_override_font_sizes/font_size = 9
+placeholder_text = "greetings, user."
+clear_button_enabled = true
+right_icon = ExtResource("3_am2u4")
+flat = true
 
 [node name="spacer2" type="Control" parent="vbox"]
+visible = false
 custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="sep" type="HSeparator" parent="vbox"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 
 [node name="spacer3" type="Control" parent="vbox"]
+visible = false
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="menu" type="MenuBar" parent="vbox"]
+visible = false
 layout_mode = 2
 
 [node name="action" type="PopupMenu" parent="vbox/menu"]
 
 [node name="sep2" type="HSeparator" parent="vbox"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 
 [node name="spacer4" type="Control" parent="vbox"]
+visible = false
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 mouse_filter = 2
@@ -76,6 +101,13 @@ mouse_filter = 2
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 icon = ExtResource("3_eusw6")
+flat = true
+expand_icon = true
+
+[node name="console_history_toggler" type="Button" parent="vbox/hbox"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+icon = ExtResource("4_81fch")
 flat = true
 expand_icon = true
 
@@ -106,6 +138,7 @@ mouse_filter = 2
 [node name="console_label" type="RichTextLabel" parent="vbox/hbox"]
 layout_mode = 2
 theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
+theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
 text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]__v. 0.0.0.1"
 fit_content = true
@@ -119,7 +152,11 @@ icon = ExtResource("4_6x54g")
 flat = true
 expand_icon = true
 
+[connection signal="mouse_entered" from="vbox/line" to="." method="_on_line_mouse_entered"]
+[connection signal="mouse_exited" from="vbox/line" to="." method="_on_line_mouse_exited"]
+[connection signal="text_submitted" from="vbox/line" to="." method="_on_line_text_submitted"]
 [connection signal="button_down" from="vbox/hbox/console_menu_toggler" to="." method="_on_console_menu_toggler_button_down"]
+[connection signal="button_down" from="vbox/hbox/console_history_toggler" to="." method="_on_console_history_toggler_button_down"]
 [connection signal="meta_clicked" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_started"]

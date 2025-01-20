@@ -1,35 +1,25 @@
-[gd_scene load_steps=3 format=3 uid="uid://dvt7nxmmlpgj1"]
+[gd_scene load_steps=4 format=3 uid="uid://dvt7nxmmlpgj1"]
 
 [ext_resource type="Script" path="res://src/scene/ui/app_ui.gd" id="1_mwyax"]
 [ext_resource type="PackedScene" uid="uid://d3ffxjiwggxht" path="res://src/scene/ui/console.tscn" id="2_3rp5l"]
+[ext_resource type="PackedScene" uid="uid://xu87r8s00jp5" path="res://src/scene/ui/file_browser.tscn" id="2_y8t35"]
 
-[node name="app_ui" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="app_ui" type="MarginContainer"]
+offset_right = 231.0
+offset_bottom = 65.0
 mouse_filter = 2
 script = ExtResource("1_mwyax")
 
-[node name="v_split" type="VSplitContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="h_split" type="HSplitContainer" parent="."]
+layout_mode = 2
 mouse_filter = 2
 
-[node name="console" parent="v_split" instance=ExtResource("2_3rp5l")]
+[node name="v_split" type="VSplitContainer" parent="h_split"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="file_browser" parent="h_split/v_split" instance=ExtResource("2_y8t35")]
 layout_mode = 2
 
-[node name="h_split" type="HSplitContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+[node name="console" parent="h_split/v_split" instance=ExtResource("2_3rp5l")]
+layout_mode = 2

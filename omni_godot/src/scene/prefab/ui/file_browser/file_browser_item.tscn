@@ -1,0 +1,89 @@
+[gd_scene load_steps=6 format=3 uid="uid://cklth385cdeia"]
+
+[ext_resource type="Script" path="res://src/scene/prefab/ui/file_browser/file_browser_item.gd" id="1_485k5"]
+[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="1_r8tk7"]
+[ext_resource type="FontFile" uid="uid://cwjomy78x2f2r" path="res://core/assets/font/etude_noire_regular.ttf" id="3_3ufbo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pfp8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdt75"]
+bg_color = Color(0.721569, 0.721569, 0.721569, 0.227451)
+
+[node name="file_browser_item" type="MarginContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+script = ExtResource("1_485k5")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="icon_rect" type="TextureRect" parent="vbox/AspectRatioContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("1_r8tk7")
+
+[node name="icon_margin" type="MarginContainer" parent="vbox/AspectRatioContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="image_icon_rect" type="TextureRect" parent="vbox/AspectRatioContainer/icon_margin"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+expand_mode = 1
+
+[node name="label" type="RichTextLabel" parent="vbox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_3ufbo")
+theme_override_font_sizes/normal_font_size = 9
+bbcode_enabled = true
+text = "example_file.txt"
+scroll_active = false
+
+[node name="item_button" type="Button" parent="."]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_2pfp8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_rdt75")
+flat = true
+
+[node name="item_right_click_menu" type="PopupMenu" parent="item_button"]
+size = Vector2i(114, 160)
+theme_override_constants/v_separation = 0
+item_count = 9
+item_0/text = "execute"
+item_1/text = "open with . . ."
+item_1/id = 1
+item_2/id = 2
+item_2/separator = true
+item_3/text = "cut"
+item_3/id = 3
+item_4/text = "copy"
+item_4/id = 4
+item_5/text = "paste"
+item_5/id = 5
+item_6/id = 6
+item_6/separator = true
+item_7/text = "browser view"
+item_7/id = 7
+item_8/text = "recycle"
+item_8/id = 8
+
+[connection signal="gui_input" from="item_button" to="." method="_on_item_button_gui_input"]
+[connection signal="index_pressed" from="item_button/item_right_click_menu" to="." method="_on_item_right_click_menu_index_pressed"]
