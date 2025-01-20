@@ -5,21 +5,31 @@
 [ext_resource type="PackedScene" uid="uid://xu87r8s00jp5" path="res://src/scene/ui/file_browser.tscn" id="2_y8t35"]
 
 [node name="app_ui" type="MarginContainer"]
-offset_right = 231.0
-offset_bottom = 65.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_mwyax")
 
-[node name="h_split" type="HSplitContainer" parent="."]
+[node name="h_split" type="HBoxContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 0
 
-[node name="v_split" type="VSplitContainer" parent="h_split"]
+[node name="v_split" type="VBoxContainer" parent="h_split"]
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
+theme_override_constants/separation = 0
 
 [node name="file_browser" parent="h_split/v_split" instance=ExtResource("2_y8t35")]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="console" parent="h_split/v_split" instance=ExtResource("2_3rp5l")]
 layout_mode = 2
+size_flags_vertical = 3

@@ -7,12 +7,22 @@ const APP_UI = preload("res://src/scene/ui/app_ui.tscn")
 var ui: AppUI
 
 
-func _start() -> Error:
+func _pre_core_start() -> Error:
 	
-	get_window().size = Vector2i(512, 0)
-	
+	#get_window().borderless = true
+	get_window().min_size = Vector2i(0, 0)
 	get_tree().get_root().set_transparent_background(true)
 	get_window().set_wrap_controls(true)
+	
+	get_window().size = Vector2i(250, 0)
+	
+	refresh_window()
+	
+	return await Cast.wait()
+
+func _start() -> Error:
+	
+	
 	
 	# ---
 	
@@ -55,10 +65,18 @@ func _start() -> Error:
 	
 	# ---
 	
+	get_window().borderless = false
+	
 	ui = APP_UI.instantiate()
 	get_parent().add_child(ui)
 	
 	return OK
+
+
+static func toggle_file_browser(toggle:bool) -> void:
+	if not Core.instance: return
+	var app: App = Core.instance as App
+	app.ui.toggle_file_browser(toggle)
 
 static func refresh_window():
 	if not Core.instance: return
@@ -66,5 +84,5 @@ static func refresh_window():
 	app.do_refresh_window()
 
 func do_refresh_window():
-	get_window().size = Vector2i(512, 0)
+	get_window().size = Vector2i(250, 0)
 	get_window().child_controls_changed()

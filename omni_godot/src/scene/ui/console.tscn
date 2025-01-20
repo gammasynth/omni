@@ -1,26 +1,30 @@
-[gd_scene load_steps=10 format=3 uid="uid://d3ffxjiwggxht"]
+[gd_scene load_steps=12 format=3 uid="uid://d3ffxjiwggxht"]
 
 [ext_resource type="Script" path="res://src/scene/ui/console.gd" id="1_f5mrp"]
 [ext_resource type="FontFile" uid="uid://cnji0hctq4gul" path="res://core/assets/font/OfficeCodePro-Light.otf" id="2_gpftm"]
 [ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="3_am2u4"]
 [ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="3_eusw6"]
+[ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://src/resources/animated_texture/omni_text_3_animated.tres" id="3_pvrsv"]
 [ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="4_6x54g"]
 [ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="4_81fch"]
 [ext_resource type="FontFile" uid="uid://cmmmqdw3s8f3g" path="res://core/assets/font/frau-unifon.ttf" id="5_vp8qq"]
+[ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="6_6hm3u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
 bg_color = Color(0, 0, 0, 0.392157)
 
 [sub_resource type="FontVariation" id="FontVariation_08cj1"]
 base_font = ExtResource("5_vp8qq")
-spacing_top = 13
+spacing_top = -4
 
 [node name="console" type="PanelContainer"]
-custom_minimum_size = Vector2(512, 65)
-anchors_preset = 10
+custom_minimum_size = Vector2(250, 50)
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 65.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 script = ExtResource("1_f5mrp")
 
@@ -30,6 +34,7 @@ mouse_filter = 2
 theme_override_constants/separation = 0
 
 [node name="code" type="CodeEdit" parent="vbox"]
+visible = false
 self_modulate = Color(0.300573, 0.302174, 0.317407, 1)
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
@@ -45,12 +50,28 @@ auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
 
 [node name="spacer" type="Control" parent="vbox"]
+visible = false
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 mouse_filter = 2
 
+[node name="background" type="Control" parent="vbox"]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="vbox/background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_pvrsv")
+
 [node name="line" type="LineEdit" parent="vbox"]
-custom_minimum_size = Vector2(0, 25)
+custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_gpftm")
 theme_override_font_sizes/font_size = 9
@@ -91,23 +112,33 @@ mouse_filter = 2
 visible = false
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
+size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="hbox" type="HBoxContainer" parent="vbox"]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
+size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="console_menu_toggler" type="Button" parent="vbox/hbox"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 icon = ExtResource("3_eusw6")
 flat = true
 expand_icon = true
 
 [node name="console_history_toggler" type="Button" parent="vbox/hbox"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 icon = ExtResource("4_81fch")
+flat = true
+expand_icon = true
+
+[node name="file_browser_toggler" type="Button" parent="vbox/hbox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+icon = ExtResource("6_6hm3u")
 flat = true
 expand_icon = true
 
@@ -124,6 +155,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8ug05")
 [node name="path_label" type="RichTextLabel" parent="vbox/hbox/path_panel_container"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("2_gpftm")
+theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 
 [node name="spacer" type="Control" parent="vbox/hbox"]
@@ -140,13 +173,13 @@ layout_mode = 2
 theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
-text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]__v. 0.0.0.1"
+text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]_0.0.0.1"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
 
 [node name="omni_button" type="Button" parent="vbox/hbox"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 icon = ExtResource("4_6x54g")
 flat = true
@@ -157,6 +190,7 @@ expand_icon = true
 [connection signal="text_submitted" from="vbox/line" to="." method="_on_line_text_submitted"]
 [connection signal="button_down" from="vbox/hbox/console_menu_toggler" to="." method="_on_console_menu_toggler_button_down"]
 [connection signal="button_down" from="vbox/hbox/console_history_toggler" to="." method="_on_console_history_toggler_button_down"]
+[connection signal="button_down" from="vbox/hbox/file_browser_toggler" to="." method="_on_file_browser_toggler_button_down"]
 [connection signal="meta_clicked" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_started"]

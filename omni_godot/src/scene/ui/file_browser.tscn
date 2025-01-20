@@ -13,6 +13,8 @@ script = ExtResource("2_xjibq")
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 theme_override_constants/h_separation = 25
 theme_override_constants/v_separation = 1
 columns = 3
