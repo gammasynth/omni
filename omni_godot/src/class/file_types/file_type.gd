@@ -10,15 +10,16 @@ var file_browser_item_icon: Texture2D = null
 
 
 ## Override this function in an extended script to add a new file extension.
-func _refresh_info(at_path:String="") -> void:
+func _refresh_info(_at_path:String="") -> void:
 	is_base_file = false
 	extensions = ["generic_file_type"]
 	
 	file_browser_item_icon = null
 
 func get_file_icon(icon_file_name:String) -> Texture2D:
-	var icon_registry: Registry = Registry.get_registry("file_icons")
-	return icon_registry.db.grab(icon_file_name)
+	#var icon_registry: Registry = Registry.get_registry("file_icons")
+	#return icon_registry.db.grab(icon_file_name)
+	return Registry.pull("file_icons", icon_file_name)
 
 
 static func get_file_type_from_path(at_path:String) -> FileType:
@@ -47,9 +48,9 @@ static func get_file_type_from_path(at_path:String) -> FileType:
 	
 	# we did not find a ref for this type of file extension.
 	# return an unknown FileType?
-	var ft: FileType = file_type_registry.data.get("text_file_type").new()
-	ft._refresh_info(at_path)
-	return ft
+	var default_ft: FileType = file_type_registry.grab("text_file_type").new()
+	default_ft._refresh_info(at_path)
+	return default_ft
 
 
 static func is_file_path_of_file_type(file_type:FileType, at_path:String, file_is_actually_folder:bool= at_path.get_extension().is_empty() and DirAccess.dir_exists_absolute(at_path)) -> bool:

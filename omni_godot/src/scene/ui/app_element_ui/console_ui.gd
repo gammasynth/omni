@@ -1,6 +1,17 @@
 extends DatabasePanelContainer
 
-class_name Console
+class_name ConsoleUI
+
+func _get_database(o:Database) -> Database:
+	if not o: o = Console.new(name)
+	#if not o.name == name: o.name = name
+	
+	database = o
+	
+	return o
+
+var console: Console:
+	get: return db
 
 @onready var vbox: VBoxContainer = $vbox
 
@@ -8,7 +19,7 @@ class_name Console
 
 @onready var spacer: Control = $vbox/spacer
 
-@onready var line: LineEdit = $vbox/line
+@onready var line: LineEdit = $vbox/line_hbox/line
 
 @onready var spacer_2: Control = $vbox/spacer2
 @onready var sep: HSeparator = $vbox/sep
@@ -46,37 +57,26 @@ const U_SHINY = preload("res://src/assets/texture/ui/console/u_shiny.png")
 const FILE_BROWSER_BUTTON_BRIGHT = preload("res://src/assets/texture/ui/console/file_browser_button_bright.png")
 const FILE_BROWSER_BUTTON_DARK = preload("res://src/assets/texture/ui/console/file_browser_button_dark.png")
 
-var menu_bar_mode: bool = false
-var command_history_mode: bool = false
-var file_browser_mode: bool = false
+
 
 var animating_line_icon: bool = false
 
-var greeting: bool = false
 
-var sentient_line: bool = false:
-	set(b):
-		sentient_line = b
-		if not b:
-			greeting = false
-			# etc...
-
-
-var current_directory_path: String = "C:/"
 
 
 func _ready_up():
 	
 	get_window().files_dropped.connect(func(f): print(f))
-	App.instance.ui.console = self
+	App.ui.console_ui = self
+	App.console = console
 	
-	menu_bar_mode = false
+	console.menu_bar_mode = false
 	toggle_menu_bar_mode()
 	
-	command_history_mode = false
+	console.command_history_mode = false
 	toggle_command_history()
 	
-	file_browser_mode = false
+	console.file_browser_mode = false
 	toggle_file_browser()
 	
 	refresh_console_label()
@@ -85,13 +85,13 @@ func _ready_up():
 	display_greeting()
 	
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
-	path_label.text = current_directory_path
+	path_label.text = console.current_directory_path
 	
 	App.refresh_window()
 
 
 func display_greeting():
-	greeting = true
+	console.greeting = true
 	display_sentient_message("welcome, user.")
 
 
@@ -99,8 +99,14 @@ func standby():
 	display_sentient_message()
 
 func display_sentient_message(text:String=""):
-	if not text.is_empty(): sentient_line = true
-	else: sentient_line = false
+	if not line.text.is_empty(): 
+		line.placeholder_text = text
+		console.sentient_line = false
+		return
+	
+	
+	if not text.is_empty(): console.sentient_line = true
+	else: console.sentient_line = false
 	
 	line.placeholder_text = text
 
@@ -112,7 +118,7 @@ func refresh_console_label() -> void:
 	
 
 
-func toggle_menu_bar_mode(toggle:bool=menu_bar_mode) -> void:
+func toggle_menu_bar_mode(toggle:bool=console.menu_bar_mode) -> void:
 	if toggle: console_menu_toggler.icon = TRAP_OUTLINE_SYMBOL_SHINY
 	else: console_menu_toggler.icon = TRAP_OUTLINE_SYMBOL_FILLED_FLIPPED
 	
@@ -125,7 +131,7 @@ func toggle_menu_bar_mode(toggle:bool=menu_bar_mode) -> void:
 	
 	App.refresh_window()
 
-func toggle_command_history(toggle:bool=command_history_mode) -> void:
+func toggle_command_history(toggle:bool=console.command_history_mode) -> void:
 	if toggle: console_history_toggler.icon = U_SHINY
 	else: console_history_toggler.icon = U_DARKER
 	
@@ -134,7 +140,7 @@ func toggle_command_history(toggle:bool=command_history_mode) -> void:
 	
 	App.refresh_window()
 
-func toggle_file_browser(toggle:bool=file_browser_mode) -> void:
+func toggle_file_browser(toggle:bool=console.file_browser_mode) -> void:
 	if toggle: file_browser_toggler.icon = FILE_BROWSER_BUTTON_BRIGHT
 	else: file_browser_toggler.icon = FILE_BROWSER_BUTTON_DARK
 	
@@ -166,7 +172,7 @@ func play_line_icon_anim():
 
 func _on_console_menu_toggler_button_down() -> void:
 	console_menu_toggler.release_focus()
-	menu_bar_mode = !menu_bar_mode
+	console.menu_bar_mode = !console.menu_bar_mode
 	toggle_menu_bar_mode()
 
 
@@ -176,16 +182,16 @@ func _on_console_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
 
 
-func _on_console_label_meta_hover_started(meta: Variant) -> void:
+func _on_console_label_meta_hover_started(_meta: Variant) -> void:
 	pass # Replace with function body.
 
-func _on_console_label_meta_hover_ended(meta: Variant) -> void:
+func _on_console_label_meta_hover_ended(_meta: Variant) -> void:
 	pass # Replace with function body.
 
 
 func _on_console_history_toggler_button_down() -> void:
 	console_history_toggler.release_focus()
-	command_history_mode = !command_history_mode
+	console.command_history_mode = !console.command_history_mode
 	toggle_command_history()
 
 
@@ -204,12 +210,15 @@ func _on_line_mouse_entered() -> void:
 
 
 func _on_line_mouse_exited() -> void:
-	if line.text.is_empty():
-		display_sentient_message("omni | Enter a command...")
+	
 	standby()
+	
+	if line.text.is_empty():
+		display_sentient_message("omni")
+	
 
 
 func _on_file_browser_toggler_button_down() -> void:
 	file_browser_toggler.release_focus()
-	file_browser_mode = !file_browser_mode
+	console.file_browser_mode = !console.file_browser_mode
 	toggle_file_browser()

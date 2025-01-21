@@ -1,7 +1,7 @@
 extends FileType
 
 ## Override this function in an extended script to add a new file extension.
-func _refresh_info(at_path:String="") -> void:
+func _refresh_info(_at_path:String="") -> void:
 	is_base_file = true
 	extensions = ["exe", "x86_64", "bin"]
 	

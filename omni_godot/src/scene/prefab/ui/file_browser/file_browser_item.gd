@@ -48,5 +48,5 @@ func _on_item_button_gui_input(event: InputEvent) -> void:
 			item_right_click_menu.popup(Rect2i(Vector2i(mouse_global_pos), Vector2i.ZERO))
 
 
-func _on_item_right_click_menu_index_pressed(index: int) -> void:
+func _on_item_right_click_menu_index_pressed(_index: int) -> void:
 	pass # Replace with function body.

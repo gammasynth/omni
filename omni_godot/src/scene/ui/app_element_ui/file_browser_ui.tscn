@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://xu87r8s00jp5"]
+
+[ext_resource type="Script" path="res://src/scene/ui/app_element_ui/file_browser_ui.gd" id="2_xjibq"]
+
+[node name="file_browser_ui" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+script = ExtResource("2_xjibq")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="scroll_box" type="ScrollContainer" parent="vbox"]
+custom_minimum_size = Vector2(280, 110)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="file_grid" type="GridContainer" parent="vbox/scroll_box"]
+custom_minimum_size = Vector2(270, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 1
+columns = 3
+
+[node name="footer_toolbar" type="PanelContainer" parent="vbox"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2

@@ -4,7 +4,10 @@ class_name App
 
 const APP_UI = preload("res://src/scene/ui/app_ui.tscn")
 
-var ui: AppUI
+static var ui: AppUI
+
+static var console: Console
+static var file_browser: FileBrowser
 
 
 func _pre_core_start() -> Error:
@@ -20,6 +23,8 @@ func _pre_core_start() -> Error:
 	
 	return await Cast.wait()
 
+
+
 func _start() -> Error:
 	
 	
@@ -28,13 +33,13 @@ func _start() -> Error:
 	
 	chat(str("engine args: " + str(OS.get_cmdline_args())))
 	chat(str("user args: " + str(OS.get_cmdline_user_args())))
-	print(" ")
+	if debug: print(" ")
 	
 	print_rich(BBCode.color("omni", BBCode.COLORS.black))
 	print("+    +")
 	print_rich(BBCode.color(" omni", BBCode.COLORS.cyan))
 	print("+    +")
-	print_rich(BBCode.color("omni", BBCode.COLORS.black))
+	#print_rich(BBCode.color("omni", BBCode.COLORS.black))
 	print(" ")
 	
 	#chat(str("omni is running on: " + str(OS.get_distribution_name()) + "; " + str(OS.get_model_name())))
@@ -46,14 +51,14 @@ func _start() -> Error:
 	chat(str("model: " + str(OS.get_model_name())))
 	chat(str("cpu: " + str(OS.get_processor_name())))
 	chat(str("cores: " + str(OS.get_processor_count())))
-	print(" ")
+	if debug: print(" ")
 	
 	
 	chat(str("memory: " + str(OS.get_memory_info())))
-	print(" ")
+	if debug: print(" ")
 	
 	chat(str("locale: " + str(OS.get_locale())))
-	print(" ")
+	if debug: print(" ")
 	
 	# ---
 	
@@ -61,7 +66,7 @@ func _start() -> Error:
 	chat(str("user data dir: " + OS.get_user_data_dir()))
 	chat(str("config dir: " + str(OS.get_config_dir())))
 	chat(str("cache dir: " + str(OS.get_cache_dir())))
-	print(" ")
+	if debug: print(" ")
 	
 	# ---
 	
