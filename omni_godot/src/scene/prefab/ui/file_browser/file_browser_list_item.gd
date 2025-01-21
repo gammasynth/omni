@@ -28,7 +28,12 @@ func _ready():
 func setup():
 	
 	if file_type: icon_rect.texture = file_type.file_browser_item_icon
-	label.text = file_path
+	
+	var file_name = file_path.get_file()
+	if not file_name:
+		file_name = FileManager.get_folder(file_path)
+	
+	label.text = file_name
 
 
 func _on_item_button_gui_input(event: InputEvent) -> void:

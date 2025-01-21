@@ -15,7 +15,7 @@ var console: Console:
 
 @onready var vbox: VBoxContainer = $vbox
 
-@onready var code: CodeEdit = $vbox/code
+@onready var code: CodeEdit = $vbox/code_split/code
 
 @onready var spacer: Control = $vbox/spacer
 
@@ -89,6 +89,7 @@ func _ready_up():
 	path_label.text = console.current_directory_path
 	console.directory_focus_changed.connect(func(new_path:String): path_label.text = new_path)
 	
+	clear_console_history()
 	# - - -
 	
 	play_line_icon_anim()
@@ -97,20 +98,43 @@ func _ready_up():
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
 	
 	
-	App.refresh_window()
+	App.refresh_window(Vector2i(250,50))
 
+func clear_console_history():
+	code.text = ""
+	console.line_count = 0
 
 func display_greeting():
 	console.greeting = true
 	display_sentient_message("welcome, user.")
+	print_out("omni")
+	print_out("[ gammasynth ]")
+	print_out(" ")
+	print_out(console.current_directory_path)
+
+
+func print_out(text:String) -> void:
+	#code.insert_text(text, code.get_line_count(), 0)
+	#code.set_line(code.get_line_count(), text)
+	#code.insert_line_at(code.get_line_count(), text)
+	
+	if code.text.is_empty(): code.text = text
+	else: code.text = str(code.text + "\n" + text)
+	console.line_count += 1
+	
+	#print(code.text)
+	update_screen_size()
 
 
 func standby():
 	display_sentient_message()
 
 func display_sentient_message(text:String=""):
+	
+	if not text.is_empty() and console.sentient_line: return
+	
 	if not line.text.is_empty(): 
-		line.placeholder_text = text
+		line.placeholder_text = ""
 		console.sentient_line = false
 		return
 	
@@ -142,13 +166,47 @@ func toggle_menu_bar_mode(toggle:bool=console.menu_bar_mode) -> void:
 	App.refresh_window()
 
 func toggle_command_history(toggle:bool=console.command_history_mode) -> void:
-	if toggle: console_history_toggler.icon = U_SHINY
+	if toggle: 
+		console_history_toggler.icon = U_SHINY
+		update_screen_size()
 	else: console_history_toggler.icon = U_DARKER
 	
 	code.visible = toggle
 	spacer.visible = toggle
 	
 	App.refresh_window()
+
+func update_screen_size():
+	var command_history_min_y:int = 0
+	if console.command_history_mode: 
+		command_history_min_y = clamp(
+			(console.line_count * 24) * 2,
+			 0,
+			 DisplayServer.screen_get_size(get_window().current_screen).y - floor(get_window().position.y) / 4)
+	
+	var file_browser_min_y:int = 0; if console.file_browser_mode: file_browser_min_y = App.ui.file_browser_ui.custom_minimum_size.y
+	
+	var menu_min_y:int = 0
+	if console.menu_bar_mode: 
+		menu_min_y += spacer_2.size.y
+		menu_min_y += sep.size.y
+		menu_min_y += spacer_3.size.y
+		menu_min_y += menu.size.y
+		menu_min_y += sep_2.size.y
+		menu_min_y += spacer_4.size.y
+	
+	var min_y: int = command_history_min_y + file_browser_min_y + menu_min_y
+	var size_y: int = get_window().size.y
+	if min_y > size_y: size_y = min_y
+	
+	App.resize(
+			Vector2i(
+				get_window().size.x,
+				#console.line_count * 128
+				size_y
+				)
+			)
+
 
 func toggle_file_browser(toggle:bool=console.file_browser_mode) -> void:
 	if toggle: file_browser_toggler.icon = FILE_BROWSER_BUTTON_BRIGHT
@@ -213,7 +271,6 @@ func _on_line_text_submitted(new_text: String) -> void:
 	line.clear()
 	play_line_icon_anim()
 	
-	chat("text entered: " + new_text)
 	await console.parse_text_line(new_text)
 	
 
@@ -225,9 +282,7 @@ func _on_line_mouse_entered() -> void:
 func _on_line_mouse_exited() -> void:
 	
 	standby()
-	
-	if line.text.is_empty():
-		display_sentient_message("omni")
+	display_sentient_message("omni")
 	
 
 

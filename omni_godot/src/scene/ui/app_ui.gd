@@ -35,3 +35,6 @@ func toggle_file_browser(toggle:bool) -> void:
 		console_ui.set_v_size_flags(Control.SIZE_FILL)
 	else:
 		console_ui.set_v_size_flags(Control.SIZE_EXPAND_FILL)
+
+func print_out(text:String) -> void:
+	console_ui.print_out(text)

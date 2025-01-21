@@ -34,12 +34,16 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="code" type="CodeEdit" parent="vbox"]
-visible = false
-self_modulate = Color(0.300573, 0.302174, 0.317407, 1)
+[node name="code_split" type="VSplitContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="code" type="CodeEdit" parent="vbox/code_split"]
+self_modulate = Color(0.6468, 0.648837, 0.667843, 1)
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 theme_override_fonts/font = ExtResource("2_gpftm")
 theme_override_font_sizes/font_size = 9
 wrap_mode = 1
@@ -47,22 +51,14 @@ indent_wrapped_lines = true
 scroll_smooth = true
 symbol_lookup_on_click = true
 line_folding = true
-auto_brace_completion_enabled = true
-auto_brace_completion_highlight_matching = true
 
-[node name="spacer" type="Control" parent="vbox"]
-visible = false
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="background" type="Control" parent="vbox"]
+[node name="background" type="Control" parent="vbox/code_split"]
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="TextureRect" type="TextureRect" parent="vbox/background"]
+[node name="TextureRect" type="TextureRect" parent="vbox/code_split/background"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -70,6 +66,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_pvrsv")
+
+[node name="spacer" type="Control" parent="vbox"]
+visible = false
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="line_hbox" type="HBoxContainer" parent="vbox"]
 custom_minimum_size = Vector2(0, 26)
@@ -134,7 +136,6 @@ mouse_filter = 2
 visible = false
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
-size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="hbox" type="HBoxContainer" parent="vbox"]

@@ -13,12 +13,12 @@ size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_mwyax")
 
-[node name="h_split" type="HBoxContainer" parent="."]
+[node name="h_split" type="HSplitContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="v_split" type="VBoxContainer" parent="h_split"]
+[node name="v_split" type="VSplitContainer" parent="h_split"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2

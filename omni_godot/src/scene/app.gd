@@ -87,11 +87,32 @@ static func toggle_file_browser(toggle:bool) -> void:
 	var app: App = Core.instance as App
 	app.ui.toggle_file_browser(toggle)
 
-static func refresh_window():
-	if not Core.instance: return
-	var app: App = Core.instance as App
-	app.do_refresh_window()
 
-func do_refresh_window():
-	get_window().size = Vector2i(250, 0)
-	get_window().child_controls_changed()
+static func resize(new_size:Vector2i=Vector2i(0, 0)) -> void:
+	if not Core.instance: return
+	if not instance.get_window(): return
+	if new_size == Vector2i(0, 0): return
+	instance.get_window().size = new_size
+	#print("NEW SIZE: " + str(new_size))
+	#print(instance.get_window().size)
+
+static func refresh_window(new_size:Vector2i=Vector2i(0, 0)):
+	if not Core.instance: return
+	if not instance.get_window(): return
+	resize(new_size)
+	instance.get_window().child_controls_changed()
+	#print(instance.get_window().size)
+
+static func execute(order:String) -> Variant:
+	var output: Array = []
+	if order.contains(" "):
+		order = str("\"" + order + "\"")
+	await OS.execute(order, [], output, true)
+	#print(output)
+	return output
+
+
+static func print_out(text:String) -> void:
+	if not Core.instance: return
+	if not ui: return
+	ui.print_out(text)

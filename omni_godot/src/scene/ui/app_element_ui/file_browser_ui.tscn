@@ -13,6 +13,7 @@ border_color = Color(0.133196, 0.133196, 0.133196, 0.243137)
 border_blend = true
 
 [node name="file_browser_ui" type="MarginContainer"]
+custom_minimum_size = Vector2(288, 136)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

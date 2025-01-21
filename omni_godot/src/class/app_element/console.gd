@@ -7,6 +7,8 @@ signal operation_finished
 
 signal directory_focus_changed(new_current_path:String)
 
+var line_count:int = 0
+
 var menu_bar_mode: bool = false
 var command_history_mode: bool = false
 var file_browser_mode: bool = false
@@ -42,7 +44,42 @@ func parse_text_line(text_line:String) -> void:
 	# - - -
 	
 	var operated: bool = false
+	var extension: String = text_line.get_extension()
 	
+	# First, you should check all commands from Registry to see if one runs. If not, let code below run.
+	# TODO
+	# !!!
+	# Registry.get_registry("console_commands")
+	# set operated = true when doing a command
+	# !!!
+	# TODO
+	
+	# default non-command behavior below
+	
+	# this could be a file, or a URL
+	if extension.length() > 0:
+		# check if file, else check if URL
+		var file_paths: Array[String] = FileManager.get_all_filepaths_from_directory(current_directory_path)
+		for fp: String in file_paths:
+			print(fp)
+			if text_line.to_snake_case() == fp.to_snake_case():
+				operated = true
+				App.print_out("executing file " + text_line.to_snake_case() + "...")
+				App.execute(str(current_directory_path + fp))
+		
+		if not operated:
+			operated = true
+			var client: HTTPClient = HTTPClient.new()
+			if not text_line.begins_with("https://"): text_line = str("https://" + text_line)
+			
+			print("connecting to url...")
+			var connection: Error = await client.connect_to_host(text_line)
+			print(str(str(text_line) + error_string(connection)))
+			
+			if connection == OK:
+				var e: Error = await client.request(HTTPClient.METHOD_GET, "", [])
+				print(error_string(e))
+			else: print("BAD")
 	
 	# if text is the above directory's folder name
 	if not operated: operated = is_text_line_above_folder(text_line)
