@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cklth385cdeia"]
 
-[ext_resource type="Script" path="res://src/scene/prefab/ui/file_browser/file_browser_item.gd" id="1_485k5"]
+[ext_resource type="Script" path="res://src/scene/prefab/ui/file_browser/file_browser_grid_item.gd" id="1_485k5"]
 [ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="1_r8tk7"]
 [ext_resource type="FontFile" uid="uid://cwjomy78x2f2r" path="res://core/assets/font/etude_noire_regular.ttf" id="3_3ufbo"]
 
@@ -15,7 +15,7 @@ border_blend = true
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdt75"]
 bg_color = Color(0.721569, 0.721569, 0.721569, 0.227451)
 
-[node name="file_browser_item" type="MarginContainer"]
+[node name="file_browser_grid_item" type="MarginContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/margin_left = 4

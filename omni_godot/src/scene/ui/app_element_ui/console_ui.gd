@@ -69,6 +69,12 @@ func _ready_up():
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
 	App.console = console
+	# - - -
+	
+	App.console.operation_started.connect(func(): line.editable = false)
+	App.console.operation_finished.connect(func(): line.editable = true)
+	
+	# - - -
 	
 	console.menu_bar_mode = false
 	toggle_menu_bar_mode()
@@ -80,12 +86,16 @@ func _ready_up():
 	toggle_file_browser()
 	
 	refresh_console_label()
-	play_line_icon_anim()
+	path_label.text = console.current_directory_path
+	console.directory_focus_changed.connect(func(new_path:String): path_label.text = new_path)
 	
+	# - - -
+	
+	play_line_icon_anim()
 	display_greeting()
 	
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
-	path_label.text = console.current_directory_path
+	
 	
 	App.refresh_window()
 
@@ -198,11 +208,14 @@ func _on_console_history_toggler_button_down() -> void:
 
 func _on_line_text_submitted(new_text: String) -> void:
 	
+	if console.operating: return
+	
+	line.clear()
+	play_line_icon_anim()
 	
 	chat("text entered: " + new_text)
-	line.clear()
+	await console.parse_text_line(new_text)
 	
-	play_line_icon_anim()
 
 
 func _on_line_mouse_entered() -> void:

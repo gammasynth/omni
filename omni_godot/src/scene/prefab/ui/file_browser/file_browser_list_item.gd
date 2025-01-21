@@ -1,15 +1,15 @@
-extends MarginContainer
+extends DatabaseMarginContainer
 
-class_name FileBrowserItem
+class_name FileBrowserListItem
 
-@onready var vbox: VBoxContainer = $vbox
-@onready var aspect_ratio_container: AspectRatioContainer = $vbox/AspectRatioContainer
+@onready var hbox: HBoxContainer = $hbox
+@onready var aspect_ratio_container: AspectRatioContainer = $hbox/AspectRatioContainer
 
-@onready var icon_rect: TextureRect = $vbox/AspectRatioContainer/icon_rect
-@onready var icon_margin: MarginContainer = $vbox/AspectRatioContainer/icon_margin
-@onready var image_icon_rect: TextureRect = $vbox/AspectRatioContainer/icon_margin/image_icon_rect
+@onready var icon_rect: TextureRect = $hbox/AspectRatioContainer/icon_rect
+@onready var icon_margin: MarginContainer = $hbox/AspectRatioContainer/icon_margin
+@onready var image_icon_rect: TextureRect = $hbox/AspectRatioContainer/icon_margin/image_icon_rect
 
-@onready var label: RichTextLabel = $vbox/label
+@onready var label: RichTextLabel = $hbox/label
 
 @onready var item_button: Button = $item_button
 @onready var item_right_click_menu: PopupMenu = $item_button/item_right_click_menu

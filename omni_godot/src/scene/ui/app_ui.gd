@@ -1,4 +1,4 @@
-extends MarginContainer
+extends DatabaseMarginContainer
 
 class_name AppUI
 
@@ -18,7 +18,14 @@ var file_browser: FileBrowser:
 
 
 func _ready():
-	file_browser_ui.parse_directory(console.current_directory_path)
+	
+	console_ui = Registry.pull("app_elements", "console_ui.tscn").instantiate()
+	file_browser_ui = Registry.pull("app_elements", "file_browser_ui.tscn").instantiate()
+	
+	await Cast.make_node_child(file_browser_ui, v_split)
+	await Cast.make_node_child(console_ui, v_split)
+	
+	App.open_directory()
 
 
 func toggle_file_browser(toggle:bool) -> void:

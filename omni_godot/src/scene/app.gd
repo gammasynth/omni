@@ -78,6 +78,10 @@ func _start() -> Error:
 	return OK
 
 
+static func open_directory(at_path:String=console.current_directory_path) -> void:
+	console.current_directory_path = at_path
+	file_browser.parse_directory(at_path)
+
 static func toggle_file_browser(toggle:bool) -> void:
 	if not Core.instance: return
 	var app: App = Core.instance as App

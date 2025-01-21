@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://xu87r8s00jp5"]
+[gd_scene load_steps=4 format=3 uid="uid://xu87r8s00jp5"]
 
+[ext_resource type="Texture2D" uid="uid://bq2ijrbywnptk" path="res://src/assets/texture/ui/box/grey_box.png" id="2_r8ho5"]
 [ext_resource type="Script" path="res://src/scene/ui/app_element_ui/file_browser_ui.gd" id="2_xjibq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddpxx"]
+bg_color = Color(0.0392157, 0.0392157, 0.0392157, 0.545098)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.133196, 0.133196, 0.133196, 0.243137)
+border_blend = true
 
 [node name="file_browser_ui" type="MarginContainer"]
 anchors_preset = 15
@@ -8,6 +18,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
@@ -16,6 +28,23 @@ script = ExtResource("2_xjibq")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="file_browser_toolbar" type="PanelContainer" parent="vbox"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ddpxx")
+
+[node name="toolbar_hbox" type="HBoxContainer" parent="vbox/file_browser_toolbar"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+alignment = 2
+
+[node name="grid_mode_toggler" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+icon = ExtResource("2_r8ho5")
+flat = true
+expand_icon = true
 
 [node name="scroll_box" type="ScrollContainer" parent="vbox"]
 custom_minimum_size = Vector2(280, 110)
@@ -31,6 +60,7 @@ theme_override_constants/h_separation = 25
 theme_override_constants/v_separation = 1
 columns = 3
 
-[node name="footer_toolbar" type="PanelContainer" parent="vbox"]
-custom_minimum_size = Vector2(0, 16)
+[node name="file_list" type="VBoxContainer" parent="vbox/scroll_box"]
 layout_mode = 2
+
+[connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/grid_mode_toggler" to="." method="_on_grid_mode_toggler_button_down"]
