@@ -47,6 +47,7 @@ var console: Console:
 @onready var console_label: RichTextLabel = $vbox/hbox/console_label
 @onready var omni_button: Button = $vbox/hbox/omni_button
 
+@onready var background: Control = $vbox/code_split/background
 
 const TRAP_OUTLINE_SYMBOL_FILLED_FLIPPED = preload("res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png")
 const TRAP_OUTLINE_SYMBOL_SHINY = preload("res://src/assets/texture/ui/console/trap_outline_symbol_shiny.png")
@@ -74,6 +75,7 @@ func _ready_up():
 	App.console.operation_started.connect(func(): line.editable = false)
 	App.console.operation_finished.connect(func(): line.editable = true)
 	
+	
 	# - - -
 	
 	console.menu_bar_mode = false
@@ -99,6 +101,17 @@ func _ready_up():
 	
 	
 	App.refresh_window(Vector2i(250,50))
+	
+	await setup_settings()
+
+
+func setup_settings():
+	var settings : Settings = Settings.initialize_settings("console")
+	settings.prepare_setting("background", ["boolean"], func(b): background.visible = b, [true], [{}] )
+	settings.finish_prepare_settings()
+	
+	await settings.instance_ui(vbox)
+
 
 func clear_console_history():
 	code.text = ""
