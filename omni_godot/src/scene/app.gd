@@ -6,8 +6,8 @@ const APP_UI = preload("res://src/scene/ui/app_ui.tscn")
 
 static var ui: AppUI
 
-static var console: Console
-static var file_browser: FileBrowser
+static var console: OmniConsole
+static var file_browser: OmniFileBrowser
 
 
 func _pre_core_start() -> Error:

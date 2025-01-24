@@ -1,20 +1,20 @@
 [gd_scene load_steps=12 format=3 uid="uid://d3ffxjiwggxht"]
 
-[ext_resource type="Script" path="res://src/scene/ui/app_element_ui/console_ui.gd" id="1_f5mrp"]
-[ext_resource type="FontFile" uid="uid://cnji0hctq4gul" path="res://core/assets/font/OfficeCodePro-Light.otf" id="2_gpftm"]
-[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="3_am2u4"]
-[ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="3_eusw6"]
-[ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://src/resources/animated_texture/omni_text_3_animated.tres" id="3_pvrsv"]
-[ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="4_6x54g"]
-[ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="4_81fch"]
-[ext_resource type="FontFile" uid="uid://cmmmqdw3s8f3g" path="res://core/assets/font/frau-unifon.ttf" id="5_vp8qq"]
-[ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="6_6hm3u"]
+[ext_resource type="Script" path="res://src/scene/ui/app_element_ui/omni_console_ui.gd" id="1_2qqn0"]
+[ext_resource type="FontFile" uid="uid://cnji0hctq4gul" path="res://core/assets/font/OfficeCodePro-Light.otf" id="2_n5y6j"]
+[ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://src/resources/animated_texture/omni_text_3_animated.tres" id="3_dvhog"]
+[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="4_848k1"]
+[ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="5_heub3"]
+[ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="6_pi5lq"]
+[ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
+[ext_resource type="FontFile" uid="uid://cmmmqdw3s8f3g" path="res://core/assets/font/frau-unifon.ttf" id="8_60vf8"]
+[ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="9_pjlbn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
 bg_color = Color(0, 0, 0, 0.392157)
 
 [sub_resource type="FontVariation" id="FontVariation_08cj1"]
-base_font = ExtResource("5_vp8qq")
+base_font = ExtResource("8_60vf8")
 spacing_top = -4
 
 [node name="console_ui" type="PanelContainer"]
@@ -27,7 +27,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
-script = ExtResource("1_f5mrp")
+script = ExtResource("1_2qqn0")
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -44,7 +44,7 @@ custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_fonts/font = ExtResource("2_gpftm")
+theme_override_fonts/font = ExtResource("2_n5y6j")
 theme_override_font_sizes/font_size = 9
 wrap_mode = 1
 indent_wrapped_lines = true
@@ -65,7 +65,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_pvrsv")
+texture = ExtResource("3_dvhog")
 
 [node name="spacer" type="Control" parent="vbox"]
 visible = false
@@ -85,7 +85,7 @@ layout_mode = 2
 [node name="line_prefix_label" type="RichTextLabel" parent="vbox/line_hbox/center_box"]
 custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
-theme_override_fonts/normal_font = ExtResource("2_gpftm")
+theme_override_fonts/normal_font = ExtResource("2_n5y6j")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
 text = "[center][pulse freq=1.75 color=#ffffff80 ease=-1.5]$[/pulse][/center]"
@@ -97,11 +97,11 @@ autowrap_mode = 0
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("2_gpftm")
+theme_override_fonts/font = ExtResource("2_n5y6j")
 theme_override_font_sizes/font_size = 9
 placeholder_text = "greetings, user."
 clear_button_enabled = true
-right_icon = ExtResource("3_am2u4")
+right_icon = ExtResource("4_848k1")
 flat = true
 
 [node name="spacer2" type="Control" parent="vbox"]
@@ -147,21 +147,21 @@ mouse_filter = 2
 [node name="console_menu_toggler" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-icon = ExtResource("3_eusw6")
+icon = ExtResource("5_heub3")
 flat = true
 expand_icon = true
 
 [node name="console_history_toggler" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-icon = ExtResource("4_81fch")
+icon = ExtResource("6_pi5lq")
 flat = true
 expand_icon = true
 
 [node name="file_browser_toggler" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-icon = ExtResource("6_6hm3u")
+icon = ExtResource("7_rkik4")
 flat = true
 expand_icon = true
 
@@ -178,7 +178,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8ug05")
 [node name="path_label" type="RichTextLabel" parent="vbox/hbox/path_panel_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/normal_font = ExtResource("2_gpftm")
+theme_override_fonts/normal_font = ExtResource("2_n5y6j")
 theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 
@@ -204,7 +204,7 @@ autowrap_mode = 0
 [node name="omni_button" type="Button" parent="vbox/hbox"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-icon = ExtResource("4_6x54g")
+icon = ExtResource("9_pjlbn")
 flat = true
 expand_icon = true
 

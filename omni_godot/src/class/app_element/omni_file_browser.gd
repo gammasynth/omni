@@ -1,6 +1,6 @@
 extends Database
 
-class_name FileBrowser
+class_name OmniFileBrowser
 
 var file_browser_ui: FileBrowserUI
 

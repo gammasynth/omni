@@ -3,14 +3,14 @@ extends DatabaseMarginContainer
 class_name FileBrowserUI
 
 func _get_database(o:Database) -> Database:
-	if not o: o = FileBrowser.new(self)
+	if not o: o = OmniFileBrowser.new(self)
 	#if not o.name == name: o.name = name
 	
 	database = o
 	
 	return o
 
-var file_browser: FileBrowser:
+var file_browser: OmniFileBrowser:
 	get: return db
 
 const FILE_BROWSER_GRID_ITEM = preload("res://src/scene/prefab/ui/file_browser/file_browser_grid_item.tscn")

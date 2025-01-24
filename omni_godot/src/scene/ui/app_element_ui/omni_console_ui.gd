@@ -3,7 +3,7 @@ extends DatabasePanelContainer
 class_name ConsoleUI
 
 func _get_database(o:Database) -> Database:
-	if not o: o = Console.new(name)
+	if not o: o = OmniConsole.new(name)
 	#if not o.name == name: o.name = name
 	
 	database = o
@@ -70,6 +70,9 @@ func _ready_up():
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
 	App.console = console
+	
+	console.text_edit = code
+	console.line_edit = line
 	# - - -
 	
 	App.console.operation_started.connect(func(): line.editable = false)
@@ -114,8 +117,7 @@ func setup_settings():
 
 
 func clear_console_history():
-	code.text = ""
-	console.line_count = 0
+	console.clear_console_history()
 
 func display_greeting():
 	console.greeting = true
@@ -131,9 +133,7 @@ func print_out(text:String) -> void:
 	#code.set_line(code.get_line_count(), text)
 	#code.insert_line_at(code.get_line_count(), text)
 	
-	if code.text.is_empty(): code.text = text
-	else: code.text = str(code.text + "\n" + text)
-	console.line_count += 1
+	console.print_out(text)
 	
 	#print(code.text)
 	update_screen_size()
