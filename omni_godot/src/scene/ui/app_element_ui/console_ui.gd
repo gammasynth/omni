@@ -184,16 +184,16 @@ func update_screen_size():
 			 0,
 			 DisplayServer.screen_get_size(get_window().current_screen).y - floor(get_window().position.y) / 4)
 	
-	var file_browser_min_y:int = 0; if console.file_browser_mode: file_browser_min_y = App.ui.file_browser_ui.custom_minimum_size.y
+	var file_browser_min_y:int = 0; if console.file_browser_mode: file_browser_min_y = floor(App.ui.file_browser_ui.custom_minimum_size.y)
 	
 	var menu_min_y:int = 0
 	if console.menu_bar_mode: 
-		menu_min_y += spacer_2.size.y
-		menu_min_y += sep.size.y
-		menu_min_y += spacer_3.size.y
-		menu_min_y += menu.size.y
-		menu_min_y += sep_2.size.y
-		menu_min_y += spacer_4.size.y
+		menu_min_y += floor(spacer_2.size.y)
+		menu_min_y += floor(sep.size.y)
+		menu_min_y += floor(spacer_3.size.y)
+		menu_min_y += floor(menu.size.y)
+		menu_min_y += floor(sep_2.size.y)
+		menu_min_y += floor(spacer_4.size.y)
 	
 	var min_y: int = command_history_min_y + file_browser_min_y + menu_min_y
 	var size_y: int = get_window().size.y
@@ -271,7 +271,7 @@ func _on_line_text_submitted(new_text: String) -> void:
 	line.clear()
 	play_line_icon_anim()
 	
-	await console.parse_text_line(new_text)
+	console.parse_text_line(new_text)
 	
 
 

@@ -73,11 +73,11 @@ func parse_text_line(text_line:String) -> void:
 			if not text_line.begins_with("https://"): text_line = str("https://" + text_line)
 			
 			print("connecting to url...")
-			var connection: Error = await client.connect_to_host(text_line)
+			var connection: Error = client.connect_to_host(text_line)
 			print(str(str(text_line) + error_string(connection)))
 			
 			if connection == OK:
-				var e: Error = await client.request(HTTPClient.METHOD_GET, "", [])
+				var e: Error = client.request(HTTPClient.METHOD_GET, "", [])
 				print(error_string(e))
 			else: print("BAD")
 	

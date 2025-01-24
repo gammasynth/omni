@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://mgsah3xe0crt"]
+
+[node name="GraphEdit" type="GraphEdit"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_offset = Vector2(-40, -40)
+grid_pattern = 1
+snapping_distance = 16
+minimap_enabled = false
+show_menu = false
+
+[node name="GraphNode" type="GraphNode" parent="."]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 34.0
+offset_right = 207.0
+offset_bottom = 132.0
+mouse_filter = 1
+position_offset = Vector2(11, -6)
+title = "ersersers"
+
+[node name="GraphNode2" type="GraphNode" parent="."]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 107.0
+offset_right = 453.0
+offset_bottom = 205.0
+mouse_filter = 1
+position_offset = Vector2(257, 67)
+title = "ersersers"

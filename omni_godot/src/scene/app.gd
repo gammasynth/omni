@@ -107,7 +107,7 @@ static func execute(order:String) -> Variant:
 	var output: Array = []
 	if order.contains(" "):
 		order = str("\"" + order + "\"")
-	await OS.execute(order, [], output, true)
+	OS.execute(order, [], output, true)
 	#print(output)
 	return output
 
