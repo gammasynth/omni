@@ -2,6 +2,8 @@ extends Core
 
 class_name App
 
+signal theme_name_changed(new_theme_name:String)
+
 const APP_UI = preload("res://src/scene/ui/app_ui.tscn")
 
 static var ui: AppUI
@@ -9,6 +11,10 @@ static var ui: AppUI
 static var console: OmniConsole
 static var file_browser: OmniFileBrowser
 
+static var theme_name: String = "dark":
+	set(s):
+		theme_name = s
+		if instance: instance.theme_name_changed.emit(s)
 
 func _pre_core_start() -> Error:
 	
@@ -75,7 +81,50 @@ func _start() -> Error:
 	ui = APP_UI.instantiate()
 	get_parent().add_child(ui)
 	
+	setup_theme_settings()
+	
 	return OK
+
+
+func setup_theme_settings():
+	
+	
+	var theme_settings: Settings = Settings.initialize_settings("theme")
+	
+	theme_settings.prepare_setting(
+		"current_theme", # setting_name
+		["dropdown_buttons"], # setting_widget(s)
+		change_theme_index, # setting_value_changed_callable_function
+		[0], # default_setting_widget_value(s)
+		[ # widget_parameter_dictionary(s)
+			{
+				"WINDOW_TITLE" : "themes", # telling the dropdown widget to have a title above list
+				"ITEM_0" : "dark", # simply adding an item button to the dropdown as a string
+				"ITEM_1" : { "ITEM_NAME" : "light" }, # alternatively adding an item to dropdown as Dictionary
+				"ITEM_2" : { "ITEM_NAME" : "custom", "ACCEL" : KEY_C } # optional accel shortcut can be added
+			}
+		]
+	)
+	
+	theme_settings.prepare_setting(
+		"window_panel_color", 
+		["color"], 
+		ui.console_ui.change_window_panel_color,
+		[Color.WHITE],
+		[{}]
+	)
+	
+	theme_settings.finish_prepare_settings()
+
+
+func change_theme_index(new_index:int):
+	match new_index:
+		0:
+			theme_name = "dark"
+		1:
+			theme_name = "light"
+		2:
+			theme_name = "custom"
 
 
 static func open_directory(at_path:String=console.current_directory_path) -> void:

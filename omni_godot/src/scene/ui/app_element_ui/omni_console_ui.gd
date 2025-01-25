@@ -62,10 +62,29 @@ const FILE_BROWSER_BUTTON_DARK = preload("res://src/assets/texture/ui/console/fi
 
 var animating_line_icon: bool = false
 
+#const WINDOW_PANEL_COLORS : Dictionary = { "dark" : Color(0.03, 0.03, 0.03, 0.61), "light" : Color(1.0, 1.0, 1.0, 0.78)}
+var window_panel_color: Color = Color.WHITE:
+	set(c):
+		last_window_panel_color = window_panel_color
+		window_panel_color = c
 
+var last_window_panel_color: Color = Color.WHITE
 
+func change_window_panel_color(color:Color): 
+	var stylebox: StyleBox
+	if App.ui.current_theme: stylebox = App.ui.current_theme.get_stylebox("panel", "panel_container")
+	if not stylebox and App.ui.last_theme: stylebox = App.ui.last_theme.get_stylebox("panel", "panel_container")
+
+	if stylebox: 
+		add_theme_stylebox_override("panel", stylebox)
+		stylebox.bg_color = color
+		window_panel_color = color
+	else:
+		warn("PANELCONTAINER STYLEBOX ERROR!")
 
 func _ready_up():
+	
+	theme_changed.connect(func(): remove_theme_stylebox_override("panel"))
 	
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
@@ -105,7 +124,8 @@ func _ready_up():
 	
 	App.refresh_window(Vector2i(250,50))
 	
-	await setup_settings()
+	#await setup_settings()
+	$HTTPRequest.request("https://github.com")
 
 
 func setup_settings():
@@ -303,3 +323,17 @@ func _on_file_browser_toggler_button_down() -> void:
 	file_browser_toggler.release_focus()
 	console.file_browser_mode = !console.file_browser_mode
 	toggle_file_browser()
+
+
+func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	#print(result)
+	#print(response_code)
+	#print(headers)
+	#print(body)
+	pass
+
+
+func _on_edit_index_pressed(index: int) -> void:
+	if index == 0: # Edit Theme
+		var settings: Settings = Settings.all_settings.get("theme")
+		settings.instance_ui_window(App.instance)

@@ -30,12 +30,13 @@ window/size/viewport_width=512
 window/size/viewport_height=300
 window/size/borderless=true
 window/size/transparent=true
+window/subwindows/embed_subwindows=false
 window/per_pixel_transparency/allowed=true
 
 [gui]
 
 theme/custom="res://src/resources/theme/darkscale_modified.theme"
-theme/custom_font="res://core/assets/font/frau.ttf"
+theme/custom_font="res://core/assets/font/frau-offset.tres"
 
 [input]
 

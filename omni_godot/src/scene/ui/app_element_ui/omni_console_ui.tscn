@@ -28,6 +28,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_2qqn0")
+debug = null
+deep_debug = null
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -125,7 +127,10 @@ mouse_filter = 2
 visible = false
 layout_mode = 2
 
-[node name="action" type="PopupMenu" parent="vbox/menu"]
+[node name="Edit" type="PopupMenu" parent="vbox/menu"]
+size = Vector2i(60, 100)
+item_count = 1
+item_0/text = "Theme"
 
 [node name="sep2" type="HSeparator" parent="vbox"]
 visible = false
@@ -208,12 +213,16 @@ icon = ExtResource("9_pjlbn")
 flat = true
 expand_icon = true
 
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
 [connection signal="mouse_entered" from="vbox/line_hbox/line" to="." method="_on_line_mouse_entered"]
 [connection signal="mouse_exited" from="vbox/line_hbox/line" to="." method="_on_line_mouse_exited"]
 [connection signal="text_submitted" from="vbox/line_hbox/line" to="." method="_on_line_text_submitted"]
+[connection signal="index_pressed" from="vbox/menu/Edit" to="." method="_on_edit_index_pressed"]
 [connection signal="button_down" from="vbox/hbox/console_menu_toggler" to="." method="_on_console_menu_toggler_button_down"]
 [connection signal="button_down" from="vbox/hbox/console_history_toggler" to="." method="_on_console_history_toggler_button_down"]
 [connection signal="button_down" from="vbox/hbox/file_browser_toggler" to="." method="_on_file_browser_toggler_button_down"]
 [connection signal="meta_clicked" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_clicked"]
 [connection signal="meta_hover_ended" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_ended"]
 [connection signal="meta_hover_started" from="vbox/hbox/console_label" to="." method="_on_console_label_meta_hover_started"]
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
