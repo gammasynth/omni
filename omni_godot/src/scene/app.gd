@@ -176,16 +176,11 @@ static func refresh_window(new_size:Vector2i=Vector2i(0, 0)):
 	instance.get_window().child_controls_changed()
 	#print(instance.get_window().size)
 
-static func execute(order:String) -> Variant:
-	var output: Array = []
-	if order.contains(" "):
-		order = str("\"" + order + "\"")
-	await OS.execute(order, [console.current_directory_path], output, true)
-	#print(output)
-	return output
-
-
-static func print_out(text:String) -> void:
-	if not Core.instance: return
-	if not ui: return
-	ui.print_out(text)
+#static func execute(order:String) -> Variant:
+	#if not console: return ""
+	#return console.execute(order)
+#
+#
+#static func print_out(text:String) -> void:
+	#if not console: return
+	#console.print_out(text)

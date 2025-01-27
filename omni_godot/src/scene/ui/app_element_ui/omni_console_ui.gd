@@ -66,7 +66,7 @@ var animating_line_icon: bool = false
 
 func _ready_up():
 	
-	
+	get_window().focus_entered.connect(line.grab_focus)
 	
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
@@ -130,7 +130,7 @@ func display_greeting():
 	print_out(console.current_directory_path)
 
 
-func print_out(text:String) -> void:
+func print_out(text:Variant) -> void:
 	#code.insert_text(text, code.get_line_count(), 0)
 	#code.set_line(code.get_line_count(), text)
 	#code.insert_line_at(code.get_line_count(), text)
