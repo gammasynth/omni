@@ -79,17 +79,29 @@ func _start() -> Error:
 	get_window().borderless = false
 	
 	ui = APP_UI.instantiate()
-	get_parent().add_child(ui)
+	await Cast.make_node_child(ui, get_parent())
+	await RenderingServer.frame_post_draw
+	await get_tree().process_frame
+	await get_tree().create_timer(1.0)
 	
 	setup_theme_settings()
 	
 	return OK
 
 
+func reset_theme_settings(b):
+	if not b: return
+	if FileAccess.file_exists("user://settings/theme/theme.json"):
+		DirAccess.remove_absolute("user://settings/theme/theme.json")
+	
+	setup_theme_settings()
+
 func setup_theme_settings():
 	
 	
-	var theme_settings: Settings = Settings.initialize_settings("theme")
+	var theme_settings: Settings = Settings.initialize_settings("theme", "user://settings/theme/")
+	var theme_func = func():
+		return theme_name
 	
 	theme_settings.prepare_setting(
 		"current_theme", # setting_name
@@ -106,11 +118,23 @@ func setup_theme_settings():
 		]
 	)
 	
+	var clr_func = func():
+		var default_panel_clr: Color = Color.WHITE
+		if ui.back_panel.has_theme_stylebox_override("panel") and ui.back_panel.get("theme_override_styles/panel") is StyleBoxFlat: default_panel_clr = ui.back_panel.get("theme_override_styles/panel").bg_color
+	
 	theme_settings.prepare_setting(
 		"window_panel_color", 
 		["color"], 
-		ui.console_ui.change_window_panel_color,
-		[Color.WHITE],
+		ui.change_window_panel_color,
+		[clr_func],
+		[{}]
+	)
+	
+	theme_settings.prepare_setting(
+		"reset_theme_settings", 
+		["boolean"], 
+		reset_theme_settings,
+		[false],
 		[{}]
 	)
 	
@@ -156,7 +180,7 @@ static func execute(order:String) -> Variant:
 	var output: Array = []
 	if order.contains(" "):
 		order = str("\"" + order + "\"")
-	OS.execute(order, [], output, true)
+	await OS.execute(order, [console.current_directory_path], output, true)
 	#print(output)
 	return output
 

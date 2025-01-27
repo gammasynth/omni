@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvt7nxmmlpgj1"]
+[gd_scene load_steps=3 format=3 uid="uid://dvt7nxmmlpgj1"]
 
 [ext_resource type="Script" path="res://src/scene/ui/app_ui.gd" id="1_mwyax"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s148x"]
 
 [node name="app_ui" type="MarginContainer"]
 anchors_preset = 15
@@ -12,6 +14,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_mwyax")
+
+[node name="back_panel" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s148x")
 
 [node name="h_split" type="HSplitContainer" parent="."]
 layout_mode = 2

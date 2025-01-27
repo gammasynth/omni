@@ -19,6 +19,11 @@ var file_path: String = ""
 var file_type: FileType = null
 
 var being_clicked: bool = false
+var click_delta: float = 0.0
+
+var single_click_open_time: float = 0.15
+var double_click_initial_release_time: float = 0.1
+var double_click_second_press_time: float = 0.1
 
 
 
@@ -36,6 +41,12 @@ func setup():
 	label.text = file_name
 
 
+func _process(delta: float) -> void:
+	if being_clicked:
+		click_delta += delta
+
+
+
 func _on_item_button_gui_input(event: InputEvent) -> void:
 	
 	var mouse_global_pos: Vector2 = get_global_mouse_position()
@@ -43,6 +54,12 @@ func _on_item_button_gui_input(event: InputEvent) -> void:
 	if being_clicked:
 		if event.is_action_released("lmb"):
 			being_clicked = false
+			
+			if click_delta >= single_click_open_time:
+				if file_type.is_folder:
+					App.open_directory(file_path)
+			
+			click_delta = 0.0
 	else:
 		if event.is_action_pressed("lmb"):
 			print("mouse click item")

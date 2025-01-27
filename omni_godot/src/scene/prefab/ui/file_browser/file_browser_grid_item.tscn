@@ -56,6 +56,7 @@ theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 text = "example_file.txt"
 scroll_active = false
+autowrap_mode = 2
 
 [node name="item_button" type="Button" parent="."]
 layout_mode = 2

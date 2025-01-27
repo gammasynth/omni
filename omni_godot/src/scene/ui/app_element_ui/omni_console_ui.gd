@@ -62,29 +62,11 @@ const FILE_BROWSER_BUTTON_DARK = preload("res://src/assets/texture/ui/console/fi
 
 var animating_line_icon: bool = false
 
-#const WINDOW_PANEL_COLORS : Dictionary = { "dark" : Color(0.03, 0.03, 0.03, 0.61), "light" : Color(1.0, 1.0, 1.0, 0.78)}
-var window_panel_color: Color = Color.WHITE:
-	set(c):
-		last_window_panel_color = window_panel_color
-		window_panel_color = c
 
-var last_window_panel_color: Color = Color.WHITE
-
-func change_window_panel_color(color:Color): 
-	var stylebox: StyleBox
-	if App.ui.current_theme: stylebox = App.ui.current_theme.get_stylebox("panel", "panel_container")
-	if not stylebox and App.ui.last_theme: stylebox = App.ui.last_theme.get_stylebox("panel", "panel_container")
-
-	if stylebox: 
-		add_theme_stylebox_override("panel", stylebox)
-		stylebox.bg_color = color
-		window_panel_color = color
-	else:
-		warn("PANELCONTAINER STYLEBOX ERROR!")
 
 func _ready_up():
 	
-	theme_changed.connect(func(): remove_theme_stylebox_override("panel"))
+	
 	
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self

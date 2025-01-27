@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://d3ffxjiwggxht"]
+[gd_scene load_steps=13 format=3 uid="uid://d3ffxjiwggxht"]
 
 [ext_resource type="Script" path="res://src/scene/ui/app_element_ui/omni_console_ui.gd" id="1_2qqn0"]
 [ext_resource type="FontFile" uid="uid://cnji0hctq4gul" path="res://core/assets/font/OfficeCodePro-Light.otf" id="2_n5y6j"]
 [ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://src/resources/animated_texture/omni_text_3_animated.tres" id="3_dvhog"]
 [ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="4_848k1"]
+[ext_resource type="FontVariation" uid="uid://cur23vi1ru8rc" path="res://core/assets/font/frau-offset.tres" id="5_acxab"]
 [ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="5_heub3"]
 [ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="6_pi5lq"]
 [ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
@@ -28,8 +29,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_2qqn0")
-debug = null
-deep_debug = null
 
 [node name="vbox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -124,11 +123,13 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="menu" type="MenuBar" parent="vbox"]
-visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("5_acxab")
+theme_override_font_sizes/font_size = 16
 
 [node name="Edit" type="PopupMenu" parent="vbox/menu"]
 size = Vector2i(60, 100)
+theme_override_font_sizes/font_size = 11
 item_count = 1
 item_0/text = "Theme"
 

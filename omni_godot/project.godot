@@ -35,8 +35,8 @@ window/per_pixel_transparency/allowed=true
 
 [gui]
 
-theme/custom="res://src/resources/theme/darkscale_modified.theme"
-theme/custom_font="res://core/assets/font/frau-offset.tres"
+theme/custom="res://src/resources/themes/darkscale_modified.theme"
+theme/custom_font="res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
 
 [input]
 
