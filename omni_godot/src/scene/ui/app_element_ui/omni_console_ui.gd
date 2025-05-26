@@ -2,16 +2,14 @@ extends DatabasePanelContainer
 
 class_name ConsoleUI
 
-func _get_database(o:Database) -> Database:
-	if not o: o = OmniConsole.new(name)
-	#if not o.name == name: o.name = name
-	
-	database = o
-	
-	return o
 
 var console: Console:
-	get: return db
+	get: 
+		if not console:
+			console = OmniConsole.new(name)
+			db = console
+		
+		return db
 
 @onready var vbox: VBoxContainer = $vbox
 
@@ -70,14 +68,14 @@ func _ready_up():
 	
 	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
-	App.console = console
+	Main.console = console
 	
 	console.text_edit = code
 	console.line_edit = line
 	# - - -
 	
-	App.console.operation_started.connect(func(): line.editable = false)
-	App.console.operation_finished.connect(func(): line.editable = true)
+	Main.console.operation_started.connect(func(): line.editable = false)
+	Main.console.operation_finished.connect(func(): line.editable = true)
 	
 	
 	# - - -
@@ -85,7 +83,7 @@ func _ready_up():
 	console.menu_bar_mode = false
 	toggle_menu_bar_mode()
 	
-	console.command_history_mode = false
+	console.command_history_mode = true
 	toggle_command_history()
 	
 	console.file_browser_mode = false
@@ -104,10 +102,10 @@ func _ready_up():
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
 	
 	
-	App.refresh_window(Vector2i(250,50))
+	App.ui.refresh_window(Vector2i(250,50))
 	
 	#await setup_settings()
-	$HTTPRequest.request("https://github.com")
+	#$HTTPRequest.request("https://github.com")
 
 
 func setup_settings():
@@ -178,7 +176,7 @@ func toggle_menu_bar_mode(toggle:bool=console.menu_bar_mode) -> void:
 	sep_2.visible = toggle
 	spacer_4.visible = toggle
 	
-	App.refresh_window()
+	App.ui.refresh_window()
 
 func toggle_command_history(toggle:bool=console.command_history_mode) -> void:
 	if toggle: 
@@ -189,7 +187,7 @@ func toggle_command_history(toggle:bool=console.command_history_mode) -> void:
 	code.visible = toggle
 	spacer.visible = toggle
 	
-	App.refresh_window()
+	App.ui.refresh_window()
 
 func update_screen_size():
 	var command_history_min_y:int = 0
@@ -214,7 +212,7 @@ func update_screen_size():
 	var size_y: int = get_window().size.y
 	if min_y > size_y: size_y = min_y
 	
-	App.resize(
+	App.ui.resize(
 			Vector2i(
 				get_window().size.x,
 				#console.line_count * 128
@@ -227,9 +225,9 @@ func toggle_file_browser(toggle:bool=console.file_browser_mode) -> void:
 	if toggle: file_browser_toggler.icon = FILE_BROWSER_BUTTON_BRIGHT
 	else: file_browser_toggler.icon = FILE_BROWSER_BUTTON_DARK
 	
-	App.toggle_file_browser(toggle)
+	Main.toggle_file_browser(toggle)
 	
-	App.refresh_window()
+	App.ui.refresh_window()
 
 
 

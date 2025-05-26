@@ -2,16 +2,12 @@ extends DatabaseMarginContainer
 
 class_name FileBrowserUI
 
-func _get_database(o:Database) -> Database:
-	if not o: o = OmniFileBrowser.new(self)
-	#if not o.name == name: o.name = name
-	
-	database = o
-	
-	return o
-
 var file_browser: OmniFileBrowser:
-	get: return db
+	get: 
+		if not file_browser: 
+			file_browser = OmniFileBrowser.new(self)
+			db = file_browser
+		return db
 
 const FILE_BROWSER_GRID_ITEM = preload("res://src/scene/prefab/ui/file_browser/file_browser_grid_item.tscn")
 const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/file_browser_list_item.tscn")
@@ -22,7 +18,7 @@ const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/f
 
 func _ready():
 	App.ui.file_browser_ui = self
-	App.file_browser = file_browser
+	Main.file_browser = file_browser
 	resized.connect(refresh_grid_size)
 
 
@@ -36,7 +32,7 @@ func add_item(file_path:String, file_type:FileType) -> void:
 	var item = item_base.instantiate()
 	item.file_path = file_path
 	item.file_type = file_type
-	await Cast.make_node_child(item, browser)
+	await Make.child(item, browser)
 	return
 
 
@@ -61,4 +57,4 @@ func _on_grid_mode_toggler_button_down() -> void:
 		file_list.visible = true
 		file_grid.visible = false
 	
-	App.open_directory()
+	Main.open_directory()

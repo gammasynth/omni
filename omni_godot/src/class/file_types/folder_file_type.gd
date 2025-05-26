@@ -11,8 +11,8 @@ func _refresh_info(at_path:String="") -> void:
 	if at_path.is_empty(): return
 	if not DirAccess.dir_exists_absolute(at_path): return
 	
-	var folders : Array[String] = FileManager.get_all_directories_from_directory(at_path, true)
-	var files: Array[String] = FileManager.get_all_filepaths_from_directory(at_path, "", true)
+	var folders : Array[String] = File.get_all_directories_from_directory(at_path, true)
+	var files: Array[String] = File.get_all_filepaths_from_directory(at_path, "", true)
 	
 	var ft_registry: Registry = Registry.get_registry("file_types")
 	var program_ft: FileType = ft_registry.db.grab("program_file_type").new()

@@ -1,6 +1,6 @@
-extends DatabaseMarginContainer
+extends AppUI
 
-class_name AppUI
+class_name MainUI
 
 
 @onready var h_split = $h_split
@@ -8,15 +8,17 @@ class_name AppUI
 
 @onready var back_panel: Panel = $back_panel
 
+@onready var icon: TextureRect = $icon
+@onready var raw_console: RichTextLabel = $console_margin/raw_console
 
 var console_ui: ConsoleUI
 var file_browser_ui: FileBrowserUI
 
 var console: Console:
-	get: return App.console
+	get: return Main.console
 
 var file_browser: OmniFileBrowser:
-	get: return App.file_browser
+	get: return Main.file_browser
 
 const THEME_KEYS: Dictionary = {
 	"dark" : "darkscale_modified.theme",
@@ -31,6 +33,14 @@ var current_theme:Theme = null:
 
 var last_theme:Theme = load(ProjectSettings.get_setting("gui/theme/custom"))
 var unique_back_panel_stylebox: StyleBox = null
+
+func _ready_up():
+	RefInstance.chat_mirror_callable = raw_output
+
+func raw_output(text:String) -> void:
+	if text.is_empty() or text == " ":
+		text = "\n"
+	raw_console.text = str(raw_console.text + "\n"  + text)
 
 
 func theme_name_changed(theme_name:String) -> void:
@@ -72,7 +82,7 @@ func change_window_panel_color(color:Color):
 		unique_back_panel_stylebox = stylebox.duplicate()
 		stylebox = unique_back_panel_stylebox
 	
-	print("setting color")
+	chatf("setting color")
 	if stylebox: 
 		if not back_panel.has_theme_stylebox_override("panel"):
 			back_panel.add_theme_stylebox_override("panel", stylebox)
@@ -85,14 +95,14 @@ func change_window_panel_color(color:Color):
 	else:
 		warn("PANELCONTAINER STYLEBOX ERROR!")
 	
-	App.theme_name = "custom"
+	Main.theme_name = "custom"
 
 
 
 
 
 
-func _ready():
+func _post_start():
 	
 	current_theme = await load("res://src/resources/theme/darkscale_modified.theme")
 	
@@ -104,10 +114,16 @@ func _ready():
 	
 	current_theme = Registry.pull("themes", "darkscale_modified.theme")
 	
-	await Cast.make_node_child(file_browser_ui, v_split)
-	await Cast.make_node_child(console_ui, v_split)
+	var tween:Tween = create_tween().set_parallel()
+	tween.tween_property(icon, "modulate", Color(0.0,0.0,0.0,0.0), 0.35)
+	tween.tween_property(raw_console, "modulate", Color(0.0,0.0,0.0,0.0), 0.35)
+	tween.tween_callback(func(): icon.visible = false).set_delay(0.35)
+	tween.tween_callback(func(): raw_console.visible = false).set_delay(0.35)
 	
-	App.open_directory()
+	await Make.child(file_browser_ui, v_split)
+	await Make.child(console_ui, v_split)
+	
+	Main.open_directory()
 
 
 func toggle_file_browser(toggle:bool) -> void:

@@ -36,7 +36,7 @@ func setup():
 	
 	var file_name = file_path.get_file()
 	if not file_name:
-		file_name = FileManager.get_folder(file_path)
+		file_name = File.get_folder(file_path)
 	
 	label.text = file_name
 
@@ -57,7 +57,7 @@ func _on_item_button_gui_input(event: InputEvent) -> void:
 			
 			if click_delta >= single_click_open_time:
 				if file_type.is_folder:
-					App.open_directory(file_path)
+					Main.open_directory(file_path)
 			
 			click_delta = 0.0
 	else:

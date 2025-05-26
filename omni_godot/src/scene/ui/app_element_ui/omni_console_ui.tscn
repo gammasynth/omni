@@ -1,32 +1,19 @@
-[gd_scene load_steps=15 format=3 uid="uid://d3ffxjiwggxht"]
+[gd_scene load_steps=11 format=3 uid="uid://d3ffxjiwggxht"]
 
 [ext_resource type="Script" uid="uid://bf8j0182i20sp" path="res://src/scene/ui/app_element_ui/omni_console_ui.gd" id="1_2qqn0"]
-[ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://src/resources/animated_texture/omni_text_3_animated.tres" id="3_dvhog"]
-[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://src/resources/animated_texture/cool_tiny_cube.tres" id="4_848k1"]
+[ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://resources/animated_texture/omni_text_3_animated.tres" id="3_dvhog"]
+[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resources/animated_texture/cool_tiny_cube.tres" id="4_848k1"]
 [ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="5_heub3"]
 [ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="6_pi5lq"]
+[ext_resource type="FontFile" uid="uid://dcc3wdw8l0l7m" path="res://resources/font/frau-unifon.ttf" id="7_or8sq"]
 [ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
 [ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="9_pjlbn"]
-
-[sub_resource type="Resource" id="Resource_med4x"]
-metadata/__load_path__ = "res://core/assets/font/OfficeCodePro-Light.otf"
-
-[sub_resource type="Resource" id="Resource_or8sq"]
-metadata/__load_path__ = "res://core/assets/font/OfficeCodePro-Light.otf"
-
-[sub_resource type="Resource" id="Resource_ci5v5"]
-metadata/__load_path__ = "res://core/assets/font/OfficeCodePro-Light.otf"
-
-[sub_resource type="Resource" id="Resource_od2km"]
-metadata/__load_path__ = "res://core/assets/font/frau-offset.tres"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
 bg_color = Color(0, 0, 0, 0.392157)
 
-[sub_resource type="Resource" id="Resource_4laiq"]
-metadata/__load_path__ = "res://core/assets/font/OfficeCodePro-Light.otf"
-
 [sub_resource type="FontVariation" id="FontVariation_08cj1"]
+base_font = ExtResource("7_or8sq")
 spacing_top = -4
 
 [node name="console_ui" type="PanelContainer"]
@@ -56,7 +43,6 @@ custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-theme_override_fonts/font = SubResource("Resource_med4x")
 theme_override_font_sizes/font_size = 9
 wrap_mode = 1
 indent_wrapped_lines = true
@@ -68,6 +54,7 @@ line_folding = true
 clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
 mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="vbox/code_split/background"]
@@ -97,7 +84,6 @@ layout_mode = 2
 [node name="line_prefix_label" type="RichTextLabel" parent="vbox/line_hbox/center_box"]
 custom_minimum_size = Vector2(9, 9)
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("Resource_or8sq")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
 text = "[center][pulse freq=1.75 color=#ffffff80 ease=-1.5]$[/pulse][/center]"
@@ -109,7 +95,6 @@ autowrap_mode = 0
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = SubResource("Resource_ci5v5")
 theme_override_font_sizes/font_size = 9
 placeholder_text = "greetings, user."
 clear_button_enabled = true
@@ -135,7 +120,6 @@ mouse_filter = 2
 
 [node name="menu" type="MenuBar" parent="vbox"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("Resource_od2km")
 theme_override_font_sizes/font_size = 16
 
 [node name="Edit" type="PopupMenu" parent="vbox/menu"]
@@ -143,6 +127,7 @@ size = Vector2i(60, 100)
 theme_override_font_sizes/font_size = 11
 item_count = 1
 item_0/text = "Theme"
+item_0/id = 0
 
 [node name="sep2" type="HSeparator" parent="vbox"]
 visible = false
@@ -195,7 +180,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8ug05")
 [node name="path_label" type="RichTextLabel" parent="vbox/hbox/path_panel_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/normal_font = SubResource("Resource_4laiq")
 theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 

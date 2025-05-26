@@ -13,27 +13,21 @@ static var theme_name: String = "dark":
 		theme_name = s
 		if instance: instance.theme_name_changed.emit(s)
 
-func _pre_core_start() -> Error:
-	
-	
-	
-	return await Cast.wait()
 
 
 
 func _start() -> Error:
 	
+	#get_window().borderless = false
+	#
+	#ui = APP_UI.instantiate()
+	#await Cast.make_node_child(ui, get_parent())
+	#await RenderingServer.frame_post_draw
+	#await get_tree().process_frame
+	#await get_tree().create_timer(1.0)
 	
 	
-	
-	
-	get_window().borderless = false
-	
-	ui = APP_UI.instantiate()
-	await Cast.make_node_child(ui, get_parent())
-	await RenderingServer.frame_post_draw
-	await get_tree().process_frame
-	await get_tree().create_timer(1.0)
+	ui.start()
 	
 	setup_theme_settings()
 	
@@ -50,7 +44,14 @@ func reset_theme_settings(b):
 func setup_theme_settings():
 	
 	
-	var theme_settings: Settings = Settings.initialize_settings("theme", "user://settings/theme/")
+	var theme_settings: Settings
+	if not Settings.all_settings.has("theme"):
+		theme_settings = Settings.initialize_settings("theme", "user://settings/theme/")
+	else:
+		theme_settings = Settings.all_settings["theme"]
+		theme_settings.finish_prepare_settings()
+		return
+	
 	var theme_func = func():
 		return theme_name
 	
@@ -69,9 +70,11 @@ func setup_theme_settings():
 		]
 	)
 	
-	var clr_func = func():
+	var clr_func = func() -> Color:
 		var default_panel_clr: Color = Color.WHITE
-		if ui.back_panel.has_theme_stylebox_override("panel") and ui.back_panel.get("theme_override_styles/panel") is StyleBoxFlat: default_panel_clr = ui.back_panel.get("theme_override_styles/panel").bg_color
+		if ui.back_panel.has_theme_stylebox_override("panel") and ui.back_panel.get("theme_override_styles/panel") is StyleBoxFlat: 
+			default_panel_clr = ui.back_panel.get("theme_override_styles/panel").bg_color
+		return default_panel_clr
 	
 	theme_settings.prepare_setting(
 		"window_panel_color", 

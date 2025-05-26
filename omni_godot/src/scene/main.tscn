@@ -1,7 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://bt5uatl5djh6c"]
+[gd_scene load_steps=3 format=3 uid="uid://bt5uatl5djh6c"]
 
 [ext_resource type="Script" uid="uid://cxckitom0q5w3" path="res://src/scene/main.gd" id="1_lorpx"]
+[ext_resource type="PackedScene" uid="uid://bi888t1r21bnb" path="res://lib/g_libs/g_tools/scene/tool_node.tscn" id="2_48vbg"]
 
-[node name="app" type="Node"]
+[node name="main" type="Node"]
 script = ExtResource("1_lorpx")
-debug = true
+registry_system = true
+ui_scene_path = "res://src/scene/ui/main_ui.tscn"
+
+[node name="ToolNode" parent="." instance=ExtResource("2_48vbg")]

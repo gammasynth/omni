@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://tjcihmla4fji"]
+
+[ext_resource type="PackedScene" uid="uid://bwu54n2r4muxr" path="res://lib/gd_app_ui/scene/prefab/ui/modular_ui/generic_modular_ui/modular_loading_screen.tscn" id="1_f415t"]
+[ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="2_f52bm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bejmu"]
+bg_color = Color(0.652042, 0.812183, 0.928074, 1)
+
+[node name="modular_loading_screen" instance=ExtResource("1_f415t")]
+
+[node name="splash_texture" parent="menu_margin/vbox" index="1"]
+texture = ExtResource("2_f52bm")
+expand_mode = 5
+
+[node name="progress_bar" parent="menu_margin/vbox" index="4"]
+theme_override_styles/fill = SubResource("StyleBoxFlat_bejmu")

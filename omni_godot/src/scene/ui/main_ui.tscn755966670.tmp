@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvt7nxmmlpgj1"]
+
+[ext_resource type="Script" uid="uid://bwufogva0b7k2" path="res://src/scene/ui/main_ui.gd" id="1_mwyax"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s148x"]
+
+[node name="main_ui" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_mwyax")
+
+[node name="back_panel" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s148x")
+
+[node name="h_split" type="HSplitContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="v_split" type="VSplitContainer" parent="h_split"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0

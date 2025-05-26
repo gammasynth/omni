@@ -21,7 +21,7 @@ func parse_directory(new_directory_path:String) -> Error:
 	
 	var folder_paths = DirAccess.get_directories_at(new_directory_path)
 	for p in folder_paths:
-		all_paths.append(new_directory_path + FileManager.ends_with_slash(p))
+		all_paths.append(new_directory_path + File.ends_with_slash(p))
 	
 	
 	var file_paths = DirAccess.get_files_at(new_directory_path)
