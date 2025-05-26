@@ -1,11 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://384pip3anqnn"]
+[gd_scene load_steps=6 format=3 uid="uid://384pip3anqnn"]
 
-[ext_resource type="Script" path="res://src/scene/prefab/ui/file_browser/file_browser_list_item.gd" id="1_6mmea"]
+[ext_resource type="Script" uid="uid://dmygpiswehhkc" path="res://src/scene/prefab/ui/file_browser/file_browser_list_item.gd" id="1_6mmea"]
 [ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
-[ext_resource type="FontFile" uid="uid://cwjomy78x2f2r" path="res://core/assets/font/etude_noire_regular.ttf" id="3_2frfp"]
 
 [sub_resource type="FontVariation" id="FontVariation_u0lcb"]
-base_font = ExtResource("3_2frfp")
 spacing_top = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pfp8"]

@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://xu87r8s00jp5"]
+[gd_scene load_steps=7 format=3 uid="uid://xu87r8s00jp5"]
 
-[ext_resource type="FontFile" uid="uid://druwgsmu6r4yw" path="res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf" id="2_fan0x"]
 [ext_resource type="Texture2D" uid="uid://bq2ijrbywnptk" path="res://src/assets/texture/ui/box/grey_box.png" id="2_r8ho5"]
-[ext_resource type="Script" path="res://src/scene/ui/app_element_ui/omni_file_browser_ui.gd" id="2_xjibq"]
+[ext_resource type="Script" uid="uid://bontmbnaqfowg" path="res://src/scene/ui/app_element_ui/omni_file_browser_ui.gd" id="2_xjibq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddpxx"]
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 0.545098)
@@ -12,6 +11,15 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.133196, 0.133196, 0.133196, 0.243137)
 border_blend = true
+
+[sub_resource type="Resource" id="Resource_dcvwu"]
+metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
+
+[sub_resource type="Resource" id="Resource_alcnh"]
+metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
+
+[sub_resource type="Resource" id="Resource_jfcm6"]
+metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
 
 [node name="file_browser_ui" type="MarginContainer"]
 custom_minimum_size = Vector2(288, 136)
@@ -43,21 +51,21 @@ layout_mode = 2
 [node name="d_back_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_fan0x")
+theme_override_fonts/font = SubResource("Resource_dcvwu")
 theme_override_font_sizes/font_size = 8
 text = ""
 
 [node name="d_up_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_fan0x")
+theme_override_fonts/font = SubResource("Resource_alcnh")
 theme_override_font_sizes/font_size = 8
 text = ""
 
 [node name="d_forward_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_fan0x")
+theme_override_fonts/font = SubResource("Resource_jfcm6")
 theme_override_font_sizes/font_size = 8
 text = ""
 

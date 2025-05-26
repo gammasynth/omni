@@ -1,3 +1,9 @@
-[submodule "omni_godot/core"]
-	path = omni_godot/core
-	url = https://github.com/gammasynth/core
+[submodule "omni_godot/lib/g_libs"]
+	path = omni_godot/lib/g_libs
+	url = https://github.com/gammasynth/g_libs
+[submodule "omni_godot/lib/gd_app"]
+	path = omni_godot/lib/gd_app
+	url = https://github.com/gammasynth/gd_app
+[submodule "omni_godot/lib/gd_app_ui"]
+	path = omni_godot/lib/gd_app_ui
+	url = https://github.com/gammasynth/gd_app_ui

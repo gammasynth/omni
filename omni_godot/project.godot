@@ -13,14 +13,14 @@ config_version=5
 config/name="omni"
 config/description="Console & File Browsing Systems."
 config/version="0.0.0.1"
-run/main_scene="res://src/scene/app.tscn"
+run/main_scene="res://src/scene/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="gammasynth/omni"
-config/features=PackedStringArray("4.3", "GL Compatibility")
+config/features=PackedStringArray("4.4", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
-boot_splash/image="res://src/assets/texture/ui/omni_splash_1024x600.png"
 boot_splash/fullsize=false
 boot_splash/use_filter=false
+boot_splash/image="res://src/assets/texture/ui/omni_splash_1024x600.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
 
