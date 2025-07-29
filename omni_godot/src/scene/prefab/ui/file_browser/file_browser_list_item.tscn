@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://384pip3anqnn"]
 
 [ext_resource type="Script" uid="uid://dmygpiswehhkc" path="res://src/scene/prefab/ui/file_browser/file_browser_list_item.gd" id="1_6mmea"]
-[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
+[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resources/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
 
 [sub_resource type="FontVariation" id="FontVariation_u0lcb"]
 spacing_top = 4

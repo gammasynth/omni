@@ -67,7 +67,7 @@ func _on_item_button_gui_input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("rmb"):
 			#print("RIGHT mouse click item A")
-			item_right_click_menu.popup(Rect2i(Vector2i(mouse_global_pos), Vector2i.ZERO))
+			item_right_click_menu.popup(Rect2i(Vector2i(DisplayServer.mouse_get_position()), Vector2i.ZERO))
 
 
 func _on_item_right_click_menu_index_pressed(_index: int) -> void:

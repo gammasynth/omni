@@ -14,3 +14,6 @@ var sentient_line: bool = false:
 		if not b:
 			greeting = false
 			# etc...
+
+func _open_directory(at_path:String=current_directory_path) -> void: 
+	Main.open_directory(at_path)

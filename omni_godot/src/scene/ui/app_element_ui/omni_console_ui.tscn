@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://bf8j0182i20sp" path="res://src/scene/ui/app_element_ui/omni_console_ui.gd" id="1_2qqn0"]
 [ext_resource type="Texture2D" uid="uid://m4ke5mdlunio" path="res://resources/animated_texture/omni_text_3_animated.tres" id="3_dvhog"]
 [ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resources/animated_texture/cool_tiny_cube.tres" id="4_848k1"]
-[ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="5_heub3"]
-[ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://src/assets/texture/ui/console/u_darker.png" id="6_pi5lq"]
+[ext_resource type="Texture2D" uid="uid://clidepxp1kaqa" path="res://resources/texture/ui/console/trap_outline_symbol_filled_flipped.png" id="5_heub3"]
+[ext_resource type="Texture2D" uid="uid://cxqdpy66wjkl7" path="res://resources/texture/ui/console/u_darker.png" id="6_pi5lq"]
 [ext_resource type="FontFile" uid="uid://dcc3wdw8l0l7m" path="res://resources/font/frau-unifon.ttf" id="7_or8sq"]
-[ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://src/assets/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
+[ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://resources/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
 [ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="9_pjlbn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]

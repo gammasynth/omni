@@ -1,7 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://xu87r8s00jp5"]
+[gd_scene load_steps=8 format=3 uid="uid://xu87r8s00jp5"]
 
-[ext_resource type="Texture2D" uid="uid://bq2ijrbywnptk" path="res://src/assets/texture/ui/box/grey_box.png" id="2_r8ho5"]
+[ext_resource type="Texture2D" uid="uid://dpbu35eor2ync" path="res://resources/texture/ui/arrows/cube_arrow_left.png" id="2_lxacw"]
+[ext_resource type="Texture2D" uid="uid://bq2ijrbywnptk" path="res://resources/texture/ui/box/grey_box.png" id="2_r8ho5"]
 [ext_resource type="Script" uid="uid://bontmbnaqfowg" path="res://src/scene/ui/app_element_ui/omni_file_browser_ui.gd" id="2_xjibq"]
+[ext_resource type="Texture2D" uid="uid://b70agpyev5l6n" path="res://resources/texture/ui/arrows/cube_arrow_up.png" id="3_tbk20"]
+[ext_resource type="Texture2D" uid="uid://canyv2umqfg7e" path="res://resources/texture/ui/arrows/cube_arrow_right.png" id="4_erp7k"]
+[ext_resource type="PackedScene" uid="uid://bq42tvt2m46uf" path="res://src/scene/prefab/ui/file_browser/favorite_folder_button.tscn" id="6_tbk20"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ddpxx"]
 bg_color = Color(0.0392157, 0.0392157, 0.0392157, 0.545098)
@@ -11,15 +15,6 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.133196, 0.133196, 0.133196, 0.243137)
 border_blend = true
-
-[sub_resource type="Resource" id="Resource_dcvwu"]
-metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
-
-[sub_resource type="Resource" id="Resource_alcnh"]
-metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
-
-[sub_resource type="Resource" id="Resource_jfcm6"]
-metadata/__load_path__ = "res://core/assets/font/GohuFontuni11NerdFont-Regular.ttf"
 
 [node name="file_browser_ui" type="MarginContainer"]
 custom_minimum_size = Vector2(288, 136)
@@ -51,28 +46,27 @@ layout_mode = 2
 [node name="d_back_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = SubResource("Resource_dcvwu")
 theme_override_font_sizes/font_size = 8
-text = ""
+icon = ExtResource("2_lxacw")
+expand_icon = true
 
 [node name="d_up_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = SubResource("Resource_alcnh")
 theme_override_font_sizes/font_size = 8
-text = ""
+icon = ExtResource("3_tbk20")
+expand_icon = true
 
 [node name="d_forward_button" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
-theme_override_fonts/font = SubResource("Resource_jfcm6")
 theme_override_font_sizes/font_size = 8
-text = ""
+icon = ExtResource("4_erp7k")
+expand_icon = true
 
 [node name="git_info_title" type="RichTextLabel" parent="vbox/file_browser_toolbar/toolbar_hbox"]
 layout_mode = 2
 bbcode_enabled = true
-text = "aaaaaaa"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -91,12 +85,29 @@ icon = ExtResource("2_r8ho5")
 flat = true
 expand_icon = true
 
-[node name="scroll_box" type="ScrollContainer" parent="vbox"]
+[node name="h_split" type="HSplitContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="favorite_folder_scroll_box" type="ScrollContainer" parent="vbox/h_split"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="vbox" type="VBoxContainer" parent="vbox/h_split/favorite_folder_scroll_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" parent="vbox/h_split/favorite_folder_scroll_box/vbox" instance=ExtResource("6_tbk20")]
+layout_mode = 2
+
+[node name="scroll_box" type="ScrollContainer" parent="vbox/h_split"]
 custom_minimum_size = Vector2(280, 110)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="file_grid" type="GridContainer" parent="vbox/scroll_box"]
+[node name="file_grid" type="GridContainer" parent="vbox/h_split/scroll_box"]
 custom_minimum_size = Vector2(270, 100)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -105,7 +116,11 @@ theme_override_constants/h_separation = 25
 theme_override_constants/v_separation = 1
 columns = 3
 
-[node name="file_list" type="VBoxContainer" parent="vbox/scroll_box"]
+[node name="file_list" type="VBoxContainer" parent="vbox/h_split/scroll_box"]
 layout_mode = 2
 
+[connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/d_back_button" to="." method="_on_button_up"]
+[connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/d_up_button" to="." method="_on_button_up"]
+[connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/d_forward_button" to="." method="_on_button_up"]
 [connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/grid_mode_toggler" to="." method="_on_grid_mode_toggler_button_down"]
+[connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/grid_mode_toggler" to="." method="_on_button_up"]

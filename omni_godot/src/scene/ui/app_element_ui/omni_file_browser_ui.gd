@@ -12,9 +12,11 @@ var file_browser: OmniFileBrowser:
 const FILE_BROWSER_GRID_ITEM = preload("res://src/scene/prefab/ui/file_browser/file_browser_grid_item.tscn")
 const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/file_browser_list_item.tscn")
 
-@onready var scroll_box: ScrollContainer = $vbox/scroll_box
-@onready var file_grid: GridContainer = $vbox/scroll_box/file_grid
-@onready var file_list: VBoxContainer = $vbox/scroll_box/file_list
+@onready var scroll_box: ScrollContainer = $vbox/h_split/scroll_box
+@onready var file_grid: GridContainer = $vbox/h_split/scroll_box/file_grid
+@onready var file_list: VBoxContainer = $vbox/h_split/scroll_box/file_list
+
+var favorite_folders: Array[String] = []
 
 func _ready():
 	App.ui.file_browser_ui = self
@@ -58,3 +60,7 @@ func _on_grid_mode_toggler_button_down() -> void:
 		file_grid.visible = false
 	
 	Main.open_directory()
+
+
+func _on_button_up() -> void:
+	pass # Replace with function body.

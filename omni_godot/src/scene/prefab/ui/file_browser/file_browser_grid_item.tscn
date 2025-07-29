@@ -1,10 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cklth385cdeia"]
+[gd_scene load_steps=5 format=3 uid="uid://cklth385cdeia"]
 
 [ext_resource type="Script" uid="uid://cg3e3ow7oqk7m" path="res://src/scene/prefab/ui/file_browser/file_browser_grid_item.gd" id="1_485k5"]
-[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://src/assets/texture/ui/file_browser/empty_file.png" id="1_r8tk7"]
-
-[sub_resource type="Resource" id="Resource_soelo"]
-metadata/__load_path__ = "res://core/assets/font/etude_noire_regular.ttf"
+[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resources/texture/ui/file_browser/empty_file.png" id="1_r8tk7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pfp8"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -53,7 +50,6 @@ expand_mode = 1
 [node name="label" type="RichTextLabel" parent="vbox"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
-theme_override_fonts/normal_font = SubResource("Resource_soelo")
 theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 text = "example_file.txt"
@@ -71,6 +67,7 @@ size = Vector2i(114, 160)
 theme_override_constants/v_separation = 0
 item_count = 9
 item_0/text = "execute"
+item_0/id = 0
 item_1/text = "open with . . ."
 item_1/id = 1
 item_2/id = 2

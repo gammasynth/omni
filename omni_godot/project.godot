@@ -20,7 +20,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/fullsize=false
 boot_splash/use_filter=false
-boot_splash/image="res://src/assets/texture/ui/omni_splash_1024x600.png"
+boot_splash/image="res://resources/texture/ui/omni_splash_1024x600.png"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"
 

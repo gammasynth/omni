@@ -47,14 +47,14 @@ var console: Console:
 
 @onready var background: Control = $vbox/code_split/background
 
-const TRAP_OUTLINE_SYMBOL_FILLED_FLIPPED = preload("res://src/assets/texture/ui/console/trap_outline_symbol_filled_flipped.png")
-const TRAP_OUTLINE_SYMBOL_SHINY = preload("res://src/assets/texture/ui/console/trap_outline_symbol_shiny.png")
+const TRAP_OUTLINE_SYMBOL_FILLED_FLIPPED = preload("res://resources/texture/ui/console/trap_outline_symbol_filled_flipped.png")
+const TRAP_OUTLINE_SYMBOL_SHINY = preload("res://resources/texture/ui/console/trap_outline_symbol_shiny.png")
 
-const U_DARKER = preload("res://src/assets/texture/ui/console/u_darker.png")
-const U_SHINY = preload("res://src/assets/texture/ui/console/u_shiny.png")
+const U_DARKER = preload("res://resources/texture/ui/console/u_darker.png")
+const U_SHINY = preload("res://resources/texture/ui/console/u_shiny.png")
 
-const FILE_BROWSER_BUTTON_BRIGHT = preload("res://src/assets/texture/ui/console/file_browser_button_bright.png")
-const FILE_BROWSER_BUTTON_DARK = preload("res://src/assets/texture/ui/console/file_browser_button_dark.png")
+const FILE_BROWSER_BUTTON_BRIGHT = preload("res://resources/texture/ui/console/file_browser_button_bright.png")
+const FILE_BROWSER_BUTTON_DARK = preload("res://resources/texture/ui/console/file_browser_button_dark.png")
 
 
 

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bq42tvt2m46uf"]
+
+[ext_resource type="Script" uid="uid://b7hnkdltwa4qc" path="res://src/scene/prefab/ui/file_browser/favorite_folder_button.gd" id="1_tinv0"]
+
+[node name="favorite_folder_button" type="Button"]
+theme_override_font_sizes/font_size = 9
+expand_icon = true
+script = ExtResource("1_tinv0")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

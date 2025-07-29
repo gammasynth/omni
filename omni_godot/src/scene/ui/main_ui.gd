@@ -11,8 +11,8 @@ class_name MainUI
 @onready var icon: TextureRect = $icon
 @onready var raw_console: RichTextLabel = $console_margin/raw_console
 
-var console_ui: ConsoleUI
-var file_browser_ui: FileBrowserUI
+static var console_ui: ConsoleUI
+static var file_browser_ui: FileBrowserUI
 
 var console: Console:
 	get: return Main.console
