@@ -1,0 +1,103 @@
+[gd_scene load_steps=5 format=3 uid="uid://kxs1y1xdavov"]
+
+[ext_resource type="Theme" uid="uid://g2qfdttglcwm" path="res://resource/theme/light_pixel_omni.theme" id="1_kdnyu"]
+[ext_resource type="PackedScene" uid="uid://xu87r8s00jp5" path="res://src/scene/ui/file_browser/omni_file_browser_ui.tscn" id="2_ee1qe"]
+[ext_resource type="PackedScene" uid="uid://d3ffxjiwggxht" path="res://src/scene/ui/console/omni_console_ui.tscn" id="3_67ttv"]
+[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resource/animated_texture/cool_tiny_cube.tres" id="4_84hkt"]
+
+[node name="test_ui" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_kdnyu")
+
+[node name="back_panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="custom_back_panel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="h_split" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="v_split" type="VSplitContainer" parent="h_split"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="file_browser_ui" parent="h_split/v_split" instance=ExtResource("2_ee1qe")]
+layout_mode = 2
+
+[node name="console_ui" parent="h_split/v_split" instance=ExtResource("3_67ttv")]
+layout_mode = 2
+
+[node name="boot_vbox" type="VBoxContainer" parent="."]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="icon" type="TextureRect" parent="boot_vbox"]
+self_modulate = Color(0.666667, 0.901961, 0.921569, 0.690196)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_84hkt")
+stretch_mode = 5
+
+[node name="HSeparator" type="HSeparator" parent="boot_vbox"]
+layout_mode = 2
+
+[node name="console_pc" type="PanelContainer" parent="boot_vbox"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="console_margin" type="MarginContainer" parent="boot_vbox/console_pc"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="raw_console" type="RichTextLabel" parent="boot_vbox/console_pc/console_margin"]
+self_modulate = Color(0.8, 0.929412, 0.941176, 0.945098)
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = true
+scroll_active = false
+scroll_following = true

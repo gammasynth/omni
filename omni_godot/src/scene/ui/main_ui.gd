@@ -2,14 +2,15 @@ extends AppUI
 
 class_name MainUI
 
-
 @onready var h_split = $h_split
 @onready var v_split = $h_split/v_split
 
 @onready var back_panel: Panel = $back_panel
+@onready var custom_back_panel: Panel = $custom_back_panel
 
-@onready var icon: TextureRect = $icon
-@onready var raw_console: RichTextLabel = $console_margin/raw_console
+@onready var icon: TextureRect = $boot_vbox/icon
+@onready var raw_console: RichTextLabel = $boot_vbox/console_pc/console_margin/raw_console
+@onready var boot_vbox: VBoxContainer = $boot_vbox
 
 static var console_ui: ConsoleUI
 static var file_browser_ui: FileBrowserUI
@@ -20,40 +21,57 @@ var console: Console:
 var file_browser: OmniFileBrowser:
 	get: return Main.file_browser
 
-const THEME_KEYS: Dictionary = {
-	"dark" : "darkscale_modified.theme",
-	"light" : "lightscale_alpha.theme"
-	}
-
-var current_theme:Theme = null:
-	set(t):
-		last_theme = current_theme
-		current_theme = t
-		theme = current_theme
-
-var last_theme:Theme = load(ProjectSettings.get_setting("gui/theme/custom"))
+var user_theme_path:String = "user://settings/theme/user_custom.theme"
 var unique_back_panel_stylebox: StyleBox = null
+var modified_back_panel: bool = false
+var unique_back_panel_color:Color=Color.BLACK
 
-func _ready_up():
-	RefInstance.chat_mirror_callable = raw_output
+func get_user_theme() -> Theme:
+	var base_theme: Theme = preload("res://lib/gd_app_ui/resource/theme/blank_theme.theme")
+	var user_theme: Theme = null
+	DirAccess.make_dir_recursive_absolute(user_theme_path.get_base_dir())
+	if FileAccess.file_exists(user_theme_path): user_theme = await load(user_theme_path)
+	if not user_theme: user_theme = base_theme.duplicate(true)
+	return user_theme
 
-func raw_output(text:String) -> void:
-	if text.is_empty() or text == " ":
-		text = "\n"
-	raw_console.text = str(raw_console.text + "\n"  + text)
+func _app_ui_initialized() -> void: pass
+	#theme = await get_user_theme()
+	#current_theme = Registry.pull("themes", "darkscale_modified.theme")
+	#App.instance.theme_name_changed.connect(theme_name_changed)
+	#theme_changed.connect(func(): back_panel.remove_theme_stylebox_override("panel"))
 
+func _ready_up():RefInstance.chat_mirror_callable = raw_output
+
+func raw_output(text:String) -> void: raw_console.text = str(raw_console.text + "\n"  + text)
+
+func theme_was_changed(new_theme:Theme) -> void: 
+	theme = new_theme
+	if theme == null:
+		change_window_panel_color(unique_back_panel_color, false)
+	else:
+		var panel_color:Color=theme.get_stylebox("panel", "Panel").bg_color
+		change_window_panel_color(panel_color, false)
 
 func theme_name_changed(theme_name:String) -> void:
 	
 	if theme_name == "custom":
-		current_theme = null
-		if unique_back_panel_stylebox and not back_panel.has_theme_stylebox_override("panel"): back_panel.add_theme_stylebox_override("panel", unique_back_panel_stylebox)
+		#theme = null # TODO MAKE CUSTOM USER THEME
+		back_panel.visible = false
+		custom_back_panel.visible = true
+		modified_back_panel = true
+		#if unique_back_panel_stylebox and not custom_back_panel.has_theme_stylebox_override("panel"): custom_back_panel.add_theme_stylebox_override("panel", unique_back_panel_stylebox)
 		return
+	else:
+		modified_back_panel = false
+		back_panel.visible = true
+		custom_back_panel.visible = false
 	
-	var theme_key: String = THEME_KEYS.get(theme_name)
-	var theme_res: Theme = Registry.pull("themes", theme_key)
-	current_theme = theme_res
-	if back_panel.has_theme_stylebox_override("panel"): back_panel.remove_theme_stylebox_override("panel")
+	# BUG I DONT KNOW WHAT IS WRONG WITH THIS BELOW
+	#var theme_key: String = THEME_KEYS.get(theme_name)
+	#var theme_res: Theme = Registry.pull("themes", theme_key)
+	
+	#current_theme = theme_res
+	#if back_panel.has_theme_stylebox_override("panel"): back_panel.remove_theme_stylebox_override("panel")
 	
 	pass
 
@@ -68,13 +86,23 @@ var window_panel_color: Color = Color.WHITE:
 
 var last_window_panel_color: Color = Color.WHITE
 
-func change_window_panel_color(color:Color): 
-	var stylebox: StyleBox = null
+
+
+func change_window_panel_color(color:Color, enable:bool=true): 
+	if enable:
+		modified_back_panel = true
+		back_panel.visible = false
+		custom_back_panel.visible = true
+		unique_back_panel_color = color
 	
-	if back_panel.has_theme_stylebox_override("panel"): stylebox = back_panel.get("theme_override_styles/panel")
+	var stylebox: StyleBoxFlat = null
 	
-	if not stylebox and current_theme: stylebox = current_theme.get_stylebox("panel", "panel")
-	if not stylebox and last_theme: stylebox = last_theme.get_stylebox("panel", "panel")
+	if custom_back_panel.has_theme_stylebox_override("panel"): stylebox = back_panel.get("theme_override_styles/panel")
+	
+	if not stylebox and theme: stylebox = theme.get_stylebox("panel", "panel")
+	#if not stylebox: 
+		#var user_theme = await get_user_theme()
+		#stylebox = user_theme.get_stylebox("panel", "panel")
 	
 	if not stylebox: stylebox = StyleBoxFlat.new()
 	
@@ -84,35 +112,26 @@ func change_window_panel_color(color:Color):
 	
 	chatf("setting color")
 	if stylebox: 
-		if not back_panel.has_theme_stylebox_override("panel"):
-			back_panel.add_theme_stylebox_override("panel", stylebox)
-		if back_panel.has_theme_stylebox_override("panel") and back_panel.get("theme_override_styles/panel") != stylebox: 
-			back_panel.remove_theme_stylebox_override("panel")
-			back_panel.add_theme_stylebox_override("panel", stylebox)
+		stylebox.draw_center = true
+		if not custom_back_panel.has_theme_stylebox_override("panel"):
+			custom_back_panel.add_theme_stylebox_override("panel", stylebox)
+		if custom_back_panel.has_theme_stylebox_override("panel") and custom_back_panel.get("theme_override_styles/panel") != stylebox: 
+			custom_back_panel.remove_theme_stylebox_override("panel")
+			custom_back_panel.add_theme_stylebox_override("panel", stylebox)
 		
-		back_panel.get("theme_override_styles/panel").set("bg_color",(color))
+		stylebox.set_bg_color(color)
 		#window_panel_color = color
 	else:
 		warn("PANELCONTAINER STYLEBOX ERROR!")
 	
-	Main.theme_name = "custom"
+	#Main.theme_name = "custom" # added disable for this color picker if not already in custom theme
 
-
-
-
-
-
-func _post_start():
-	
-	current_theme = await load("res://src/resources/theme/darkscale_modified.theme")
-	
-	console_ui = Registry.pull("app_elements", "omni_console_ui.tscn").instantiate()
-	file_browser_ui = Registry.pull("app_elements", "omni_file_browser_ui.tscn").instantiate()
-	
-	App.instance.theme_name_changed.connect(theme_name_changed)
-	#theme_changed.connect(func(): back_panel.remove_theme_stylebox_override("panel"))
-	
-	current_theme = Registry.pull("themes", "darkscale_modified.theme")
+func _start():
+	console_ui = preload("res://src/scene/ui/console/omni_console_ui.tscn").instantiate()
+	file_browser_ui = preload("res://src/scene/ui/file_browser/omni_file_browser_ui.tscn").instantiate()
+	# TODO PERHAPS use registry for being able to pull modded versions of the console/file browser
+	#console_ui = Registry.pull("app_elements", "omni_console_ui.tscn").instantiate()
+	#file_browser_ui = Registry.pull("app_elements", "omni_file_browser_ui.tscn").instantiate()
 	
 	var tween:Tween = create_tween().set_parallel()
 	tween.tween_property(icon, "modulate", Color(0.0,0.0,0.0,0.0), 0.35)
@@ -122,17 +141,16 @@ func _post_start():
 	
 	await Make.child(file_browser_ui, v_split)
 	await Make.child(console_ui, v_split)
+	file_browser_ui.grid_mode = Main.file_browser.grid_mode
 	
 	Main.open_directory()
+	Make.fade(boot_vbox, 1.5, false)
 
 
-func toggle_file_browser(toggle:bool) -> void:
-	file_browser_ui.visible = toggle
-	
-	if toggle:
-		console_ui.set_v_size_flags(Control.SIZE_FILL)
-	else:
-		console_ui.set_v_size_flags(Control.SIZE_EXPAND_FILL)
+func toggle_file_browser(toggle:bool) -> void: file_browser_ui.visible = toggle
+	#if toggle:
+		#console_ui.set_v_size_flags(Control.SIZE_FILL)
+	#else:
+		#console_ui.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 
-func print_out(text:String) -> void:
-	console_ui.print_out(text)
+func print_out(text:String) -> void: console_ui.print_out(text)

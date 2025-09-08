@@ -1,94 +1,70 @@
-[gd_scene load_steps=6 format=3 uid="uid://384pip3anqnn"]
+[gd_scene load_steps=5 format=3 uid="uid://384pip3anqnn"]
 
 [ext_resource type="Script" uid="uid://dmygpiswehhkc" path="res://src/scene/prefab/ui/file_browser/file_browser_list_item.gd" id="1_6mmea"]
-[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resources/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
+[ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resource/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
+[ext_resource type="StyleBox" uid="uid://cykoehg3qt4v8" path="res://resource/stylebox/item_selected_panel.stylebox" id="3_6nevw"]
 
 [sub_resource type="FontVariation" id="FontVariation_u0lcb"]
-spacing_top = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pfp8"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rdt75"]
-bg_color = Color(0.721569, 0.721569, 0.721569, 0.227451)
-
-[node name="file_browser_list_item" type="MarginContainer"]
+[node name="file_browser_list_item" type="MarginContainer" node_paths=PackedStringArray("icon_rect", "image_icon_rect", "label", "selected_panel")]
 offset_right = 21.0
 offset_bottom = 16.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
+mouse_filter = 0
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 script = ExtResource("1_6mmea")
+icon_rect = NodePath("hbox/AspectRatioContainer/icon_rect")
+image_icon_rect = NodePath("hbox/AspectRatioContainer/icon_margin/image_icon_rect")
+label = NodePath("hbox/label")
+selected_panel = NodePath("selected_panel")
 
 [node name="hbox" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 0
+mouse_filter = 2
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="hbox"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+mouse_filter = 2
 
 [node name="icon_rect" type="TextureRect" parent="hbox/AspectRatioContainer"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 texture = ExtResource("2_s5wkw")
 expand_mode = 1
 
 [node name="icon_margin" type="MarginContainer" parent="hbox/AspectRatioContainer"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 
 [node name="image_icon_rect" type="TextureRect" parent="hbox/AspectRatioContainer/icon_margin"]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
+mouse_filter = 2
 expand_mode = 1
 
 [node name="label" type="RichTextLabel" parent="hbox"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_fonts/normal_font = SubResource("FontVariation_u0lcb")
 theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 text = "example_file.txt"
 scroll_active = false
+vertical_alignment = 1
 
-[node name="item_button" type="Button" parent="."]
+[node name="selected_panel" type="Panel" parent="."]
+visible = false
 layout_mode = 2
-theme_override_styles/focus = SubResource("StyleBoxFlat_2pfp8")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_rdt75")
-flat = true
-
-[node name="item_right_click_menu" type="PopupMenu" parent="item_button"]
-size = Vector2i(114, 160)
-theme_override_constants/v_separation = 0
-item_count = 9
-item_0/text = "execute"
-item_1/text = "open with . . ."
-item_1/id = 1
-item_2/id = 2
-item_2/separator = true
-item_3/text = "cut"
-item_3/id = 3
-item_4/text = "copy"
-item_4/id = 4
-item_5/text = "paste"
-item_5/id = 5
-item_6/id = 6
-item_6/separator = true
-item_7/text = "browser view"
-item_7/id = 7
-item_8/text = "recycle"
-item_8/id = 8
-
-[connection signal="gui_input" from="item_button" to="." method="_on_item_button_gui_input"]
-[connection signal="index_pressed" from="item_button/item_right_click_menu" to="." method="_on_item_right_click_menu_index_pressed"]
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_6nevw")

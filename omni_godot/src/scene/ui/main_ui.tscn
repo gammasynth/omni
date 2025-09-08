@@ -1,12 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://dvt7nxmmlpgj1"]
 
 [ext_resource type="Script" uid="uid://bwufogva0b7k2" path="res://src/scene/ui/main_ui.gd" id="1_mwyax"]
-[ext_resource type="Texture2D" uid="uid://2oex5v24xh6s" path="res://resources/texture/fancy_icon.png" id="2_uam0p"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s148x"]
-bg_color = Color(0.0119504, 0.0240317, 0.029347, 1)
+[ext_resource type="StyleBox" uid="uid://cdu4aia234202" path="res://resource/stylebox/main_back_panel_flat_dark.stylebox" id="2_qe78l"]
+[ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resource/animated_texture/cool_tiny_cube.tres" id="2_uam0p"]
 
 [node name="main_ui" type="MarginContainer"]
+custom_minimum_size = Vector2(256, 192)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,12 +15,18 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_mwyax")
-window_minimum_size = Vector2(256, 64)
-custom_loading_screen_scene_path = "res://src/scene/ui/modular_ui/omni_loading_screen.tscn"
+window_minimum_size = Vector2(256, 192)
+loading_screen_ui_path = "res://src/scene/ui/modular_ui/omni_loading_screen.tscn"
 
 [node name="back_panel" type="Panel" parent="."]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_s148x")
+mouse_filter = 2
+
+[node name="custom_back_panel" type="Panel" parent="."]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_qe78l")
 
 [node name="h_split" type="HSplitContainer" parent="."]
 layout_mode = 2
@@ -34,26 +39,40 @@ size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="icon" type="TextureRect" parent="."]
+[node name="boot_vbox" type="VBoxContainer" parent="."]
+z_index = 1
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="icon" type="TextureRect" parent="boot_vbox"]
 self_modulate = Color(0.666667, 0.901961, 0.921569, 0.690196)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("2_uam0p")
-stretch_mode = 3
+stretch_mode = 5
 
-[node name="console_margin" type="MarginContainer" parent="."]
+[node name="console_pc" type="PanelContainer" parent="boot_vbox"]
 layout_mode = 2
+size_flags_vertical = 8
 mouse_filter = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
-[node name="raw_console" type="RichTextLabel" parent="console_margin"]
+[node name="console_margin" type="MarginContainer" parent="boot_vbox/console_pc"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="raw_console" type="RichTextLabel" parent="boot_vbox/console_pc/console_margin"]
 self_modulate = Color(0.8, 0.929412, 0.941176, 0.945098)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 bbcode_enabled = true
+scroll_active = false
 scroll_following = true

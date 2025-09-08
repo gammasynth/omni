@@ -12,6 +12,6 @@ func _boot_registry():
 	#uses_entry_groups = false
 	#entry_class = RegistryEntry.new()
 	directories_to_load = [
-		"res://resources/texture/ui/file_browser/"
+		"res://resource/texture/ui/file_browser/"
 	]
 	return OK

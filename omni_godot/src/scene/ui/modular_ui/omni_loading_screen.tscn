@@ -1,16 +1,91 @@
-[gd_scene load_steps=4 format=3 uid="uid://tjcihmla4fji"]
+[gd_scene load_steps=5 format=3 uid="uid://tjcihmla4fji"]
 
-[ext_resource type="PackedScene" uid="uid://bwu54n2r4muxr" path="res://lib/gd_app_ui/scene/prefab/ui/modular_ui/generic_modular_ui/modular_loading_screen.tscn" id="1_f415t"]
-[ext_resource type="Texture2D" uid="uid://dgxbdsfjtk4xh" path="res://icon.png" id="2_f52bm"]
+[ext_resource type="Script" uid="uid://ckmpb2fj5gay7" path="res://lib/gd_app_ui/scene/prefab/ui/modular_ui/generic_modular_ui/modular_loading_screen.gd" id="1_f415t"]
+[ext_resource type="PackedScene" uid="uid://b38qr3oeoi3k6" path="res://lib/gd_app_ui/scene/prefab/ui/modular_ui/generic_modular_ui/modular_background.tscn" id="2_f52bm"]
+[ext_resource type="Texture2D" uid="uid://dy4jewb6c6pvt" path="res://icon_x16.png" id="3_f52bm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bejmu"]
-bg_color = Color(0.652042, 0.812183, 0.928074, 1)
+bg_color = Color(0.699981, 0.840562, 0.934591, 1)
 
-[node name="modular_loading_screen" instance=ExtResource("1_f415t")]
+[node name="modular_loading_screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_f415t")
+bar_size = 4.0
 
-[node name="splash_texture" parent="menu_margin/vbox" index="1"]
-texture = ExtResource("2_f52bm")
-expand_mode = 5
+[node name="modular_background" parent="." instance=ExtResource("2_f52bm")]
+visible = false
+layout_mode = 1
+mouse_filter = 2
 
-[node name="progress_bar" parent="menu_margin/vbox" index="4"]
+[node name="menu_margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -52.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="vbox" type="VBoxContainer" parent="menu_margin"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="title_text" type="RichTextLabel" parent="menu_margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 5
+text = "omni"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="splash_texture" type="TextureRect" parent="menu_margin/vbox"]
+texture_filter = 1
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_f52bm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="subtitle_text" type="RichTextLabel" parent="menu_margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="event_text" type="RichTextLabel" parent="menu_margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="progress_bar" type="ProgressBar" parent="menu_margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
 theme_override_styles/fill = SubResource("StyleBoxFlat_bejmu")
+step = 1.0
+rounded = true
+show_percentage = false
+
+[node name="description_text" type="RichTextLabel" parent="menu_margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
