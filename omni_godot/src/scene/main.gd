@@ -19,7 +19,7 @@ static var current_theme:Theme
 var theme_settings: Settings
 var app_settings: Settings
 
-func _pre_app_start() -> Error: 
+func _pre_registry_start() -> Error: 
 	main = self
 	
 	setup_theme_settings()
@@ -57,13 +57,13 @@ func setup_app_settings():
 
 func reset_theme_settings(b):
 	if not b: return
-	if FileAccess.file_exists("user://settings/theme/theme.json"):
-		DirAccess.remove_absolute("user://settings/theme/theme.json")
+	if FileAccess.file_exists("user://settings/app/theme/theme.json"):
+		DirAccess.remove_absolute("user://settings/app/theme/theme.json")
 	
 	setup_theme_settings()
 
 func setup_theme_settings():
-	theme_settings = Settings.initialize_settings("theme", true, "user://settings/theme/")
+	theme_settings = Settings.initialize_settings("theme", true, "user://settings/app/theme/")
 	
 	#var theme_func = func():
 		#return theme_name
@@ -124,7 +124,12 @@ func setup_theme_settings():
 	
 	theme_settings.spawned_window.connect(new_window_needs_theme)
 
-func change_window_panel_color(new_color:Color) -> void:
+func change_window_panel_color(new_color:Color, can_undo:bool=true) -> void:
+	var last_color:Color = ui.unique_back_panel_color
+	if can_undo and last_color != new_color: # wait, these can loop, uyou need another function
+		var undo:Callable = change_window_panel_color.bind(last_color, false)
+		var redo:Callable = change_window_panel_color.bind(new_color, false)
+		App.record_action(GenericAppAction.new(undo, redo))
 	theme_settings.set_setting_value("window_panel_color", [new_color])
 	ui.change_window_panel_color(new_color)
 
@@ -134,8 +139,12 @@ func is_custom_back_panel_allowed() -> bool:
 
 func new_window_needs_theme(new_window:Window) -> void: new_window.theme = current_theme
 
-func change_theme_index(new_index:Variant):
+func change_theme_index(new_index:Variant, can_undo:bool=true):
 	var idx:int = int(new_index)
+	if can_undo and theme_index != idx:
+		var undo:Callable = change_theme_index.bind(theme_index, false)
+		var redo:Callable = change_theme_index.bind(idx, false)
+		App.record_action(GenericAppAction.new(undo, redo))
 	theme_index = idx
 	match idx:
 		0: theme_name = "dark"
@@ -179,18 +188,21 @@ func change_theme_index(new_index:Variant):
 							#var r:ModularSettingOption = c.options.get("reset_theme_settings")
 							#r.update_setting_value_from_external(false)
 
-static func can_change_directory(try_path:String="") -> bool:
-	if Main.console.operating:
-		AlertSystem.create_warning("Active Process!", "Can't change directory during an active process!")
-		return false
-	return true
-static func refresh_directory() -> void: file_browser.refresh_ui()
-static func open_directory(at_path:String=console.current_directory_path, refresh_ui:bool=true) -> void:
-	if not Main.can_change_directory(): return
-	console.current_directory_path = at_path
-	if refresh_ui: file_browser.parse_directory(at_path)
+#static func can_change_directory(try_path:String="") -> bool:
+	#if Main.console.operating:
+		#AlertSystem.create_warning("Active Process!", "Can't change directory during an active process!")
+		#return false
+	#return true
+#static func refresh_directory() -> void: file_browser.refresh_ui()
+#static func open_directory(at_path:String=console.current_directory_path) -> void:
+	#console.current_directory_path = at_path
+	#console.print_out(at_path)
 
-static func toggle_file_browser(toggle:bool) -> void:
+static func toggle_file_browser(toggle:bool, can_undo:bool=true) -> void:
+	if can_undo:
+		var undo:Callable = toggle_file_browser.bind(not toggle, false)
+		var redo:Callable = toggle_file_browser.bind(toggle, false)
+		App.record_action(GenericAppAction.new(undo, redo))
 	App.ui.toggle_file_browser(toggle)
 
 

@@ -15,4 +15,6 @@ var sentient_line: bool = false:
 			greeting = false
 			# etc...
 
-func _open_directory(at_path:String=current_directory_path) -> void: Main.open_directory(at_path)
+func _refresh() -> void: 
+	change_directory(current_directory_path, false, false)
+	Main.file_browser.refresh()

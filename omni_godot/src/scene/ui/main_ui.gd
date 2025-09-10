@@ -15,12 +15,6 @@ class_name MainUI
 static var console_ui: ConsoleUI
 static var file_browser_ui: FileBrowserUI
 
-var console: Console:
-	get: return Main.console
-
-var file_browser: OmniFileBrowser:
-	get: return Main.file_browser
-
 var user_theme_path:String = "user://settings/theme/user_custom.theme"
 var unique_back_panel_stylebox: StyleBox = null
 var modified_back_panel: bool = false
@@ -143,7 +137,10 @@ func _start():
 	await Make.child(console_ui, v_split)
 	file_browser_ui.grid_mode = Main.file_browser.grid_mode
 	
-	Main.open_directory()
+	Main.console.directory_focus_changed.connect(Main.file_browser.open_directory.bind(false))
+	Main.console.open_directory()
+	Main.file_browser.directory_focus_changed.connect(Main.console.open_directory.bind(false, true))
+	
 	Make.fade(boot_vbox, 1.5, false)
 
 

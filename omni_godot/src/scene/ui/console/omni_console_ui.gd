@@ -25,6 +25,10 @@ var console: Console:
 @onready var spacer_3: Control = $vbox/spacer3
 
 @onready var menu: MenuBar = $vbox/menu
+@onready var file: PopupMenu = $vbox/menu/File
+@onready var edit: PopupMenu = $vbox/menu/Edit
+@onready var settings: PopupMenu = $vbox/menu/Settings
+
 
 @onready var sep_2: HSeparator = $vbox/sep2
 @onready var spacer_4: Control = $vbox/spacer4
@@ -60,99 +64,77 @@ const FILE_BROWSER_BUTTON_DARK = preload("res://resource/texture/ui/console/file
 var animating_line_icon: bool = false
 var processing_command:bool = false
 
-func reprepare_line_entry(_new_text:String) -> void: line.grab_focus()
 
-func thread_process_started() -> void: processing_command = true
-
-func _process(delta: float) -> void: if processing_command: console.process(delta)
 
 func _ready_up():
+	get_window().mouse_entered.connect(line.grab_focus)
+	get_window().files_dropped.connect(func(f): print(f))# TODO add drop files
 	
-	get_window().focus_entered.connect(line.grab_focus)
-	line.text_submitted.connect(reprepare_line_entry)
-	
-	get_window().files_dropped.connect(func(f): print(f))
 	App.ui.console_ui = self
 	Main.console = console
 	
 	console.rich_label = code
 	console.line_edit = line
-	# - - -
 	
-	Main.console.operation_started.connect(func(): line.editable = false)
-	Main.console.operation_finished.connect(func(): line.editable = true)
+	console.operation_started.connect(func(): line.editable = false)
+	console.operation_finished.connect(func(): line.editable = true)
+	console.operation_finished.connect(func(): line.grab_focus.call_deferred())
 	
+	console.directory_focus_changed.connect(directory_focus_changed)
 	
-	# - - -
+	console.process_started.connect(thread_process_started)
 	
-	console.menu_bar_mode = false
-	toggle_menu_bar_mode()
-	
-	console.command_history_mode = true
-	toggle_command_history()
-	
-	console.file_browser_mode = false
-	toggle_file_browser()
+	console.menu_bar_mode = false; toggle_menu_bar_mode()
+	console.command_history_mode = true; toggle_command_history()
+	console.file_browser_mode = false; toggle_file_browser()
 	
 	refresh_console_label()
-	path_label.text = console.current_directory_path
-	console.directory_focus_changed.connect(func(new_path:String): path_label.text = new_path)
 	
-	clear_console_history()
-	# - - -
 	
 	play_line_icon_anim()
 	display_greeting()
-	
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
-	
-	
-	#App.ui.refresh_window(Vector2i(250,50))
-	
-	#await setup_settings()
 	#$HTTPRequest.request("https://github.com")
 	
-	console.process_started.connect(thread_process_started)
+	line.grab_focus.call_deferred()
+
+func thread_process_started() -> void: processing_command = true
+
+func _process(delta: float) -> void: if processing_command: console.process(delta)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("console_cancel") and not event.is_echo(): console.force_stop_pipe()
 
-func setup_settings():
-	var settings : Settings = Settings.initialize_settings("console")
-	settings.prepare_setting("background", ["boolean"], func(b): background.visible = b, [true], [{}] )
-	settings.finish_prepare_settings()
-	
-	await settings.instance_ui(vbox)
 
+
+func directory_focus_changed(new_path:String) -> void: path_label.text = new_path
+
+#func setup_settings():
+	#var settings : Settings = Settings.initialize_settings("console")
+	#settings.prepare_setting("background", ["boolean"], func(b): background.visible = b, [true], [{}] )
+	#settings.finish_prepare_settings()
+	#
+	#await settings.instance_ui(vbox)
 
 func clear_console_history():
+	var undo:Callable = (func(x,y): code.text = x; console.line_count = y).bind(code.text, console.line_count)
+	var redo:Callable = (func(): code.text = ""; console.line_count = 0)
+	App.record_action(GenericAppAction.new(undo, redo))
 	console.clear_console_history()
 
 func display_greeting():
 	console.greeting = true
 	display_sentient_message("welcome, user.")
-	print_out("omni")
-	print_out("[ gammasynth ]")
-	print_out(" ")
-	print_out(console.current_directory_path)
+	console.print_out("omni")
+	console.print_out("[ gammasynth ]")
+	console.print_out(" ")
+	line.grab_click_focus()
 
 
-func print_out(text:Variant) -> void:
-	#code.insert_text(text, code.get_line_count(), 0)
-	#code.set_line(code.get_line_count(), text)
-	#code.insert_line_at(code.get_line_count(), text)
-	
-	console.print_out(text)
-	
-	#print(code.text)
-	update_screen_size()
 
-
-func standby():
-	display_sentient_message()
+func standby():display_sentient_message()
 
 func display_sentient_message(text:String=""):
-	
 	if not text.is_empty() and console.sentient_line: return
 	
 	if not line.text.is_empty(): 
@@ -171,7 +153,7 @@ func refresh_console_label() -> void:
 	var info: String = "[pulse freq=0.75 color=#00abab80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]_"
 	var version : String = ProjectSettings.get_setting("application/config/version")
 	console_label.text = str(info + version)
-	
+	path_label.text = console.current_directory_path
 
 
 func toggle_menu_bar_mode(toggle:bool=console.menu_bar_mode) -> void:
@@ -187,48 +169,19 @@ func toggle_menu_bar_mode(toggle:bool=console.menu_bar_mode) -> void:
 	
 	App.ui.refresh_window()
 
-func toggle_command_history(toggle:bool=console.command_history_mode) -> void:
+func toggle_command_history(toggle:bool=console.command_history_mode, can_undo:bool=true) -> void:
+	if can_undo:
+		var undo:Callable = toggle_command_history.bind(not toggle, false)
+		var redo:Callable = toggle_command_history.bind(toggle, false)
+		App.record_action(GenericAppAction.new(undo, redo))
 	if toggle: 
 		console_history_toggler.icon = U_SHINY
-		update_screen_size()
 	else: console_history_toggler.icon = U_DARKER
 	
 	code.visible = toggle
-	spacer.visible = toggle
+	#spacer.visible = toggle
 	
 	App.ui.refresh_window()
-
-func update_screen_size():
-	var command_history_min_y:int = 0
-	if console.command_history_mode: 
-		command_history_min_y = clamp(
-			(console.line_count * 24) * 2,
-			 0,
-			 DisplayServer.screen_get_size(get_window().current_screen).y - floor(get_window().position.y) / 4)
-	
-	var file_browser_min_y:int = 0; if console.file_browser_mode: file_browser_min_y = floor(App.ui.file_browser_ui.custom_minimum_size.y)
-	
-	var menu_min_y:int = 0
-	if console.menu_bar_mode: 
-		menu_min_y += floor(spacer_2.size.y)
-		menu_min_y += floor(sep.size.y)
-		menu_min_y += floor(spacer_3.size.y)
-		menu_min_y += floor(menu.size.y)
-		menu_min_y += floor(sep_2.size.y)
-		menu_min_y += floor(spacer_4.size.y)
-	
-	var min_y: int = command_history_min_y + file_browser_min_y + menu_min_y
-	var size_y: int = get_window().size.y
-	if min_y > size_y: size_y = min_y
-	
-	App.ui.resize(
-			Vector2i(
-				get_window().size.x,
-				#console.line_count * 128
-				size_y
-				)
-			)
-
 
 func toggle_file_browser(toggle:bool=console.file_browser_mode) -> void:
 	if toggle: file_browser_toggler.icon = FILE_BROWSER_BUTTON_BRIGHT
@@ -237,9 +190,6 @@ func toggle_file_browser(toggle:bool=console.file_browser_mode) -> void:
 	Main.toggle_file_browser(toggle)
 	
 	App.ui.refresh_window()
-
-
-
 
 func play_line_icon_anim():
 	animating_line_icon = true
@@ -256,21 +206,13 @@ func play_line_icon_anim():
 
 
 
-
-
-
-
 func _on_console_menu_toggler_button_down() -> void:
 	console_menu_toggler.release_focus()
 	console.menu_bar_mode = !console.menu_bar_mode
 	toggle_menu_bar_mode()
 
-
-
-
 func _on_console_label_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
-
 
 func _on_console_label_meta_hover_started(_meta: Variant) -> void:
 	pass # Replace with function body.
@@ -278,41 +220,27 @@ func _on_console_label_meta_hover_started(_meta: Variant) -> void:
 func _on_console_label_meta_hover_ended(_meta: Variant) -> void:
 	pass # Replace with function body.
 
-
 func _on_console_history_toggler_button_down() -> void:
 	console_history_toggler.release_focus()
 	console.command_history_mode = !console.command_history_mode
 	toggle_command_history()
 
-
-
 func _on_line_text_submitted(new_text: String) -> void:
-	
-	if console.operating: return
-	
 	line.clear()
 	play_line_icon_anim()
-	
 	console.parse_text_line(new_text)
-	
-
 
 func _on_line_mouse_entered() -> void:
 	standby()
 
-
 func _on_line_mouse_exited() -> void:
-	
 	standby()
 	display_sentient_message("omni")
-	
-
 
 func _on_file_browser_toggler_button_down() -> void:
 	file_browser_toggler.release_focus()
 	console.file_browser_mode = !console.file_browser_mode
 	toggle_file_browser()
-
 
 func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	#print(result)
@@ -321,8 +249,41 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 	#print(body)
 	pass
 
+func _on_file_index_pressed(index: int) -> void:
+	match index:
+		0: console.parse_text_line("file")
+		1: console.parse_text_line("folder")
+		2: Main.file_browser.open()
+		3: OS.create_instance([])
 
 func _on_edit_index_pressed(index: int) -> void:
-	if index == 0: # Edit Theme
-		var settings: Settings = Settings.all_settings.get("theme")
-		settings.instance_ui_window(App.instance)
+	match index:
+		0: App.undo()
+		1: App.redo()
+		2: Main.file_browser.copy()
+		3: Main.file_browser.cut()
+		4: Main.file_browser.paste()
+		5: Main.file_browser.delete()
+
+func pop_settings(by_name:String) -> void: 
+	var settings: Settings = Settings.all_settings.get(by_name); settings.instance_ui_window(App.instance)
+
+func _on_settings_index_pressed(index: int) -> void:
+	if index == 0: pop_settings("theme")
+
+
+func _on_file_about_to_popup() -> void:
+	file.set_item_disabled(2, not Main.file_browser.has_selected_files())
+
+
+func _on_edit_about_to_popup() -> void:
+	edit.set_item_disabled(0, App.undo_disabled())
+	edit.set_item_disabled(1, App.redo_disabled())
+	edit.set_item_disabled(2, not Main.file_browser.has_selected_files())
+	edit.set_item_disabled(3, not Main.file_browser.has_selected_files())
+	edit.set_item_disabled(4, not Main.file_browser.has_copied_files())
+	edit.set_item_disabled(5, not Main.file_browser.has_selected_files())
+
+
+func _on_settings_about_to_popup() -> void:
+	pass # Replace with function body.

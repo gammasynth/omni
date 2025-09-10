@@ -33,6 +33,9 @@ const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/f
 
 @onready var favorites_pc: PanelContainer = $vbox/h_split/favorites_pc
 
+var shifting:bool = false
+var controlling:bool = false
+
 var favorites_window_visible:bool = false:
 	set(b):
 		favorites_pc.visible = b
@@ -48,58 +51,128 @@ var grid_mode:bool = false:
 
 var browser_settings:Settings
 
-func grid_mode_change() -> void:
-	file_grid.visible = grid_mode; file_list.visible = not grid_mode
-	
-	file_browser.grid_mode = grid_mode
-	Main.refresh_directory()
+var item_uis:Dictionary[FileItem, FileBrowserItem]
+
+var right_click_context:Dictionary = {}
+var right_click_menu:ContextMenu = null
 
 func _ready():
 	App.ui.file_browser_ui = self
 	Main.file_browser = file_browser
+	
 	resized.connect(refresh_grid_size)
 	grid_mode_ui_changed.connect(grid_mode_change)
 	favorites_pc.connect_refresher()
+	
+	file_browser.directory_focused.connect(directory_focused)
+	
+	file_browser.item_selected.connect(item_selected)
+	file_browser.item_deselected.connect(item_deselected)
+	
+	file_browser.item_entered_cut_state.connect(item_entered_cut_state)
+	file_browser.item_exited_cut_state.connect(item_exited_cut_state)
+	
+	file_browser.favorite_added.connect(update_favorites_setting)
+	file_browser.favorite_removed.connect(update_favorites_setting)
+	
+	setup_context_menu()
+	setup_file_browser_settings()
 
+
+func setup_context_menu() -> void:
+	right_click_context.clear()
+	right_click_context = {}
+	
+	right_click_context.set("undo", App.undo)
+	right_click_context.set("redo", App.redo)
+	
+	right_click_context.set("copy", file_browser.copy)
+	right_click_context.set("cut", file_browser.cut)
+	right_click_context.set("paste", file_browser.paste)
+	#right_click_context.set("toggle_favorite", file_browser.toggle_favorite.bind(file_item.file_path))#disable for multi
+	right_click_context.set("delete", file_browser.delete)
+	
+	right_click_menu = ContextMenu.setup(self, right_click_context, ContextMenu.MENU_TYPES.RIGHT_CLICK)
+	right_click_menu.spawned_menu.connect(Main.main.new_window_needs_theme)
+
+#region File Browser Settings
 func setup_file_browser_settings() -> void:
-	browser_settings = Settings.initialize_settings("app", true, "user://settings/app/browser/")
+	browser_settings = Settings.initialize_settings("browser", true, "user://settings/app/browser/")
 	browser_settings.prepare_setting("favorite_paths", [], (func(_x): return), [{}], [{}], false)
 	
 	browser_settings.finish_prepare_settings()
 	# BUGFIX for settings turning everything to strings
-	var favs:Dictionary = browser_settings.get_setting_value("favorite_paths").get(0)
+	var favs:Dictionary = browser_settings.get_setting_value("favorite_paths")
 	var new_favs:Dictionary = {}
 	for key in favs.keys():
 		new_favs.set(int(key), favs.get(key))
 	
 	file_browser.favorites = new_favs
-	file_browser.favorite_added.connect(update_favorites_setting)
-	file_browser.favorite_removed.connect(update_favorites_setting)
 
-func update_favorites_setting() -> void:
+func update_favorites_setting(_file_path:String) -> void:
 	browser_settings.set_setting_value("favorite_paths", [file_browser.favorites])
 	browser_settings.save_settings()
+#endregion
 
-func add_item(file_path:String, file_type:FileType) -> void:
+#region Directory Management
+func get_item_ui(item:FileItem) -> FileBrowserItem: 
+	if item_uis.has(item): return item_uis.get(item)
+	return favorites_pc.item_uis.get(item)
+
+func item_selected(selected_item:FileItem) -> void: get_item_ui(selected_item).select()
+func item_deselected(deselected_item:FileItem) -> void: get_item_ui(deselected_item).deselect()
+
+func item_entered_cut_state(item:FileItem) -> void: get_item_ui(item).enter_cut_state()
+func item_exited_cut_state(item:FileItem) -> void: get_item_ui(item).exit_cut_state()
+#endregion
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("control") and not event.is_echo(): controlling = true
+	if event.is_action_released("control") and not event.is_echo(): controlling = false
+	
+	if event.is_action_pressed("shift") and not event.is_echo(): shifting = true
+	if event.is_action_released("shift") and not event.is_echo(): shifting = false
+	
+	if shifting or controlling: file_browser.multi_select = true
+	else: file_browser.multi_select = false
+
+#region Directory Render
+func add_item(item:FileItem) -> void:
 	var item_base = FILE_BROWSER_GRID_ITEM
 	if not file_browser.grid_mode: item_base = FILE_BROWSER_LIST_ITEM
 	
 	var browser = file_grid
 	if not file_browser.grid_mode: browser = file_list
 	
-	var item = item_base.instantiate()
-	item.file_path = file_path
-	item.file_type = file_type
-	await Make.child(item, browser)
+	var item_ui = item_base.instantiate()
+	item_ui.file_item = item
+	item_ui.file_browser = file_browser
+	item_uis.set(item, item_ui)
+	await Make.child(item_ui, browser)
 	return
 
+func directory_focused() -> void:
+	clear_ui_items()
+	for item:FileItem in file_browser.directory_items:
+		add_item(item)
+	refresh_grid_size()
 
 func clear_ui_items() -> void:
+	item_uis.clear()
 	for child in file_grid.get_children(): child.queue_free()
 	for child in file_list.get_children(): child.queue_free()
 
 func refresh_grid_size() -> void: file_grid.columns = floor(size.x / (64.0 + 25.0))
 
+func grid_mode_change() -> void:
+	file_grid.visible = grid_mode; file_list.visible = not grid_mode
+	
+	file_browser.grid_mode = grid_mode
+	directory_focused()
+#endregion
+
+
+#region UI Button Triggers
 func _on_grid_mode_toggler_button_down() -> void: grid_mode = not file_browser.grid_mode
 
 func _on_favorites_button_button_down() -> void: favorites_window_visible = not favorites_window_visible
@@ -111,3 +184,8 @@ func _on_d_forward_button_button_down() -> void: file_browser.go_forward_directo
 func _on_d_back_button_button_up() -> void: pass
 func _on_d_up_button_button_up() -> void: pass
 func _on_d_forward_button_button_up() -> void: pass
+#endregion
+
+
+func _on_gui_input(event: InputEvent) -> void:
+	if event.is_action_pressed("lmb") and not event.is_echo(): file_browser.deselect_all_items()

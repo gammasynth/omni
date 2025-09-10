@@ -61,16 +61,14 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -353.0
+offset_top = -257.0
+offset_right = 415.0
+offset_bottom = 343.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_dvhog")
 stretch_mode = 5
-
-[node name="spacer" type="Control" parent="vbox"]
-visible = false
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
 
 [node name="line_hbox" type="HBoxContainer" parent="vbox"]
 custom_minimum_size = Vector2(0, 16)
@@ -98,8 +96,11 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 9
 theme_override_icons/clear = ExtResource("3_8hxwv")
 placeholder_text = "greetings, user."
+keep_editing_on_text_submit = true
 clear_button_enabled = true
 right_icon = ExtResource("4_848k1")
+draw_control_chars = true
+select_all_on_focus = true
 
 [node name="spacer2" type="Control" parent="vbox"]
 visible = false
@@ -119,15 +120,42 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="menu" type="MenuBar" parent="vbox"]
-visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 9
+
+[node name="File" type="PopupMenu" parent="vbox/menu"]
+auto_translate_mode = 1
+size = Vector2i(111, 100)
+item_count = 4
+item_0/text = "New File"
+item_0/id = 0
+item_1/text = "New Folder"
+item_1/id = 1
+item_2/text = "Open File(s)"
+item_2/id = 2
+item_3/text = "New Omni"
+item_3/id = 3
 
 [node name="Edit" type="PopupMenu" parent="vbox/menu"]
-size = Vector2i(60, 100)
-theme_override_font_sizes/font_size = 11
+size = Vector2i(60, 128)
+item_count = 6
+item_0/text = "Undo"
+item_0/id = 0
+item_1/text = "Redo"
+item_1/id = 1
+item_2/text = "Copy"
+item_2/id = 2
+item_3/text = "Cut"
+item_3/id = 3
+item_4/text = "Paste"
+item_4/id = 4
+item_5/text = "Delete"
+item_5/id = 5
+
+[node name="Settings" type="PopupMenu" parent="vbox/menu"]
+size = Vector2i(108, 100)
 item_count = 1
-item_0/text = "Theme"
+item_0/text = "App Theme"
 item_0/id = 0
 
 [node name="sep2" type="HSeparator" parent="vbox"]
@@ -215,7 +243,12 @@ expand_icon = true
 [connection signal="mouse_entered" from="vbox/line_hbox/line" to="." method="_on_line_mouse_entered"]
 [connection signal="mouse_exited" from="vbox/line_hbox/line" to="." method="_on_line_mouse_exited"]
 [connection signal="text_submitted" from="vbox/line_hbox/line" to="." method="_on_line_text_submitted"]
+[connection signal="about_to_popup" from="vbox/menu/File" to="." method="_on_file_about_to_popup"]
+[connection signal="index_pressed" from="vbox/menu/File" to="." method="_on_file_index_pressed"]
+[connection signal="about_to_popup" from="vbox/menu/Edit" to="." method="_on_edit_about_to_popup"]
 [connection signal="index_pressed" from="vbox/menu/Edit" to="." method="_on_edit_index_pressed"]
+[connection signal="about_to_popup" from="vbox/menu/Settings" to="." method="_on_settings_about_to_popup"]
+[connection signal="index_pressed" from="vbox/menu/Settings" to="." method="_on_settings_index_pressed"]
 [connection signal="button_down" from="vbox/hbox/console_menu_toggler" to="." method="_on_console_menu_toggler_button_down"]
 [connection signal="button_down" from="vbox/hbox/console_history_toggler" to="." method="_on_console_history_toggler_button_down"]
 [connection signal="button_down" from="vbox/hbox/file_browser_toggler" to="." method="_on_file_browser_toggler_button_down"]

@@ -131,6 +131,7 @@ columns = 3
 [node name="file_list" type="VBoxContainer" parent="vbox/h_split/list_pc/scroll_box"]
 layout_mode = 2
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/favorites_button" to="." method="_on_favorites_button_button_down"]
 [connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/d_back_button" to="." method="_on_d_back_button_button_down"]
 [connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/d_back_button" to="." method="_on_d_back_button_button_up"]

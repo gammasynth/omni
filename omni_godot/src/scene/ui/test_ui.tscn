@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://kxs1y1xdavov"]
 
-[ext_resource type="Theme" uid="uid://g2qfdttglcwm" path="res://resource/theme/light_pixel_omni.theme" id="1_kdnyu"]
+[ext_resource type="Theme" uid="uid://qcg46b2bf138" path="res://lib/gd_app_ui/resource/theme/light_pixel.theme" id="1_67ttv"]
 [ext_resource type="PackedScene" uid="uid://xu87r8s00jp5" path="res://src/scene/ui/file_browser/omni_file_browser_ui.tscn" id="2_ee1qe"]
 [ext_resource type="PackedScene" uid="uid://d3ffxjiwggxht" path="res://src/scene/ui/console/omni_console_ui.tscn" id="3_67ttv"]
 [ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resource/animated_texture/cool_tiny_cube.tres" id="4_84hkt"]
@@ -12,7 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_kdnyu")
+theme = ExtResource("1_67ttv")
 
 [node name="back_panel" type="Panel" parent="."]
 layout_mode = 1
@@ -54,6 +54,13 @@ layout_mode = 2
 
 [node name="console_ui" parent="h_split/v_split" instance=ExtResource("3_67ttv")]
 layout_mode = 2
+
+[node name="menu" parent="h_split/v_split/console_ui/vbox" index="6"]
+visible = true
+
+[node name="Edit" parent="h_split/v_split/console_ui/vbox/menu" index="0"]
+size = Vector2i(73, 100)
+visible = true
 
 [node name="boot_vbox" type="VBoxContainer" parent="."]
 visible = false
@@ -101,3 +108,5 @@ mouse_filter = 2
 bbcode_enabled = true
 scroll_active = false
 scroll_following = true
+
+[editable path="h_split/v_split/console_ui"]

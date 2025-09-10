@@ -1,143 +1,106 @@
-extends Database
+extends FileBrowser
 
 class_name OmniFileBrowser
 
-signal favorite_added
-signal favorite_removed
-
 var file_browser_ui: FileBrowserUI
-
 var grid_mode: bool = true
-
-var dir_history: Array[String] = []
-var dir_future: Array[String] = []
-
-var favorites:Dictionary = {}# order int : path String
-var new_favorite_index:int = 0
-
-var selected_items: Array[FileBrowserItem] = []
-var copied_items: Array[FileBrowserItem] = []
-var cut_items: Array[FileBrowserItem] = []
-
 
 func _init(_file_browser_ui:FileBrowserUI=null,_name:String="file_browser", _key:Variant=_name) -> void:
 	super(_name, _key)
 	file_browser_ui = _file_browser_ui
-
-func toggle_favorite(item:FileBrowserItem) -> void:
-	var file_path:String = item.file_path
-	if not remove_favorite(file_path):
-		add_favorite(file_path)
-
-func add_favorite(path:String) -> bool:
-	if favorites.values().has(path): return false
 	
-	favorites.set(new_favorite_index, path)
-	new_favorite_index += 1
-	favorite_added.emit()
-	return true
-
-func remove_favorite(path:String) -> bool:
-	if not favorites.values().has(path): return false
+	favorite_added.connect(favorite_was_added)
+	favorite_removed.connect(favorite_was_removed)
 	
-	var favorite_index:int = favorites.values().find(path)
-	favorites.erase(favorite_index)
-	new_favorite_index -= 1
-	favorite_removed.emit()
-	return true
-
-func copy_item(item:FileBrowserItem) -> void: 
-	if item == null or not is_instance_valid(item): return
-	copied_items.clear()
-	if not selected_items.has(item): 
-		selected_items.clear()
-		selected_items.append(item)
+	items_pasted.connect(items_were_pasted)
+	items_deleted.connect(items_were_deleted)
 	
-	for fbi in selected_items: 
-		copied_items.append(fbi)
+	FileType.default_file_icon = Registry.pull("file_icons", "data_object.png")
 
-func cut_item(item:FileBrowserItem) -> void: 
-	if item == null or not is_instance_valid(item): return
-	copied_items.clear()
-	if not selected_items.has(item): 
-		selected_items.clear()
-		selected_items.append(item)
+func _can_change_directory() -> bool: return true
+
+func favorite_was_added(file_path:String) -> void: record_favorite_action(file_path, true)
+func favorite_was_removed(file_path:String) -> void: record_favorite_action(file_path, false)
+func record_favorite_action(file_path:String, b:bool): 
+	App.record_action(GenericAppAction.new(toggle_favorite.bind(file_path, not b), toggle_favorite.bind(file_path, b)))
+
+func undo_paste(
+	_pasted_to_path:String,
+	_copied_from_items: Array[FileItem],
+	pasted_items:Array[FileItem], 
+	cut_out_items:Array[FileItem], 
+	temp_deleted_items:Array[FileItem], 
+	cut_out_items_info:Dictionary[FileItem, FileItem]
+	) -> void:
 	
-	for fbi in selected_items: 
-		copied_items.append(fbi)
-		fbi.enter_cut_state()
-	cut_items = copied_items.duplicate()
-
-func paste() -> void:
-	for item in selected_items:
-		item.deselect_browser_item()
-	for item in copied_items:
-		paste_item(item)
-	for item in cut_items:
-		item.exit_cut_state()
-		delete_item(item)
-	selected_items.clear()
-	copied_items.clear()
-	cut_items.clear()
-
-func paste_item(item:FileBrowserItem) -> void:
-	if item == null or not is_instance_valid(item): return
-	var current:String = Main.console.current_directory_path
-	var old_path:String = item.file_path
-	var file_name:String = File.get_file_name_from_file_path(old_path, true)
-	var new_path:String = str(current + file_name)
-	DirAccess.copy_absolute(old_path, new_path)
-
-func delete_item(item:FileBrowserItem) -> void:
-	if item == null or not is_instance_valid(item): return
-	var old_path:String = item.file_path
-	OS.move_to_trash(old_path)
-
-func go_up_directory() -> void: 
-	if not Main.can_change_directory(): return
+	for item:FileItem in pasted_items:
+		remove_item(item)
 	
-	var current:String = Main.console.current_directory_path
-	var next:String = current
-	var base:String = File.ends_with_slash(File.ends_with_slash(next, false).get_base_dir()); if not base.is_empty(): next = base
-	if next != current and DirAccess.dir_exists_absolute(base): 
-		Main.open_directory(base)
+	for item:FileItem in cut_out_items:
+		var temp_item:FileItem = cut_out_items_info.get(item)
+		if FileAccess.file_exists(temp_item.file_path):
+			DirAccess.copy_absolute(temp_item.file_path, item.file_path)
+	focus_directory()
 
-func go_back_directory() -> void: travel_timeline(dir_history, dir_future)
-func go_forward_directory() -> void: travel_timeline(dir_future, dir_history)
+func redo_paste(
+	pasted_to_path:String,
+	copied_from_items: Array[FileItem],
+	pasted_items:Array[FileItem], 
+	cut_out_items:Array[FileItem], 
+	temp_deleted_items:Array[FileItem], 
+	cut_out_items_info:Dictionary[FileItem, FileItem]
+	) -> void:
+	paste_action(pasted_to_path, copied_from_items, cut_out_items)
+	focus_directory()
 
-func travel_timeline(a:Array[String], b:Array[String]) -> void:
-	if not Main.can_change_directory(): return
-	var current:String = Main.console.current_directory_path
-	var next:String = current
-	var this_size:int = a.size()
-	if this_size>0:
-		b.append(current)
-		next = a.get(this_size-1)
-		a.remove_at(this_size-1)
-	if next != current: 
-		Main.open_directory(next, false)
-		refresh_ui()
+func items_were_pasted(paste_info:Dictionary[String, Variant]) -> void:
+	var pasted_to_path: String = paste_info.get("pasted_to_path")
+	var copied_from_items: Array[FileItem] = paste_info.get("copied_from_items")
+	var pasted_items: Array[FileItem] = paste_info.get("pasted_items")
+	var cut_out_items: Array[FileItem] = paste_info.get("cut_out_items")
+	var temp_deleted_items: Array[FileItem] = paste_info.get("temp_deleted_items")
+	var cut_out_items_info: Dictionary[FileItem, FileItem] = paste_info.get("cut_out_items_info")
+	App.record_action(
+		GenericAppAction.new(
+			undo_paste.bind(
+				pasted_to_path,
+				copied_from_items,
+				pasted_items,
+				cut_out_items,
+				temp_deleted_items,
+				cut_out_items_info
+				),
+			redo_paste.bind(
+				pasted_to_path,
+				copied_from_items,
+				pasted_items,
+				cut_out_items,
+				temp_deleted_items,
+				cut_out_items_info
+				)
+			)
+		)
 
-func parse_directory(new_directory_path:String) -> Error:
-	dir_history.append(new_directory_path)
-	return refresh_ui()
+func undo_delete(deleted_items:Array[FileItem], backup_items:Array[FileItem], backup_info:Dictionary[FileItem, FileItem]) -> void:
+	for item:FileItem in deleted_items:
+		var backup_item:FileItem = backup_info.get(item)
+		if FileAccess.file_exists(backup_item.file_path):
+			DirAccess.copy_absolute(backup_item.file_path, item.file_path)
+	focus_directory()
 
-func refresh_ui() -> Error: return setup_directory_ui(Main.console.current_directory_path)
+func redo_delete(deleted_items:Array[FileItem], backup_items:Array[FileItem], backup_info:Dictionary[FileItem, FileItem]) -> void:
+	for item:FileItem in deleted_items:
+		if FileAccess.file_exists(item.file_path):
+			remove_item(item, false)
+	focus_directory()
 
-func setup_directory_ui(new_directory_path:String) -> Error:
-	file_browser_ui.clear_ui_items()
-	
-	var all_paths: Array[String] = []
-	
-	var folder_paths = DirAccess.get_directories_at(new_directory_path)
-	for p in folder_paths: all_paths.append(new_directory_path + File.ends_with_slash(p))
-	
-	var file_paths = DirAccess.get_files_at(new_directory_path)
-	for p in file_paths: all_paths.append(new_directory_path + p)
-	
-	for p in all_paths:
-		var ft := FileType.get_file_type_from_path(p)
-		if ft: file_browser_ui.add_item(p, ft)
-	
-	file_browser_ui.refresh_grid_size()
-	return OK
+func items_were_deleted(delete_info:Dictionary[String, Variant]) -> void:
+	var deleted_items:Array[FileItem] = delete_info.get("deleted_items")
+	var backup_items:Array[FileItem] = delete_info.get("backup_items")
+	var backup_info:Dictionary[FileItem, FileItem] = delete_info.get("backup_info")
+	App.record_action(
+		GenericAppAction.new(
+			undo_delete.bind(deleted_items, backup_items, backup_info),
+			redo_delete.bind(deleted_items, backup_items, backup_info)
+			)
+		)
