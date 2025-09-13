@@ -17,6 +17,7 @@ mouse_filter = 2
 script = ExtResource("1_mwyax")
 window_minimum_size = Vector2(256, 192)
 loading_screen_ui_path = "res://src/scene/ui/modular_ui/omni_loading_screen.tscn"
+alert_system_ui_path = "res://src/scene/ui/alert_system_ui.tscn"
 
 [node name="back_panel" type="Panel" parent="."]
 layout_mode = 2

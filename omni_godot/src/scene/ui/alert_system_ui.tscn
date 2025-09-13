@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://dobjjjk2fnv7a"]
+
+[ext_resource type="Script" uid="uid://bv0acposks7q2" path="res://lib/gd_app_ui/scene/ui/alert_system_ui.gd" id="1_ebrn7"]
+
+[node name="alert_system_ui" type="Control" node_paths=PackedStringArray("alerts_v_box")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ebrn7")
+alerts_v_box = NodePath("AlertsScrollBox/AlertsVBox")
+alert_message_path = "res://src/scene/prefab/ui/alerts/alert_message.tscn"
+server_alert_message_path = "res://src/scene/prefab/ui/alerts/server_alert_message.tscn"
+
+[node name="AlertsScrollBox" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+follow_focus = true
+
+[node name="AlertsVBox" type="VBoxContainer" parent="AlertsScrollBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+mouse_filter = 2
+theme_override_constants/separation = -29

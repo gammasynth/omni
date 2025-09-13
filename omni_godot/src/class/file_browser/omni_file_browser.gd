@@ -17,7 +17,13 @@ func _init(_file_browser_ui:FileBrowserUI=null,_name:String="file_browser", _key
 	
 	FileType.default_file_icon = Registry.pull("file_icons", "data_object.png")
 
-func _can_change_directory() -> bool: return true
+func _directory_change_prevented(at_path:String) -> void: 
+	AlertSystem.create_warning("Console Busy!", "Can't change directory during active main console process. Try a runnable command instead to free the Omni.")
+
+func _can_change_directory() -> bool: 
+	if Main.console.operating: return false
+	if Main.console.console_processing: return false
+	return true
 
 func favorite_was_added(file_path:String) -> void: record_favorite_action(file_path, true)
 func favorite_was_removed(file_path:String) -> void: record_favorite_action(file_path, false)

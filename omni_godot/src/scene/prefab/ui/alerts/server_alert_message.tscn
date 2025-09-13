@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://c10awqckrwo04"]
+
+[ext_resource type="Script" uid="uid://q7p7ht1lngr" path="res://lib/gd_app_ui/scene/prefab/ui/alerts/server_alert_message.gd" id="1_ijrjj"]
+
+[node name="ServerAlertMessage" type="MarginContainer" node_paths=PackedStringArray("alert_type_text", "alert_title_text", "alert_message_text")]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 51.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("1_ijrjj")
+alert_type_text = NodePath("MarginContainer/AlertVBox/AlertTypeText")
+alert_title_text = NodePath("MarginContainer/AlertVBox/AlertTitleText")
+alert_message_text = NodePath("MarginContainer/AlertVBox/AlertMessageText")
+
+[node name="BeginFadeTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Panel2" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Panel3" type="PanelContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="AlertVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="AlertTypeText" type="RichTextLabel" parent="MarginContainer/AlertVBox"]
+modulate = Color(0.345098, 0.32549, 1, 1)
+clip_contents = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 9
+bbcode_enabled = true
+text = "[center]Alert[/center]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="AlertTitleText" type="RichTextLabel" parent="MarginContainer/AlertVBox"]
+modulate = Color(0.556863, 0.764706, 1, 1)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 9
+bbcode_enabled = true
+text = "[center]Alert Name[/center]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/AlertVBox"]
+layout_mode = 2
+
+[node name="AlertMessageText" type="RichTextLabel" parent="MarginContainer/AlertVBox"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 9
+bbcode_enabled = true
+text = "[center]This is an alert.[/center]"
+fit_content = true
+scroll_active = false
+
+[connection signal="timeout" from="BeginFadeTimer" to="." method="_on_begin_fade_timer_timeout"]

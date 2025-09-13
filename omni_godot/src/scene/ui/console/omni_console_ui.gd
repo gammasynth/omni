@@ -3,13 +3,15 @@ extends DatabasePanelContainer
 class_name ConsoleUI
 
 
-var console: Console:
+var console: OmniConsole:
 	get: 
 		if not console:
 			console = OmniConsole.new(name)
 			db = console
-			#console.uses_threads = true
+			console.uses_threads = false
 			console.uses_piped = true
+			console.uses_process = true
+			console.refresh_during_process = false
 		return db
 
 @onready var vbox: VBoxContainer = $vbox
@@ -64,6 +66,7 @@ const FILE_BROWSER_BUTTON_DARK = preload("res://resource/texture/ui/console/file
 var animating_line_icon: bool = false
 var processing_command:bool = false
 
+var line_edited :bool = false
 
 
 func _ready_up():
@@ -76,9 +79,8 @@ func _ready_up():
 	console.rich_label = code
 	console.line_edit = line
 	
-	console.operation_started.connect(func(): line.editable = false)
-	console.operation_finished.connect(func(): line.editable = true)
-	console.operation_finished.connect(func(): line.grab_focus.call_deferred())
+	console.operation_started.connect(started_command_operation)
+	console.operation_finished.connect(finished_command_operation)
 	
 	console.directory_focus_changed.connect(directory_focus_changed)
 	
@@ -96,14 +98,27 @@ func _ready_up():
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
 	#$HTTPRequest.request("https://github.com")
 	
+	#line.grab_focus.call_deferred()
+	finished_command_operation.call()
+
+func started_command_operation() -> void:
+	line.editable = false
+
+func finished_command_operation() -> void:
+	line.editable = true
 	line.grab_focus.call_deferred()
+	path_label.text = console.current_directory_path
+	if not console.console_processing:
+		console.print_out(console.current_directory_path)
+		console.print_out(" ")
 
 func thread_process_started() -> void: processing_command = true
 
 func _process(delta: float) -> void: if processing_command: console.process(delta)
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("console_cancel") and not event.is_echo(): console.force_stop_pipe()
+	if not line_edited:
+		if event.is_action_pressed("console_cancel") and not event.is_echo(): console.force_stop_pipe()
 
 
 
@@ -251,8 +266,8 @@ func _on_http_request_request_completed(result: int, response_code: int, headers
 
 func _on_file_index_pressed(index: int) -> void:
 	match index:
-		0: console.parse_text_line("file")
-		1: console.parse_text_line("folder")
+		0: console.parse_text_line(str("file " + MainUI.console_ui.line.text))
+		1: console.parse_text_line(str("folder " + MainUI.console_ui.line.text))
 		2: Main.file_browser.open()
 		3: OS.create_instance([])
 
@@ -287,3 +302,6 @@ func _on_edit_about_to_popup() -> void:
 
 func _on_settings_about_to_popup() -> void:
 	pass # Replace with function body.
+
+
+func _on_line_editing_toggled(toggled_on: bool) -> void: line_edited = toggled_on

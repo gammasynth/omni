@@ -55,12 +55,13 @@ layout_mode = 2
 [node name="console_ui" parent="h_split/v_split" instance=ExtResource("3_67ttv")]
 layout_mode = 2
 
-[node name="menu" parent="h_split/v_split/console_ui/vbox" index="6"]
+[node name="menu" parent="h_split/v_split/console_ui/vbox" index="5"]
 visible = true
 
-[node name="Edit" parent="h_split/v_split/console_ui/vbox/menu" index="0"]
-size = Vector2i(73, 100)
+[node name="Edit" parent="h_split/v_split/console_ui/vbox/menu" index="1"]
+size = Vector2i(73, 170)
 visible = true
+unfocusable = true
 
 [node name="boot_vbox" type="VBoxContainer" parent="."]
 visible = false
