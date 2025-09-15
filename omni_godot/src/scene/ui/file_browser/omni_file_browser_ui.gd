@@ -153,9 +153,18 @@ func add_item(item:FileItem) -> void:
 
 func directory_focused() -> void:
 	clear_ui_items()
+	
 	for item:FileItem in file_browser.directory_items:
 		add_item(item)
 	refresh_grid_size()
+	
+	var at:String = file_browser.current_directory_path
+	at = File.ends_with_slash(at, false)
+	at = File.begins_with_slash(at, false)
+	at = File.begins_with_slash(at, true)
+	if file_browser.has_favorite(file_browser.current_directory_path): at = str(at + "[*]")
+	folder_title.text = str("@ " + at)
+	# TODO here we can check for git info for git_info_title
 
 func clear_ui_items() -> void:
 	item_uis.clear()

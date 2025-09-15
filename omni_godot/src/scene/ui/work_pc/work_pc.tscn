@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2if5qtln1y5v"]
+
+[ext_resource type="Script" uid="uid://pikaohujhbek" path="res://src/scene/ui/work_pc/work_pc.gd" id="1_ch2f0"]
+[ext_resource type="PackedScene" uid="uid://byhsvmc4q8vmt" path="res://src/scene/ui/work_pc/pids_pc.tscn" id="2_gx147"]
+
+[node name="work_pc" type="PanelContainer"]
+custom_minimum_size = Vector2(76, 154)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ch2f0")
+
+[node name="margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="title_vbox" type="VBoxContainer" parent="margin"]
+layout_mode = 2
+
+[node name="title_pc" type="PanelContainer" parent="margin/title_vbox"]
+layout_mode = 2
+
+[node name="panel" type="Panel" parent="margin/title_vbox/title_pc"]
+layout_mode = 2
+
+[node name="margin" type="MarginContainer" parent="margin/title_vbox/title_pc"]
+layout_mode = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="title_label" type="RichTextLabel" parent="margin/title_vbox/title_pc/margin"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "[pulse freq=1.0 color=#66a3d7 ease=-2.0]<WORK>[/pulse]"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scroll_box" type="ScrollContainer" parent="margin/title_vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="body_vbox" type="VBoxContainer" parent="margin/title_vbox/scroll_box"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+alignment = 1
+
+[node name="pids_pc" parent="margin/title_vbox/scroll_box/body_vbox" instance=ExtResource("2_gx147")]
+layout_mode = 2
+size_flags_vertical = 0

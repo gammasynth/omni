@@ -18,11 +18,10 @@ border_color = Color(0.133196, 0.133196, 0.133196, 0.243137)
 border_blend = true
 
 [node name="file_browser_ui" type="MarginContainer"]
-custom_minimum_size = Vector2(256, 64)
+custom_minimum_size = Vector2(172, 77)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -128.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3

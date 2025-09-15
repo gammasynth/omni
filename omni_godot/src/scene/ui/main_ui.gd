@@ -2,6 +2,9 @@ extends AppUI
 
 class_name MainUI
 
+const TRAP_ARROW_DOWN_SMOOTH = preload("res://resource/texture/ui/trap_arrow_down_smooth.png")
+const TRAP_ARROW_UP_BRIGHT = preload("res://resource/texture/ui/trap_arrow_up_bright.png")
+
 @onready var h_split = $h_split
 @onready var v_split = $h_split/v_split
 
@@ -14,11 +17,20 @@ class_name MainUI
 
 static var console_ui: ConsoleUI
 static var file_browser_ui: FileBrowserUI
+static var omni_worker_ui: OmniWorkerUI
+var main_console_ui: ConsoleUI: 
+	get: return console_ui
+var main_file_browser_ui: FileBrowserUI:
+	get: return file_browser_ui
+var main_omni_worker_ui: OmniWorkerUI:
+	get: return omni_worker_ui
 
 var user_theme_path:String = "user://settings/theme/user_custom.theme"
 var unique_back_panel_stylebox: StyleBox = null
 var modified_back_panel: bool = false
 var unique_back_panel_color:Color=Color.BLACK
+
+func toggle_omni_worker() -> void: omni_worker_ui.visible = not omni_worker_ui.visible
 
 func get_user_theme() -> Theme:
 	var base_theme: Theme = preload("res://lib/gd_app_ui/resource/theme/blank_theme.theme")
@@ -80,6 +92,8 @@ var window_panel_color: Color = Color.WHITE:
 
 var last_window_panel_color: Color = Color.WHITE
 
+var view_boot_box:bool = true
+var boot_box_tweener:Tween
 
 
 func change_window_panel_color(color:Color, enable:bool=true): 
@@ -123,25 +137,37 @@ func change_window_panel_color(color:Color, enable:bool=true):
 func _start():
 	console_ui = preload("res://src/scene/ui/console/omni_console_ui.tscn").instantiate()
 	file_browser_ui = preload("res://src/scene/ui/file_browser/omni_file_browser_ui.tscn").instantiate()
+	omni_worker_ui = preload("res://src/scene/ui/work_pc/work_pc.tscn").instantiate()
 	# TODO PERHAPS use registry for being able to pull modded versions of the console/file browser
 	#console_ui = Registry.pull("app_elements", "omni_console_ui.tscn").instantiate()
 	#file_browser_ui = Registry.pull("app_elements", "omni_file_browser_ui.tscn").instantiate()
 	
-	var tween:Tween = create_tween().set_parallel()
-	tween.tween_property(icon, "modulate", Color(0.0,0.0,0.0,0.0), 0.35)
-	tween.tween_property(raw_console, "modulate", Color(0.0,0.0,0.0,0.0), 0.35)
-	tween.tween_callback(func(): icon.visible = false).set_delay(0.35)
-	tween.tween_callback(func(): raw_console.visible = false).set_delay(0.35)
+	Make.fade(icon, 1.5).tween_callback(icon.set_visible.bind(false)).set_delay(1.5)
 	
 	await Make.child(file_browser_ui, v_split)
 	await Make.child(console_ui, v_split)
 	file_browser_ui.grid_mode = Main.file_browser.grid_mode
 	
-	Main.console.directory_focus_changed.connect(Main.file_browser.open_directory.bind(false))
+	Main.console.directory_focus_changed.connect(Main.file_browser.open_directory.bind(true, true, false))
 	Main.console.open_directory()
-	Main.file_browser.directory_focus_changed.connect(Main.console.open_directory.bind(false, true))
+	Main.file_browser.directory_focus_changed.connect(console_ui.file_browser_directory_changed)
 	
-	Make.fade(boot_vbox, 1.5, false)
+	omni_worker_ui.visible = false
+	await Make.child(omni_worker_ui, h_split)
+	
+	toggle_boot_vbox()
+	
+
+func toggle_boot_vbox() -> void:
+	if boot_box_tweener: boot_box_tweener.kill()
+	view_boot_box = not view_boot_box
+	if view_boot_box:
+		boot_vbox.visible = true
+		boot_box_tweener = Make.fade_in(boot_vbox, 1.5, false)
+	else: 
+		boot_box_tweener = Make.fade(boot_vbox, 1.5, false)
+		boot_box_tweener.tween_callback(boot_vbox.set_visible.bind(false)).set_delay(1.5)
+	
 
 
 func toggle_file_browser(toggle:bool) -> void: file_browser_ui.visible = toggle

@@ -60,8 +60,10 @@ visible = true
 
 [node name="Edit" parent="h_split/v_split/console_ui/vbox/menu" index="1"]
 size = Vector2i(73, 170)
-visible = true
-unfocusable = true
+
+[node name="PanelContainer" type="PanelContainer" parent="h_split"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
 
 [node name="boot_vbox" type="VBoxContainer" parent="."]
 visible = false

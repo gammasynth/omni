@@ -1,0 +1,100 @@
+[gd_scene load_steps=3 format=3 uid="uid://hxuu6xuuhu22"]
+
+[ext_resource type="PackedScene" uid="uid://bh1sj57oh5bju" path="res://src/scene/prefab/ui/work_pc/worker_submenu_pc.tscn" id="1_gjci3"]
+[ext_resource type="Script" uid="uid://y8iobe7byp4x" path="res://src/scene/prefab/ui/work_pc/executed_runnable_pc.gd" id="1_k8mt4"]
+
+[node name="worker_submenu_pc" node_paths=PackedStringArray("pid_label", "os_time_started_label", "active_label", "elapsed_label", "os_time_ended_label") instance=ExtResource("1_gjci3")]
+script = ExtResource("1_k8mt4")
+pid_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/pid_label")
+os_time_started_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/os_time_started_label")
+active_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/active_label")
+elapsed_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/elapsed_label")
+os_time_ended_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/os_time_ended_label")
+
+[node name="main_vbox" parent="margin" index="0"]
+theme_override_constants/separation = 2
+
+[node name="vbox" parent="margin/main_vbox/body_pc/margin" index="0"]
+theme_override_constants/separation = 2
+
+[node name="body_vbox" parent="margin/main_vbox/body_pc/margin/vbox" index="1"]
+theme_override_constants/separation = 1
+
+[node name="pid_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="0"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "pid: -1"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="sep1" type="HSeparator" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="1"]
+layout_mode = 2
+
+[node name="active_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="2"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "active: false"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="elapsed_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="3"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "elapsed: 0s"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="sep2" type="HSeparator" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="4"]
+layout_mode = 2
+
+[node name="os_time_started_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="5"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "begun @: not"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="sep3" type="HSeparator" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="6"]
+layout_mode = 2
+
+[node name="os_time_ended_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="7"]
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "ended @: not"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1

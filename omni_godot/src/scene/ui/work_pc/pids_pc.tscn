@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://byhsvmc4q8vmt"]
+
+[ext_resource type="Script" uid="uid://c2lgoco1x0fmp" path="res://src/scene/ui/work_pc/pids_pc.gd" id="1_hk8ap"]
+[ext_resource type="PackedScene" uid="uid://bh1sj57oh5bju" path="res://src/scene/prefab/ui/work_pc/worker_submenu_pc.tscn" id="3_net7k"]
+
+[node name="pids_pc" node_paths=PackedStringArray("body_vbox", "terminated_pids_container", "active_pids_container", "empty_label", "terminated_pids_body_vbox", "active_pids_body_vbox") instance=ExtResource("3_net7k")]
+script = ExtResource("1_hk8ap")
+body_vbox = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox")
+terminated_pids_container = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container")
+active_pids_container = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container")
+empty_label = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/empty_label")
+terminated_pids_body_vbox = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container/margin/main_vbox/body_pc/margin/vbox/body_vbox")
+active_pids_body_vbox = NodePath("margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container/margin/main_vbox/body_pc/margin/vbox/body_vbox")
+title_name = "< EXT. >"
+
+[node name="main_vbox" parent="margin" index="0"]
+theme_override_constants/separation = 8
+
+[node name="title_label" parent="margin/main_vbox/title_pc/hbox" index="0"]
+text = "< EXT. >"
+
+[node name="vbox" parent="margin/main_vbox/body_pc/margin" index="0"]
+theme_override_constants/separation = 8
+
+[node name="body_vbox" parent="margin/main_vbox/body_pc/margin/vbox" index="1"]
+theme_override_constants/separation = 8
+
+[node name="empty_label" type="RichTextLabel" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="0"]
+modulate = Color(0.642301, 0.920101, 0.964624, 1)
+layout_mode = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "[i](none)
+...[/i]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[node name="active_pids_container" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="1" instance=ExtResource("3_net7k")]
+visible = false
+modulate = Color(0.552725, 0.792745, 0.60859, 1)
+layout_mode = 2
+title_name = "Active PIDs: "
+
+[node name="title_label" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container/margin/main_vbox/title_pc/hbox" index="0"]
+text = "Active PIDs: "
+
+[node name="vbox" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container/margin/main_vbox/body_pc/margin" index="0"]
+theme_override_constants/separation = 8
+
+[node name="body_vbox" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container/margin/main_vbox/body_pc/margin/vbox" index="1"]
+theme_override_constants/separation = 8
+
+[node name="terminated_pids_container" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox" index="2" instance=ExtResource("3_net7k")]
+visible = false
+modulate = Color(0.812508, 0.558891, 0.535147, 1)
+layout_mode = 2
+title_name = "Dead PIDs:"
+
+[node name="title_label" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container/margin/main_vbox/title_pc/hbox" index="0"]
+text = "Dead PIDs:"
+
+[node name="vbox" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container/margin/main_vbox/body_pc/margin" index="0"]
+theme_override_constants/separation = 8
+
+[node name="body_vbox" parent="margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container/margin/main_vbox/body_pc/margin/vbox" index="1"]
+theme_override_constants/separation = 8
+
+[editable path="margin/main_vbox/body_pc/margin/vbox/body_vbox/active_pids_container"]
+[editable path="margin/main_vbox/body_pc/margin/vbox/body_vbox/terminated_pids_container"]

@@ -58,6 +58,9 @@ layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
 
+[node name="PanelContainer" type="PanelContainer" parent="boot_vbox/console_pc"]
+layout_mode = 2
+
 [node name="console_margin" type="MarginContainer" parent="boot_vbox/console_pc"]
 layout_mode = 2
 size_flags_vertical = 8
@@ -68,12 +71,9 @@ theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
 [node name="raw_console" type="RichTextLabel" parent="boot_vbox/console_pc/console_margin"]
-self_modulate = Color(0.8, 0.929412, 0.941176, 0.945098)
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-mouse_filter = 2
 bbcode_enabled = true
-scroll_active = false
 scroll_following = true
