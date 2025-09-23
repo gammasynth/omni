@@ -176,4 +176,44 @@ func toggle_file_browser(toggle:bool) -> void: file_browser_ui.visible = toggle
 	#else:
 		#console_ui.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 
+
+var current_base_dragged_browser_item:FileBrowserItem
+var dragged_browser_item:FileBrowserItem
+var dragging_browser_item:bool=false
+var mouse_control:Control
+
+func end_item_drag() -> void:
+	if current_base_dragged_browser_item != null and is_instance_valid(current_base_dragged_browser_item):
+		current_base_dragged_browser_item.visible = true
+	if dragged_browser_item != null and is_instance_valid(dragged_browser_item):
+		dragged_browser_item.queue_free()
+		dragged_browser_item = null
+	dragging_browser_item = false
+
+func start_item_drag(new_dragged_browser_item:FileBrowserItem) -> void:
+	end_item_drag()
+	var dragged_item: FileItem = dragged_browser_item.file_item
+	new_dragged_browser_item.visible = false
+	current_base_dragged_browser_item = new_dragged_browser_item
+	dragging_browser_item = true
+	dragged_browser_item = new_dragged_browser_item.duplicate()
+	dragged_browser_item.file_item = new_dragged_browser_item.file_item
+	dragged_browser_item.file_browser = new_dragged_browser_item.file_browser
+	dragged_browser_item.right_click_able = false
+	dragged_browser_item.being_dragged = true
+	
+	if not mouse_control: 
+		mouse_control = Control.new()
+		await Make.child(mouse_control, get_window())
+	
+	Make.disable_control(dragged_browser_item)
+	await Make.child(dragged_browser_item, mouse_control) 
+
+func _process(delta: float) -> void:
+	# TODO
+	#  this should probably be done somewhere else!
+	# if requested_next_scene != null: set_scene(requested_next_scene)
+	if mouse_control and is_instance_valid(mouse_control):
+		mouse_control.global_position = get_window().get_mouse_position()
+
 func print_out(text:String) -> void: console_ui.print_out(text)

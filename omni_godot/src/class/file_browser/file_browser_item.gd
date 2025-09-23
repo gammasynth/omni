@@ -12,15 +12,18 @@ var file_browser:OmniFileBrowser
 var file_item:FileItem = null
 
 var item_right_click_menu
+var right_click_able:bool=true
+var right_click_context:Dictionary = {}
+var right_click_menu:ContextMenu = null
 
+var being_dragged: bool = false
 var being_clicked: bool = false
 var click_delta: float = 0.0
 var check_double_click: bool = false
 var double_click_initial_release_time: float = 0.25
 var double_click_second_press_time: float = 0.25
 
-var right_click_context:Dictionary = {}
-var right_click_menu:ContextMenu = null
+
 
 func _ready(): setup()
 
@@ -33,7 +36,9 @@ func setup():
 	label.text = file_name
 	
 	gui_input.connect(gui_event)
-	setup_context_menu()
+	mouse_entered.connect(mouse_entered_rect)
+	mouse_exited.connect(mouse_left_rect)
+	if right_click_able: setup_context_menu()
 
 func setup_context_menu() -> void:
 	right_click_context.clear()
@@ -59,11 +64,18 @@ func select() -> void: selected_panel.visible = true
 
 func _process(delta: float) -> void: if being_clicked or check_double_click: click_delta += delta
 
-
+func mouse_entered_rect() -> void: return
+func mouse_left_rect() -> void: 
+	if being_clicked:
+		# try to drag the file
+		MainUI.ui.start_item_drag(self)
 
 func gui_event(event:InputEvent) -> void: _gui_event(event)
 func _gui_event(event:InputEvent) -> void:
 	var mouse_global_pos: Vector2 = get_global_mouse_position()
+	
+	if being_dragged and event.is_action_released("lmb") and not event.is_echo():
+		MainUI.ui.end_item_drag()
 	
 	if not being_clicked and event.is_action_pressed("lmb") and not event.is_echo(): 
 		being_clicked = true
