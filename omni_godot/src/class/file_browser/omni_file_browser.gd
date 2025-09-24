@@ -5,6 +5,7 @@ class_name OmniFileBrowser
 var file_browser_ui: FileBrowserUI
 var grid_mode: bool = true
 
+
 func _init(_file_browser_ui:FileBrowserUI=null,_name:String="file_browser", _key:Variant=_name) -> void:
 	super(_name, _key)
 	file_browser_ui = _file_browser_ui
@@ -15,6 +16,7 @@ func _init(_file_browser_ui:FileBrowserUI=null,_name:String="file_browser", _key
 	items_copied.connect(items_were_copied)
 	items_cut.connect(items_were_cut)
 	
+	items_moved.connect(items_were_moved)
 	items_pasted.connect(items_were_pasted)
 	items_deleted.connect(items_were_deleted)
 	
@@ -37,13 +39,13 @@ func items_were_copied(such_items:Array[FileItem]) -> void:
 	var list:String = ""
 	for item:FileItem in such_items:
 		list = str(list + item.file_path + " \n")
-	AlertSystem.create_alert("Items copied: ", list)
+	if list.length() > 0: AlertSystem.create_alert("Items copied: ", list)
 
 func items_were_cut(such_items:Array[FileItem]) -> void:
 	var list:String = ""
 	for item:FileItem in such_items:
 		list = str(list + item.file_path + " \n")
-	AlertSystem.create_alert("Items cut: ", list)
+	if list.length() > 0: AlertSystem.create_alert("Items cut: ", list)
 
 func undo_paste(
 	_pasted_to_path:String,
@@ -84,7 +86,7 @@ func items_were_pasted(paste_info:Dictionary[String, Variant]) -> void:
 	var list:String = ""
 	for item:FileItem in pasted_items:
 		list = str(list + item.file_path + " \n")
-	AlertSystem.create_alert("Items pasted: ", list)
+	if list.length() > 0: AlertSystem.create_alert("Items pasted: ", list)
 	App.record_action(
 		GenericAppAction.new(
 			undo_paste.bind(
@@ -102,6 +104,36 @@ func items_were_pasted(paste_info:Dictionary[String, Variant]) -> void:
 				cut_out_items,
 				temp_deleted_items,
 				cut_out_items_info
+				)
+			)
+		)
+
+func undo_move(new_items:Array[FileItem], old_path:String) -> void:
+	for item:FileItem in new_items:
+		var old_item:FileItem = move_item(item, old_path)
+		remove_item(item, false, true)
+
+func redo_move(items_to_move:Array[FileItem], to_path:String) -> void:
+	for item:FileItem in items_to_move:
+		var new_item:FileItem = move_item(item, to_path)
+		remove_item(item, false, true)
+
+func items_were_moved(move_info:Dictionary[String, Variant]) -> void:
+	var old_items = move_info.get("old_items")
+	var new_path = move_info.get("new_path")
+	var old_path = move_info.get("old_path")
+	var new_items = move_info.get("new_items")
+	var list:String = ""
+	for item:FileItem in new_items:
+		list = str(list + item.file_path + " \n")
+	if list.length() > 0: AlertSystem.create_alert("Items moved: ", list)
+	App.record_action(
+		GenericAppAction.new(
+			undo_move.bind(
+				new_items, old_path
+				),
+			redo_move.bind(
+				old_items, new_path
 				)
 			)
 		)
@@ -126,7 +158,7 @@ func items_were_deleted(delete_info:Dictionary[String, Variant]) -> void:
 	var list:String = ""
 	for item:FileItem in deleted_items:
 		list = str(list + item.file_path + " \n")
-	AlertSystem.create_alert("Items deleted: ", list)
+	if list.length() > 0: AlertSystem.create_alert("Items deleted: ", list)
 	App.record_action(
 		GenericAppAction.new(
 			undo_delete.bind(deleted_items, backup_items, backup_info),

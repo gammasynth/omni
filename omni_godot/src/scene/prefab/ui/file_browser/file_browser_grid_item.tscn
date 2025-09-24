@@ -1,13 +1,56 @@
-[gd_scene load_steps=4 format=3 uid="uid://cklth385cdeia"]
+[gd_scene load_steps=11 format=3 uid="uid://cklth385cdeia"]
 
 [ext_resource type="Script" uid="uid://cg3e3ow7oqk7m" path="res://src/scene/prefab/ui/file_browser/file_browser_grid_item.gd" id="1_485k5"]
 [ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resource/texture/ui/file_browser/empty_file.png" id="1_r8tk7"]
 [ext_resource type="StyleBox" uid="uid://cykoehg3qt4v8" path="res://resource/stylebox/item_selected_panel.stylebox" id="3_mldn8"]
+[ext_resource type="Shader" uid="uid://jybwdv1u8qeb" path="res://lib/gd_app_ui/resource/shader/canvas_item_shader/grid/checkered_selection_outline.gdshader" id="4_lrd05"]
 
-[node name="file_browser_grid_item" type="MarginContainer" node_paths=PackedStringArray("icon_rect", "image_icon_rect", "label", "selected_panel")]
+[sub_resource type="Gradient" id="Gradient_pncix"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_g3wyt"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dq25r"]
+width = 64
+height = 84
+color_ramp = SubResource("Gradient_pncix")
+noise = SubResource("FastNoiseLite_g3wyt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3b1io"]
+shader = ExtResource("4_lrd05")
+shader_parameter/base_texture = SubResource("NoiseTexture2D_dq25r")
+shader_parameter/line_mod = 2.83
+shader_parameter/line_speed = 0.6
+shader_parameter/size_mod = 2.0
+shader_parameter/checker_speed = 2.88
+shader_parameter/color_offset = 0.665
+shader_parameter/color_mod = 0.375
+shader_parameter/line_color = Color(0.454902, 0.752941, 0.882353, 1)
+shader_parameter/fill_color = Color(0.0917461, 0.177389, 0.231926, 0.2)
+shader_parameter/checkered = false
+shader_parameter/only_fill = false
+shader_parameter/fill_mod = 0.45
+shader_parameter/alpha_mod = 1.095
+shader_parameter/outline_alpha_mod = 0.505
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pp7t6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lrd05"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.482353, 0.482353, 0.482353, 0.513726)
+border_blend = true
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[node name="file_browser_grid_item" type="MarginContainer" node_paths=PackedStringArray("icon_rect", "image_icon_rect", "label", "selected_panel", "hover_panel", "outline_panel")]
 clip_contents = true
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 72.0
+offset_bottom = 92.0
 mouse_filter = 0
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
@@ -18,10 +61,36 @@ icon_rect = NodePath("vbox/AspectRatioContainer/icon_rect")
 image_icon_rect = NodePath("vbox/AspectRatioContainer/icon_margin/image_icon_rect")
 label = NodePath("vbox/label")
 selected_panel = NodePath("selected_panel")
+hover_panel = NodePath("hover_panel")
+outline_panel = NodePath("outline_panel")
 
-[node name="vbox" type="VBoxContainer" parent="."]
+[node name="hover_panel" type="Panel" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_3b1io")
 layout_mode = 2
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pp7t6")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="label" type="RichTextLabel" parent="vbox"]
+clip_contents = false
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/bold_italics_font_size = 9
+theme_override_font_sizes/italics_font_size = 9
+theme_override_font_sizes/mono_font_size = 9
+theme_override_font_sizes/normal_font_size = 9
+theme_override_font_sizes/bold_font_size = 9
+bbcode_enabled = true
+text = "example_file.txt"
+scroll_active = false
+autowrap_mode = 2
+horizontal_alignment = 1
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="vbox"]
 layout_mode = 2
@@ -48,24 +117,13 @@ layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
 
-[node name="label" type="RichTextLabel" parent="vbox"]
-clip_contents = false
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/bold_italics_font_size = 9
-theme_override_font_sizes/italics_font_size = 9
-theme_override_font_sizes/mono_font_size = 9
-theme_override_font_sizes/normal_font_size = 9
-theme_override_font_sizes/bold_font_size = 9
-bbcode_enabled = true
-text = "example_file.txt"
-fit_content = true
-scroll_active = false
-autowrap_mode = 2
-
 [node name="selected_panel" type="Panel" parent="."]
 visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_mldn8")
+
+[node name="outline_panel" type="Panel" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lrd05")

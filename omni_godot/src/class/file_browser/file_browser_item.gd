@@ -6,6 +6,8 @@ class_name FileBrowserItem
 @export var image_icon_rect:TextureRect
 @export var label:RichTextLabel
 @export var selected_panel:Panel
+@export var hover_panel:Panel
+@export var outline_panel:Panel
 
 var file_browser:OmniFileBrowser
 
@@ -23,7 +25,10 @@ var check_double_click: bool = false
 var double_click_initial_release_time: float = 0.25
 var double_click_second_press_time: float = 0.25
 
+var selectable:bool = true
+var draggable:bool = true
 
+var size_tweener:Tween
 
 func _ready(): setup()
 
@@ -59,36 +64,96 @@ func setup_context_menu() -> void:
 func enter_cut_state() -> void: modulate = Color(0.5,0.5,0.5,0.5)
 func exit_cut_state() -> void: modulate = Color(1.0,1.0,1.0,1.0)
 
-func deselect() -> void: selected_panel.visible = false
+func deselect() -> void: selected_panel.visible = false#; print("DESELECT")
 func select() -> void: selected_panel.visible = true
 
 func _process(delta: float) -> void: if being_clicked or check_double_click: click_delta += delta
 
-func mouse_entered_rect() -> void: return
+func tween_hover_size(up:bool=true) -> void:
+	if size_tweener is Tween and is_instance_valid(size_tweener):
+		if size_tweener.is_running(): size_tweener.pause()
+		size_tweener.kill()
+		size_tweener = null
+	
+	var icon_mod: float = 1.0
+	var image_icon_mod: float = 1.0
+	if file_browser.grid_mode:
+		icon_mod = 4.0
+		image_icon_mod = 2.0
+	
+	var new_icon_size:Vector2 = Vector2.ONE
+	var new_image_icon_size:Vector2 = Vector2.ONE
+	
+	if up:
+		if MainUI.ui.dragging_browser_items: 
+			if file_item.file_type.is_folder:
+				new_icon_size = Vector2(24.0, 24.0) * icon_mod
+				new_image_icon_size = Vector2(24.0, 24.0) * image_icon_mod
+			else:
+				new_icon_size = Vector2(8.0, 8.0) * icon_mod
+				new_image_icon_size = Vector2(8.0, 8.0) * image_icon_mod
+		else:
+			new_icon_size = Vector2(24.0, 24.0) * icon_mod
+			new_image_icon_size = Vector2(24.0, 24.0) * image_icon_mod
+	else:
+		new_icon_size = Vector2(16.0, 16.0) * icon_mod
+		new_image_icon_size = Vector2(16.0, 16.0) * image_icon_mod
+	
+	size_tweener = create_tween()
+	size_tweener.set_parallel()
+	size_tweener.tween_property(icon_rect, "custom_minimum_size", new_icon_size, 0.25)
+	size_tweener.tween_property(image_icon_rect, "custom_minimum_size", new_image_icon_size, 0.25)
+
+func mouse_entered_rect() -> void: 
+	if being_dragged: return
+	file_browser.file_browser_ui.hovered_browser_item = self
+	if MainUI.ui.dragging_browser_items and file_item.file_type.is_folder:
+		hover_panel.visible = true
+	tween_hover_size()
+	return
 func mouse_left_rect() -> void: 
-	if being_clicked:
+	if being_dragged: return
+	check_double_click = false
+	if draggable and selectable and being_clicked:
 		# try to drag the file
-		MainUI.ui.start_item_drag(self)
+		being_clicked = false
+		if not file_item.is_selected: file_browser.select_item(file_item)
+		MainUI.ui.start_item_drag(file_browser.file_browser_ui.selected_browser_items)
+	tween_hover_size(false)
+	hover_panel.visible = false
+	if file_browser.file_browser_ui.hovered_browser_item == self:
+		file_browser.file_browser_ui.hovered_browser_item = null
 
 func gui_event(event:InputEvent) -> void: _gui_event(event)
 func _gui_event(event:InputEvent) -> void:
 	var mouse_global_pos: Vector2 = get_global_mouse_position()
 	
-	if being_dragged and event.is_action_released("lmb") and not event.is_echo():
-		MainUI.ui.end_item_drag()
-	
-	if not being_clicked and event.is_action_pressed("lmb") and not event.is_echo(): 
-		being_clicked = true
-		if file_item.is_selected: file_browser.deselect_item(file_item)
-		else: file_browser.select_item(file_item)
-	
-	if being_clicked and event.is_action_released("lmb") and not event.is_echo():
+	if MainUI.ui.dragging_browser_items:
+		check_double_click = false
+		if event.is_action_released("lmb") and not event.is_echo():
+			if file_item.file_type.is_folder:
+				print("released at : " + file_item.file_path)
+				MainUI.ui.end_item_drag(file_item.file_path)
+			else:
+				print("browser released at : " + file_browser.current_directory_path)
+				MainUI.ui.end_item_drag(file_browser.current_directory_path)
+	else:
+		
+		if being_clicked and event.is_action_released("lmb") and not event.is_echo():
 			being_clicked = false
+			
+			if check_double_click and  click_delta > double_click_second_press_time: check_double_click = false
+			if not check_double_click: file_browser.select_item(file_item)
 			
 			if check_double_click:
 				if click_delta <= double_click_second_press_time:
-					if not file_browser.multi_select and file_item.file_type.is_folder: file_browser.open_directory(file_item.file_path)
+					if not file_browser.multi_select: # TODO more versatile opening
+						if file_item.file_type.is_folder: file_browser.open_directory(file_item.file_path)
+						else: file_browser.open()
 					check_double_click = false
 			elif click_delta <= double_click_initial_release_time: check_double_click = true
+			else: check_double_click = false
 			
 			click_delta = 0.0
+		
+		if not being_clicked and event.is_action_pressed("lmb") and not event.is_echo(): being_clicked = true

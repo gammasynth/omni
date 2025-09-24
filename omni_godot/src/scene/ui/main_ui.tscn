@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://djoyock1l5jox" path="res://resource/animated_texture/cool_tiny_cube.tres" id="2_uam0p"]
 
 [node name="main_ui" type="MarginContainer"]
+texture_filter = 1
 custom_minimum_size = Vector2(256, 192)
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,3 +78,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 scroll_following = true
+
+[node name="window_control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2

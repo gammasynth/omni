@@ -177,43 +177,93 @@ func toggle_file_browser(toggle:bool) -> void: file_browser_ui.visible = toggle
 		#console_ui.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 
 
-var current_base_dragged_browser_item:FileBrowserItem
-var dragged_browser_item:FileBrowserItem
-var dragging_browser_item:bool=false
+var current_base_dragged_browser_items:Array[FileBrowserItem]
+var dragged_browser_items:Array[FileBrowserItem]
+var dragging_browser_items:bool=false
 var mouse_control:Control
+var item_dragger:BoxContainer
 
-func end_item_drag() -> void:
-	if current_base_dragged_browser_item != null and is_instance_valid(current_base_dragged_browser_item):
-		current_base_dragged_browser_item.visible = true
-	if dragged_browser_item != null and is_instance_valid(dragged_browser_item):
-		dragged_browser_item.queue_free()
-		dragged_browser_item = null
-	dragging_browser_item = false
+func end_item_drag(at_path:String=Main.file_browser.current_directory_path) -> void:
+	if current_base_dragged_browser_items.size() > 0:
+		for item:FileBrowserItem in current_base_dragged_browser_items:
+			if item != null and is_instance_valid(item):
+				item.visible = true
+		current_base_dragged_browser_items.clear()
+	
+	var items_to_move:Array[FileItem]=[]
+	if dragged_browser_items.size() > 0:
+		for item:FileBrowserItem in dragged_browser_items:
+			if item != null and is_instance_valid(item):
+				items_to_move.append(item.file_item)
+				item.queue_free()
+				#dragged_browser_item = null
+		dragged_browser_items.clear()
+	
+	dragging_browser_items = false
+	if items_to_move.size() > 0: Main.file_browser.move_items(items_to_move, at_path)
+	if item_dragger and is_instance_valid(item_dragger): 
+		item_dragger.queue_free()
+		item_dragger = null
+	Main.file_browser.refresh()
 
-func start_item_drag(new_dragged_browser_item:FileBrowserItem) -> void:
-	end_item_drag()
-	var dragged_item: FileItem = dragged_browser_item.file_item
-	new_dragged_browser_item.visible = false
-	current_base_dragged_browser_item = new_dragged_browser_item
-	dragging_browser_item = true
-	dragged_browser_item = new_dragged_browser_item.duplicate()
-	dragged_browser_item.file_item = new_dragged_browser_item.file_item
-	dragged_browser_item.file_browser = new_dragged_browser_item.file_browser
-	dragged_browser_item.right_click_able = false
-	dragged_browser_item.being_dragged = true
+func start_item_drag(new_dragged_browser_items:Array[FileBrowserItem]) -> void:
+	#await end_item_drag()
+	if not mouse_control: mouse_control = $window_control
+	if not item_dragger: 
+		var offset:int = 0
+		if Main.file_browser.grid_mode: 
+			item_dragger = HBoxContainer.new()
+			offset = -64
+		else: 
+			item_dragger = VBoxContainer.new()
+			offset = -10
+		await Make.child(item_dragger, mouse_control)
+		Make.disable_control(item_dragger)
+		item_dragger.add_theme_constant_override("separation", offset)
 	
-	if not mouse_control: 
-		mouse_control = Control.new()
-		await Make.child(mouse_control, get_window())
+	dragging_browser_items = true
+	current_base_dragged_browser_items = new_dragged_browser_items.duplicate()
 	
-	Make.disable_control(dragged_browser_item)
-	await Make.child(dragged_browser_item, mouse_control) 
+	Main.file_browser.deselect_all_items()
+	var idx:int = 0
+	for browser_item:FileBrowserItem in current_base_dragged_browser_items:
+		if not browser_item or not is_instance_valid(browser_item): continue
+		
+		var this_item:FileBrowserItem = browser_item.duplicate()
+		
+		this_item.file_item = browser_item.file_item
+		this_item.file_browser = browser_item.file_browser
+		this_item.right_click_able = false
+		this_item.being_dragged = true
+		this_item.hover_panel.visible = false
+		this_item.outline_panel.visible = false
+		var icon_mod:float = 1.0
+		var icon_image_mod:float = 1.0
+		if Main.file_browser.grid_mode:
+			icon_mod = 4.0
+			icon_image_mod = 2.0
+		this_item.icon_rect.custom_minimum_size = Vector2(16.0, 16.0) * icon_mod
+		this_item.image_icon_rect.custom_minimum_size = Vector2(16.0, 16.0) * icon_image_mod
+		dragged_browser_items.append(this_item)
+		
+		Make.disable_control(this_item)
+		await Make.child(this_item, item_dragger)
+		if Main.file_browser.grid_mode: 
+			if idx == 0: 
+				if current_base_dragged_browser_items.size() > 1:
+					this_item.label.text = str(
+						this_item.label.text + "... (+" + str(current_base_dragged_browser_items.size() - 1) + ")"
+						)
+			else: this_item.label.text = ""
+		browser_item.visible = false
+		idx += 1
 
 func _process(delta: float) -> void:
 	# TODO
 	#  this should probably be done somewhere else!
 	# if requested_next_scene != null: set_scene(requested_next_scene)
-	if mouse_control and is_instance_valid(mouse_control):
-		mouse_control.global_position = get_window().get_mouse_position()
+	if item_dragger and is_instance_valid(item_dragger):
+		item_dragger.global_position = get_window().get_mouse_position()
+	if Input.is_action_just_pressed("ui_accept"): breakpoint
 
 func print_out(text:String) -> void: console_ui.print_out(text)

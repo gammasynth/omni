@@ -26,6 +26,8 @@ func add_item(file_path:String) -> void:
 	var file_item = FileItem.new(file_path)
 	item.file_item = file_item
 	item.file_browser = Main.file_browser
+	item.selectable = false
+	item.draggable = false
 	item_uis.set(file_item, item)
 	await Make.child(item, vbox)
 	return

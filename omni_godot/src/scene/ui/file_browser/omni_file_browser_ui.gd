@@ -35,6 +35,7 @@ const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/f
 
 var shifting:bool = false
 var controlling:bool = false
+var hovered_browser_item: FileBrowserItem
 
 var favorites_window_visible:bool = false:
 	set(b):
@@ -55,6 +56,8 @@ var item_uis:Dictionary[FileItem, FileBrowserItem]
 
 var right_click_context:Dictionary = {}
 var right_click_menu:ContextMenu = null
+
+var selected_browser_items:Array[FileBrowserItem] = []
 
 func _ready():
 	App.ui.file_browser_ui = self
@@ -117,16 +120,48 @@ func update_favorites_setting(_file_path:String) -> void:
 #region Directory Management
 func get_item_ui(item:FileItem) -> FileBrowserItem: 
 	if item_uis.has(item): return item_uis.get(item)
-	return favorites_pc.item_uis.get(item)
+	if favorites_pc.item_uis.has(item): return favorites_pc.item_uis.get(item)
+	for item_ui_key:FileItem in item_uis:
+		var browser_item:FileBrowserItem = item_uis.get(item_ui_key)
+		if browser_item.file_item.file_path == item.file_path:
+			return browser_item
+	for item_ui_key:FileItem in favorites_pc.item_uis:
+		var browser_item:FileBrowserItem = favorites_pc.item_uis.get(item_ui_key)
+		if browser_item.file_item.file_path == item.file_path:
+			return browser_item
+	return null
 
-func item_selected(selected_item:FileItem) -> void: get_item_ui(selected_item).select()
-func item_deselected(deselected_item:FileItem) -> void: get_item_ui(deselected_item).deselect()
+func item_selected(selected_item:FileItem) -> void: 
+	var item_ui:FileBrowserItem = get_item_ui(selected_item)
+	if not item_ui: return
+	item_ui.select()
+	selected_browser_items.append(item_ui)
 
-func item_entered_cut_state(item:FileItem) -> void: get_item_ui(item).enter_cut_state()
-func item_exited_cut_state(item:FileItem) -> void: get_item_ui(item).exit_cut_state()
+func item_deselected(deselected_item:FileItem) -> void: 
+	var item_ui:FileBrowserItem = get_item_ui(deselected_item)
+	if not item_ui: return
+	item_ui.deselect()
+	if selected_browser_items.has(item_ui): selected_browser_items.erase(item_ui)
+
+func item_entered_cut_state(item:FileItem) -> void: 
+	var item_ui:FileBrowserItem = get_item_ui(item)
+	if not item_ui or not is_instance_valid(item_ui): return
+	item_ui.enter_cut_state()
+func item_exited_cut_state(item:FileItem) -> void: 
+	var item_ui:FileBrowserItem = get_item_ui(item)
+	if not item_ui or not is_instance_valid(item_ui): return
+	item_ui.exit_cut_state()
 #endregion
 
 func _unhandled_input(event: InputEvent) -> void:
+	if MainUI.ui.dragging_browser_items and event.is_action_released("lmb") and not event.is_echo():
+		if hovered_browser_item and is_instance_valid(hovered_browser_item) and hovered_browser_item.file_item.file_type.is_folder:
+			print("folder released at : " + hovered_browser_item.file_item.file_path)
+			MainUI.ui.end_item_drag(hovered_browser_item.file_item.file_path)
+		else:
+			print("browser released at : " + file_browser.current_directory_path)
+			MainUI.ui.end_item_drag()
+	
 	if event.is_action_pressed("control") and not event.is_echo(): controlling = true
 	if event.is_action_released("control") and not event.is_echo(): controlling = false
 	
@@ -157,6 +192,13 @@ func directory_focused() -> void:
 	for item:FileItem in file_browser.directory_items:
 		add_item(item)
 	refresh_grid_size()
+	
+	for item:FileItem in file_browser.cut_items:
+		item_entered_cut_state(item)
+	
+	selected_browser_items.clear()
+	for item:FileItem in file_browser.selected_items:
+		item_selected(item)
 	
 	var at:String = file_browser.current_directory_path
 	at = File.ends_with_slash(at, false)

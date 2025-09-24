@@ -1,12 +1,55 @@
-[gd_scene load_steps=5 format=3 uid="uid://384pip3anqnn"]
+[gd_scene load_steps=12 format=3 uid="uid://384pip3anqnn"]
 
 [ext_resource type="Script" uid="uid://dmygpiswehhkc" path="res://src/scene/prefab/ui/file_browser/file_browser_list_item.gd" id="1_6mmea"]
 [ext_resource type="Texture2D" uid="uid://ht2wmw2vthd5" path="res://resource/texture/ui/file_browser/empty_file.png" id="2_s5wkw"]
 [ext_resource type="StyleBox" uid="uid://cykoehg3qt4v8" path="res://resource/stylebox/item_selected_panel.stylebox" id="3_6nevw"]
+[ext_resource type="Shader" uid="uid://jybwdv1u8qeb" path="res://lib/gd_app_ui/resource/shader/canvas_item_shader/grid/checkered_selection_outline.gdshader" id="4_76xbu"]
+
+[sub_resource type="Gradient" id="Gradient_pncix"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_g3wyt"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_pncf4"]
+width = 220
+height = 16
+color_ramp = SubResource("Gradient_pncix")
+noise = SubResource("FastNoiseLite_g3wyt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6e3t6"]
+shader = ExtResource("4_76xbu")
+shader_parameter/base_texture = SubResource("NoiseTexture2D_pncf4")
+shader_parameter/line_mod = 2.83
+shader_parameter/line_speed = 0.6
+shader_parameter/size_mod = 2.0
+shader_parameter/checker_speed = 2.88
+shader_parameter/color_offset = 0.665
+shader_parameter/color_mod = 0.375
+shader_parameter/line_color = Color(0.454902, 0.752941, 0.882353, 1)
+shader_parameter/fill_color = Color(0.0917461, 0.177389, 0.231926, 0.2)
+shader_parameter/checkered = false
+shader_parameter/only_fill = false
+shader_parameter/fill_mod = 0.45
+shader_parameter/alpha_mod = 1.095
+shader_parameter/outline_alpha_mod = 0.505
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pncf4"]
 
 [sub_resource type="FontVariation" id="FontVariation_u0lcb"]
 
-[node name="file_browser_list_item" type="MarginContainer" node_paths=PackedStringArray("icon_rect", "image_icon_rect", "label", "selected_panel")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76xbu"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.482353, 0.482353, 0.482353, 0.513726)
+border_blend = true
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="file_browser_list_item" type="MarginContainer" node_paths=PackedStringArray("icon_rect", "image_icon_rect", "label", "selected_panel", "hover_panel", "outline_panel")]
 offset_right = 21.0
 offset_bottom = 16.0
 size_flags_horizontal = 0
@@ -21,6 +64,15 @@ icon_rect = NodePath("hbox/AspectRatioContainer/icon_rect")
 image_icon_rect = NodePath("hbox/AspectRatioContainer/icon_margin/image_icon_rect")
 label = NodePath("hbox/label")
 selected_panel = NodePath("selected_panel")
+hover_panel = NodePath("hover_panel")
+outline_panel = NodePath("outline_panel")
+
+[node name="hover_panel" type="Panel" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_6e3t6")
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pncf4")
 
 [node name="hbox" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -68,3 +120,8 @@ visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_6nevw")
+
+[node name="outline_panel" type="Panel" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_76xbu")
