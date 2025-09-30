@@ -9,6 +9,8 @@ var file_browser: OmniFileBrowser:
 	get: 
 		if not file_browser: 
 			file_browser = OmniFileBrowser.new(self)
+			file_browser.query_overwrites = true
+			file_browser.overwrite_query_request.connect(MainUI.ui.overwrite_query_request)
 			db = file_browser
 		return db
 
@@ -82,18 +84,29 @@ func _ready():
 	setup_file_browser_settings()
 
 
+func new_file() -> void:
+	Main.console.parse_text_line(str("file " + MainUI.console_ui.line.text))
+	MainUI.console_ui.refresh()
+
+func new_folder() -> void:
+	Main.console.parse_text_line(str("folder " + MainUI.console_ui.line.text))
+	MainUI.console_ui.refresh()
+
 func setup_context_menu() -> void:
 	right_click_context.clear()
 	right_click_context = {}
 	
-	right_click_context.set("undo", App.undo)
-	right_click_context.set("redo", App.redo)
+	right_click_context.set("New File", new_file)
+	right_click_context.set("New Folder", new_folder)
 	
-	right_click_context.set("copy", file_browser.copy)
-	right_click_context.set("cut", file_browser.cut)
-	right_click_context.set("paste", file_browser.paste)
+	right_click_context.set("Undo", App.undo)
+	right_click_context.set("Redo", App.redo)
+	
+	right_click_context.set("Copy", file_browser.copy)
+	right_click_context.set("Cut", file_browser.cut)
+	right_click_context.set("Paste", file_browser.paste)
 	#right_click_context.set("toggle_favorite", file_browser.toggle_favorite.bind(file_item.file_path))#disable for multi
-	right_click_context.set("delete", file_browser.delete)
+	right_click_context.set("Delete", file_browser.delete)
 	
 	right_click_menu = ContextMenu.setup(self, right_click_context, ContextMenu.MENU_TYPES.RIGHT_CLICK)
 	right_click_menu.spawned_menu.connect(Main.main.new_window_needs_theme)
@@ -204,6 +217,7 @@ func directory_focused() -> void:
 	at = File.ends_with_slash(at, false)
 	at = File.begins_with_slash(at, false)
 	at = File.begins_with_slash(at, true)
+	at = File.ends_with_slash(at, true)
 	if file_browser.has_favorite(file_browser.current_directory_path): at = str(at + "[*]")
 	folder_title.text = str("@ " + at)
 	# TODO here we can check for git info for git_info_title

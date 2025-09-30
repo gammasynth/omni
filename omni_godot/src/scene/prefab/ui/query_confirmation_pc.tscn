@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6icaafo0yixk"]
+
+[ext_resource type="Script" uid="uid://cjc0ecku6r67w" path="res://src/scene/prefab/ui/query_confirmation_pc.gd" id="1_axqml"]
+
+[node name="query_confirmation_pc" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -47.0
+offset_top = -68.0
+offset_right = 47.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+script = ExtResource("1_axqml")
+
+[node name="margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="vbox" type="VBoxContainer" parent="margin"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="prompt_pc" type="PanelContainer" parent="margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="margin" type="MarginContainer" parent="margin/vbox/prompt_pc"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="query_prompt_label" type="RichTextLabel" parent="margin/vbox/prompt_pc/margin"]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "This is a confirmation query title label."
+fit_content = true
+
+[node name="query_desc_label" type="RichTextLabel" parent="margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "This is a description of the issue needing to be confirmed."
+fit_content = true
+
+[node name="hbox" type="HBoxContainer" parent="margin/vbox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="cancel_button" type="Button" parent="margin/vbox/hbox"]
+modulate = Color(0.912088, 0.678228, 0.611416, 1)
+layout_mode = 2
+text = "cancel"
+
+[node name="spacer" type="Control" parent="margin/vbox/hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="confirm_button" type="Button" parent="margin/vbox/hbox"]
+modulate = Color(0.649044, 0.877646, 0.868856, 1)
+layout_mode = 2
+text = "confirm"
+
+[connection signal="button_down" from="margin/vbox/hbox/cancel_button" to="." method="_on_cancel_button_button_down"]
+[connection signal="button_down" from="margin/vbox/hbox/confirm_button" to="." method="_on_confirm_button_button_down"]

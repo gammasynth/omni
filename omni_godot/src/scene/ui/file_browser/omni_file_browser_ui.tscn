@@ -90,7 +90,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 bbcode_enabled = true
 scroll_active = false
-autowrap_mode = 0
+autowrap_mode = 1
 vertical_alignment = 1
 
 [node name="grid_mode_toggler" type="Button" parent="vbox/file_browser_toolbar/toolbar_hbox"]

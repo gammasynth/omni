@@ -14,6 +14,7 @@ const TRAP_ARROW_UP_BRIGHT = preload("res://resource/texture/ui/trap_arrow_up_br
 @onready var icon: TextureRect = $boot_vbox/icon
 @onready var raw_console: RichTextLabel = $boot_vbox/console_pc/console_margin/raw_console
 @onready var boot_vbox: VBoxContainer = $boot_vbox
+@onready var query_confirmation_pc: QueryConfirmationPC = $query_confirmation_pc
 
 static var console_ui: ConsoleUI
 static var file_browser_ui: FileBrowserUI
@@ -200,7 +201,7 @@ func end_item_drag(at_path:String=Main.file_browser.current_directory_path) -> v
 		dragged_browser_items.clear()
 	
 	dragging_browser_items = false
-	if items_to_move.size() > 0: Main.file_browser.move_items(items_to_move, at_path)
+	if items_to_move.size() > 0: await Main.file_browser.move_items(items_to_move, at_path)
 	if item_dragger and is_instance_valid(item_dragger): 
 		item_dragger.queue_free()
 		item_dragger = null
@@ -258,12 +259,36 @@ func start_item_drag(new_dragged_browser_items:Array[FileBrowserItem]) -> void:
 		browser_item.visible = false
 		idx += 1
 
+func confirm_overwrite() -> void:
+	Main.file_browser.overwrite_query_value = true
+	Main.file_browser.overwrite_query_handled.emit()
+	Main.file_browser.overwrite_query_wait = false
+
+func deny_overwrite() -> void:
+	Main.file_browser.overwrite_query_value = false
+	Main.file_browser.overwrite_query_handled.emit()
+	Main.file_browser.overwrite_query_wait = false
+
+func overwrite_query_request(file_path:String, is_folder:bool) -> void:
+	if is_folder: 
+		query_confirmation_pc.setup(
+			"Overwrite existing folder?", 
+			str("Overwrite existing folder at path: <" + file_path + "> ?"),
+			confirm_overwrite, deny_overwrite
+			)
+	else: 
+		query_confirmation_pc.setup(
+			"Overwrite existing file?", 
+			str("Overwrite existing file at path: <" + file_path + "> ?"),
+			confirm_overwrite, deny_overwrite
+			)
+
 func _process(delta: float) -> void:
 	# TODO
 	#  this should probably be done somewhere else!
 	# if requested_next_scene != null: set_scene(requested_next_scene)
 	if item_dragger and is_instance_valid(item_dragger):
 		item_dragger.global_position = get_window().get_mouse_position()
-	if Input.is_action_just_pressed("ui_accept"): breakpoint
+	#if Input.is_action_just_pressed("ui_accept"): breakpoint
 
 func print_out(text:String) -> void: console_ui.print_out(text)

@@ -121,7 +121,9 @@ func clear_console_history():
 	App.record_action(GenericAppAction.new(undo, redo))
 	console.clear_console_history()
 
-func display_greeting():
+func display_greeting() -> void:
+	if console.greeted: return refresh()
+	console.greeted = true
 	console.greeting = true
 	display_placeholder_message("welcome, user.")
 	console.print_out(["omni", "[ gammasynth ]", " "])
@@ -239,9 +241,13 @@ func _on_omni_button_button_down() -> void: toggle_db_console()
 func _on_file_about_to_popup() -> void: file.set_item_disabled(2, not Main.file_browser.has_selected_files())
 func _on_file_index_pressed(index: int) -> void:
 	match index:
-		0: console.parse_text_line(str("file " + MainUI.console_ui.line.text))
-		1: console.parse_text_line(str("folder " + MainUI.console_ui.line.text))
-		2: Main.file_browser.open()
+		0: 
+			console.parse_text_line(str("file " + MainUI.console_ui.line.text))
+			refresh()
+		1: 
+			console.parse_text_line(str("folder " + MainUI.console_ui.line.text))
+			refresh()
+		2: Main.file_browser.open()# todo improve versatility with reading arguments for executables
 		3: OS.create_instance([])
 
 func _on_edit_about_to_popup() -> void:

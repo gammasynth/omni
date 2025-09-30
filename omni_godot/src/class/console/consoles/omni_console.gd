@@ -9,6 +9,7 @@ var menu_bar_mode: bool = false
 var command_history_mode: bool = false
 var file_browser_mode: bool = false
 
+var greeted: bool = false
 var greeting: bool = false
 
 var using_placeholder: bool = false:

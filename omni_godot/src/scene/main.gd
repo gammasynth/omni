@@ -25,6 +25,7 @@ var app_settings: Settings
 
 func _pre_registry_start() -> Error: 
 	main = self
+	DirAccess.make_dir_absolute("user://commands/")
 	return OK
 
 func _start() -> Error: 

@@ -22,7 +22,7 @@ func _perform_command(text_line:String) -> bool:
 	
 	if remaining_text.length() == 0: remaining_text = "new_folder"
 	
-	var path:String = (console as OmniConsole).current_directory_path
+	var path:String = ((console as OmniConsole).current_directory_path)
 	var file_name:String = remaining_text
 	var used_file_name:String = file_name
 	var r:int = 1
@@ -37,6 +37,7 @@ func _perform_command(text_line:String) -> bool:
 	#file.store_line(" ")
 	#file = null
 	console.print_out(text_line)
+	console.print_out(str("Making new folder: " + final_path))
 	match OS.get_name():
 		"Windows": (console as OmniConsole).execute.call_deferred(str("mkdir " + output))
 		"Linux": (console as OmniConsole).execute.call_deferred(str("mkdir " + output))

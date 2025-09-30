@@ -47,6 +47,7 @@ size_flags_stretch_ratio = 2.0
 focus_mode = 2
 bbcode_enabled = true
 scroll_following = true
+autowrap_mode = 1
 context_menu_enabled = true
 selection_enabled = true
 
@@ -218,6 +219,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
+autowrap_mode = 1
 
 [node name="sep2" type="VSeparator" parent="vbox/hbox"]
 layout_mode = 2

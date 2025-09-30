@@ -23,7 +23,7 @@ func _perform_command(text_line:String) -> bool:
 	if remaining_text.length() == 0: remaining_text = "new_file.txt"
 	if remaining_text.get_extension().is_empty(): remaining_text = str(remaining_text+".file")
 	
-	var path:String = (console as OmniConsole).current_directory_path
+	var path:String = File.ends_with_slash((console as OmniConsole).current_directory_path)
 	var ext:String = remaining_text.get_extension(); if ext.length() > 0: ext = str("." + ext)
 	var file_name:String = remaining_text.substr(0, remaining_text.find(ext))
 	var used_file_name:String = file_name
@@ -38,6 +38,7 @@ func _perform_command(text_line:String) -> bool:
 	#file.store_line(" ")
 	#file = null
 	console.print_out(text_line)
+	console.print_out(str("Making new file: " + final_path))
 	match OS.get_name():
 		"Windows": (console as OmniConsole).execute.call_deferred(str("echo. > " + final_path))
 		"Linux": (console as OmniConsole).execute.call_deferred(str("touch " + final_path))

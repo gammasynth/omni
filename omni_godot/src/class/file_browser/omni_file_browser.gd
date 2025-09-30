@@ -110,12 +110,12 @@ func items_were_pasted(paste_info:Dictionary[String, Variant]) -> void:
 
 func undo_move(new_items:Array[FileItem], old_path:String) -> void:
 	for item:FileItem in new_items:
-		var old_item:FileItem = move_item(item, old_path)
+		var old_item:FileItem = await move_item(item, old_path)
 		remove_item(item, false, true)
 
 func redo_move(items_to_move:Array[FileItem], to_path:String) -> void:
 	for item:FileItem in items_to_move:
-		var new_item:FileItem = move_item(item, to_path)
+		var new_item:FileItem = await move_item(item, to_path)
 		remove_item(item, false, true)
 
 func items_were_moved(move_info:Dictionary[String, Variant]) -> void:
