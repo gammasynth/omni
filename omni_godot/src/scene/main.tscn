@@ -10,4 +10,17 @@ ui_scene_path = "res://src/scene/ui/main_ui.tscn"
 
 [node name="ToolNode" parent="." instance=ExtResource("2_48vbg")]
 
+[node name="ScriptTool" parent="ToolNode" index="0"]
+search_path = "res://lib/g_libs/"
+comment_character = null
+blacklist_folder_names = null
+blacklist_file_names = null
+control_license_path = "res://lib/g_libs/LICENSE.md"
+licensed_file_header = "This file is part of g_libs. 
+g_libs is an open-source software codebase.
+g_libs is licensed under the MIT license."
+header_licensed_files = true
+name_licensed_files = true
+license_files = true
+
 [editable path="ToolNode"]
