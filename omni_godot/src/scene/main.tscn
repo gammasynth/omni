@@ -9,3 +9,5 @@ registry_system = true
 ui_scene_path = "res://src/scene/ui/main_ui.tscn"
 
 [node name="ToolNode" parent="." instance=ExtResource("2_48vbg")]
+
+[editable path="ToolNode"]
