@@ -6,7 +6,7 @@ signal runnable_added(runnable_info:Dictionary)
 signal runnable_finished(runnable_info:Dictionary)
 
 var menu_bar_mode: bool = false
-var command_history_mode: bool = false
+#var command_history_mode: bool = false
 var file_browser_mode: bool = false
 
 var greeted: bool = false

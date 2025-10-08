@@ -11,12 +11,12 @@
 [ext_resource type="Texture2D" uid="uid://cocx6s8ouhll0" path="res://resource/texture/ui/console/file_browser_button_dark.png" id="7_rkik4"]
 [ext_resource type="Texture2D" uid="uid://bc1lwfpwmxswn" path="res://resource/texture/icon.png" id="9_8hxwv"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
+bg_color = Color(0, 0, 0, 0.392157)
+
 [sub_resource type="FontVariation" id="FontVariation_08cj1"]
 base_font = ExtResource("7_or8sq")
 spacing_top = -4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ug05"]
-bg_color = Color(0, 0, 0, 0.392157)
 
 [node name="console_ui" type="PanelContainer"]
 custom_minimum_size = Vector2(172, 77)
@@ -204,18 +204,6 @@ icon = ExtResource("7_rkik4")
 flat = true
 expand_icon = true
 
-[node name="command_index_label" type="RichTextLabel" parent="vbox/hbox"]
-visible = false
-layout_mode = 2
-theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
-theme_override_font_sizes/normal_font_size = 16
-bbcode_enabled = true
-text = "100
-100"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
 [node name="sep" type="VSeparator" parent="vbox/hbox"]
 layout_mode = 2
 mouse_filter = 2
@@ -242,7 +230,7 @@ layout_mode = 2
 theme_override_fonts/normal_font = SubResource("FontVariation_08cj1")
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
-text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse] 0.0.0"
+text = "[pulse freq=0.75 color=#ffffff80 ease=-1.5][url=https://gammasynth.itch.io/omni]Amn1[/url][/pulse]_0.0.0.1"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0

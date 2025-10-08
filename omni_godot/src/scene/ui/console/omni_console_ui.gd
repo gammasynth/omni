@@ -56,6 +56,7 @@ var app_theme:AppTheme:
 @onready var background: Control = $vbox/code_split/background
 @onready var worker_menu_toggler: Button = $vbox/hbox/worker_menu_toggler
 
+var console_history_mode:bool = true
 var processing_command:bool = false
 var line_edited :bool = false
 
@@ -170,8 +171,8 @@ func toggle_worker_menu(toggle:bool = not MainUI.ui.omni_worker_ui.visible) -> v
 	MainUI.ui.toggle_omni_worker()
 	toggle_section(toggle, worker_menu_toggler, [], app_theme.worker_menu_icon_on, app_theme.worker_menu_icon_off)
 
-func toggle_command_history(toggle:bool = not console.command_history_mode) -> void:
-	console.command_history_mode = !console.command_history_mode
+func toggle_command_history(toggle:bool = not console_history_mode) -> void:
+	console_history_mode = !console_history_mode
 	toggle_section(
 		toggle, 
 		console_history_toggler, 
@@ -270,7 +271,7 @@ func _on_settings_about_to_popup() -> void: pass # Replace with function body.
 func _on_settings_index_pressed(index: int) -> void: if index == 0: pop_settings("theme")
 
 func pop_settings(by_name:String) -> void: 
-	var settings:Settings = Settings.all_settings.get(by_name); settings.instance_ui_window(App.instance)
+	var s:Settings = Settings.all_settings.get(by_name); s.instance_ui_window(App.instance)
 #endregion
 
 func _on_http_request_request_completed(
@@ -279,8 +280,45 @@ func _on_http_request_request_completed(
 	headers: PackedStringArray, 
 	body: PackedByteArray
 	) -> void:
-	#print(result)
-	#print(response_code)
-	#print(headers)
-	#print(body)
+	print(result)
+	print(response_code)
+	print(headers)
+	print(body)
 	pass
+
+
+
+func _on_line_gui_input(event: InputEvent) -> void:
+	var unentered_text:String = ""
+	if not line.text.is_empty() and not console.command_history.has(line.text): unentered_text = line.text
+	
+	var travel_type:Console.CONSOLE_HISTORY_TRAVEL_TYPES
+	travel_type = Console.CONSOLE_HISTORY_TRAVEL_TYPES.NONE
+	
+	if event.is_action_pressed("ui_up") and not event.is_echo(): 
+		travel_type = console.CONSOLE_HISTORY_TRAVEL_TYPES.BACKWARD
+	if event.is_action_pressed("ui_down") and not event.is_echo(): 
+		travel_type = console.CONSOLE_HISTORY_TRAVEL_TYPES.FORWARD
+	if event.is_action_pressed("control_ui_down") and not event.is_echo(): 
+		travel_type = console.CONSOLE_HISTORY_TRAVEL_TYPES.LATEST
+	if event.is_action_pressed("control_ui_up") and not event.is_echo(): 
+		travel_type = console.CONSOLE_HISTORY_TRAVEL_TYPES.EARLIEST
+	
+	if event.is_action_pressed("control_ui_left") and not event.is_echo(): 
+		line.caret_column = 0
+	if event.is_action_pressed("control_ui_right") and not event.is_echo():
+		line.caret_column = line.text.length()
+	else: 
+		if travel_type != Console.CONSOLE_HISTORY_TRAVEL_TYPES.NONE: line.caret_column = 0
+	
+	if travel_type == Console.CONSOLE_HISTORY_TRAVEL_TYPES.NONE: return
+	
+	var new_line:String = console.travel_console_history(travel_type)
+	
+	if new_line.is_empty(): return
+	
+	#if console.command_history.get(console.command_history.size() - 1)
+	line.text = new_line
+	line.caret_column = new_line.length()
+	
+	if not unentered_text.is_empty(): console.command_history.append(unentered_text)

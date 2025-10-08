@@ -37,7 +37,7 @@ func get_user_theme() -> Theme:
 	var base_theme: Theme = preload("res://lib/gd_app_ui/resource/theme/blank_theme.theme")
 	var user_theme: Theme = null
 	DirAccess.make_dir_recursive_absolute(user_theme_path.get_base_dir())
-	if FileAccess.file_exists(user_theme_path): user_theme = await load(user_theme_path)
+	if FileAccess.file_exists(user_theme_path): user_theme = load(user_theme_path)
 	if not user_theme: user_theme = base_theme.duplicate(true)
 	return user_theme
 
@@ -283,12 +283,17 @@ func overwrite_query_request(file_path:String, is_folder:bool) -> void:
 			confirm_overwrite, deny_overwrite
 			)
 
-func _process(delta: float) -> void:
+
+func _process(_delta: float) -> void:
 	# TODO
 	#  this should probably be done somewhere else!
 	# if requested_next_scene != null: set_scene(requested_next_scene)
 	if item_dragger and is_instance_valid(item_dragger):
 		item_dragger.global_position = get_window().get_mouse_position()
 	#if Input.is_action_just_pressed("ui_accept"): breakpoint
+	
+	if Input.is_action_just_pressed("focus_omni"):
+		# TODO only focus one of the open omni instances
+		get_window().grab_focus()
 
 func print_out(text:String) -> void: console_ui.print_out(text)
