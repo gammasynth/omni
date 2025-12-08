@@ -1,7 +1,7 @@
 # omni
 omni | Console Browser  
   
-![omni icon](https://raw.githubusercontent.com/gammasynth/omni/refs/heads/main/omni_branding/omni_symbol_256.png?token=GHSAT0AAAAAADQ37VADOQMRCK5ZYRQLDKL62JXGZJA)
+![omni icon](https://raw.githubusercontent.com/gammasynth/omni/refs/heads/main/omni_branding/omni_symbol_256.png)
   
 Omni is an open-source, moddable, high-level programming console.  
   
@@ -9,11 +9,19 @@ Omni is an open-source, moddable, high-level programming console.
   
 - A simple, skinnable, command terminal UI.  
   
+- Console output history can be hidden/toggled.
+  
+- Window can be resized and UI elements minimized, allowing for a simple single line-entry terminal.
+  
 - User-added command execution via high-level programming.  
   
 - The command terminal will call an entered command via the OS terminal, if it does not recognize the entered command as an existing user-added command.  
   
 - Optional in-app file browser UI alongside the command terminal.  
+  
+- Files and folders can be toggled as 'favorites' to be shown in a side-menu in the file browser UI.
+  
+- Optional DB console output for the internal operation of the omni instance.
   
 - Piped & Tracked external executable processes, with data logged per session.  
   
