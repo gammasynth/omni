@@ -18,15 +18,27 @@ static var current_app_theme:AppTheme
 var all_app_themes:Dictionary[String, AppTheme] = {}
 var all_app_theme_indexes:Dictionary[int, String] = {}
 
-const THEME_SETTINGS_PATH:String = "user://settings/app/theme/theme.json"
+const THEME_SETTINGS_PATH:String = "user://settings/app/theme/"
 const APP_SETTINGS_PATH:String = "user://settings/app/"
+const LAST_THEME_FILEPATH:String = "user://settings/app/theme/last_theme.theme"
 var theme_settings: Settings
 var app_settings: Settings
 
 func _pre_registry_start() -> Error: 
 	main = self
-	DirAccess.make_dir_absolute("user://commands/")
+	establish_user_filebase()
 	return OK
+
+func establish_user_filebase() -> void:
+	DirAccess.make_dir_absolute("user://commands/")
+	DirAccess.make_dir_absolute("user://settings/")
+	DirAccess.make_dir_absolute("user://settings/app/")
+	DirAccess.make_dir_absolute("user://settings/app/theme/")
+	
+	if FileAccess.file_exists(LAST_THEME_FILEPATH):
+		current_theme = ResourceLoader.load(LAST_THEME_FILEPATH)
+		ui.theme_was_changed(current_theme)
+	#if not FileAccess.file_exists("user://settings/app/theme/last_theme.")
 
 func _start() -> Error: 
 	
@@ -59,7 +71,7 @@ func setup_app_settings():
 	app_settings.spawned_window.connect(new_window_needs_theme)
 
 func setup_theme_settings():
-	theme_settings = Settings.initialize_settings("theme", true, "user://settings/app/theme/")
+	theme_settings = Settings.initialize_settings("theme", true, THEME_SETTINGS_PATH)
 	
 	var theme_settings_widget_params : Dictionary = {}
 	theme_settings_widget_params.set("WINDOW_TITLE", "themes")
@@ -119,6 +131,11 @@ func change_theme_index(new_index:Variant, can_undo:bool=true):
 	
 	var new_theme:Theme = current_app_theme.theme
 	current_theme = new_theme
+	
+	if FileAccess.file_exists(LAST_THEME_FILEPATH):
+		DirAccess.remove_absolute(LAST_THEME_FILEPATH)
+	
+	ResourceSaver.save(current_theme, LAST_THEME_FILEPATH)
 	
 	#if theme_name == "custom": custom_back_panel_privilege.emit(true)
 	#else: custom_back_panel_privilege.emit(false)
