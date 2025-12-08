@@ -89,3 +89,6 @@ size_flags_vertical = 4
 [node name="window_control" type="Control" parent="."]
 layout_mode = 2
 mouse_filter = 2
+
+[connection signal="drag_ended" from="h_split" to="." method="_on_h_split_drag_ended"]
+[connection signal="drag_ended" from="h_split/v_split" to="." method="_on_v_split_drag_ended"]

@@ -24,6 +24,8 @@ const LAST_THEME_FILEPATH:String = "user://settings/app/theme/last_theme.theme"
 var theme_settings: Settings
 var app_settings: Settings
 
+var changing_window_size: bool = false
+
 func _pre_registry_start() -> Error: 
 	main = self
 	establish_user_filebase()
@@ -65,10 +67,23 @@ func gather_all_app_themes() -> void:
 
 func setup_app_settings():
 	app_settings = Settings.initialize_settings("app", true, APP_SETTINGS_PATH)
-	app_settings.prepare_setting("window_size", [], (func(_x): return), [get_window().size], [{}], false)
+	app_settings.prepare_setting("window_size", [], force_update_change_window_size, [get_window().size], [{}], false)
+	
+	app_settings.prepare_setting("h_split_size", [], ui.resize_h_split, [ui.h_split.split_offset], [{}], false)
+	app_settings.prepare_setting("v_split_size", [], ui.resize_v_split, [ui.v_split.split_offset], [{}], false)
+	
 	get_window().size_changed.connect(window_size_changed)
 	app_settings.finish_prepare_settings()
 	app_settings.spawned_window.connect(new_window_needs_theme)
+
+func force_update_change_window_size(new_size:Variant) -> void:
+	# TODO fix string vector conversion probably in g_libs File classes (or maybe in gd_app_ui Settings)
+	changing_window_size = true
+	var t:String = new_size
+	var a:int = int(t.substr(1).left(t.find(",")-1))
+	var b:int = int(t.substr(t.find(",")+1).left(-1))
+	var vec: Vector2i = Vector2i(a,b)
+	get_window().size = vec
 
 func setup_theme_settings():
 	theme_settings = Settings.initialize_settings("theme", true, THEME_SETTINGS_PATH)
@@ -167,9 +182,8 @@ func change_theme_index(new_index:Variant, can_undo:bool=true):
 							#var r:ModularSettingOption = c.options.get("reset_theme_settings")
 							#r.update_setting_value_from_external(false)
 
-func change_window_panel_color(new_color:Color, can_undo:bool=true) -> void:
-	var last_color:Color = ui.unique_back_panel_color
-	theme_settings.set_setting_value("window_panel_color", [new_color])
+func change_window_panel_color(new_color:Color) -> void:
+	theme_settings.set_setting_value("window_panel_color", [new_color], false, true)
 	ui.change_window_panel_color(new_color)
 
 
@@ -180,8 +194,10 @@ func is_custom_back_panel_allowed() -> bool:
 func new_window_needs_theme(new_window:Window) -> void: new_window.theme = current_theme
 
 func window_size_changed() -> void: 
-	app_settings.set_setting_value("window_size", [get_window().size])
-	app_settings.save_settings()
+	if changing_window_size: 
+		changing_window_size = false
+		return
+	app_settings.set_setting_value("window_size", [get_window().size], false, true)
 
 func reset_theme_settings(b):
 	if not b: return

@@ -139,3 +139,4 @@ layout_mode = 2
 [connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/d_forward_button" to="." method="_on_d_forward_button_button_down"]
 [connection signal="button_up" from="vbox/file_browser_toolbar/toolbar_hbox/d_forward_button" to="." method="_on_d_forward_button_button_up"]
 [connection signal="button_down" from="vbox/file_browser_toolbar/toolbar_hbox/grid_mode_toggler" to="." method="_on_grid_mode_toggler_button_down"]
+[connection signal="drag_ended" from="vbox/h_split" to="." method="_on_h_split_drag_ended"]

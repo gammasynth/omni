@@ -1,6 +1,9 @@
 extends DatabasePanelContainer
 class_name ConsoleUI
 
+const CONSOLE_SETTINGS_PATH:String = "user://settings/app/console/"
+var console_settings:Settings
+
 var console: OmniConsole:
 	get: 
 		if not console:
@@ -16,6 +19,7 @@ var app_theme:AppTheme:
 	get: return Main.current_app_theme
 
 @onready var vbox: VBoxContainer = $vbox
+@onready var code_split: VSplitContainer = $vbox/code_split
 
 @onready var code: RichTextLabel = $vbox/code_split/code
 
@@ -78,14 +82,11 @@ func _ready_up():
 	
 	console.process_started.connect(thread_process_started)
 	
-	toggle_menu_bar_mode(false)
-	toggle_command_history(true)
-	toggle_file_browser(false)
 	
 	display_greeting()
 	#current_directory_path = OS.get_system_dir(OS.SystemDir.SYSTEM_DIR_DESKTOP)
 	#$HTTPRequest.request("https://github.com")
-	finished_command_operation()
+	#finished_command_operation()#this line moved to setup_console_settings() called from MainUI
 
 #func setup_settings():
 	#var settings : Settings = Settings.initialize_settings("console")
@@ -94,7 +95,35 @@ func _ready_up():
 	#
 	#await settings.instance_ui(vbox)
 
-func directory_focus_changed(new_path:String) -> void: path_label.text = new_path
+func setup_console_settings() -> void:
+	DirAccess.make_dir_absolute(CONSOLE_SETTINGS_PATH)
+	console_settings = Settings.initialize_settings("console", true, CONSOLE_SETTINGS_PATH)
+	if not FileAccess.file_exists(str(CONSOLE_SETTINGS_PATH + "console.gsd")):
+		# defaults
+		toggle_worker_menu(false)
+		toggle_menu_bar_mode(false)
+		toggle_command_history(true)
+		toggle_file_browser(false)
+		toggle_db_console(false)
+	
+	console_settings.prepare_setting("current_directory", ["string"], console.change_directory, [console.current_directory_path], [{}], false)
+	
+	console_settings.prepare_setting("code_split_size", ["int"], change_code_split_size, [code_split.split_offset], [{}], false)
+	
+	console_settings.prepare_setting("toggle_menu_bar_mode", ["boolean"], toggle_menu_bar_mode, [console.menu_bar_mode], [{}], false)
+	console_settings.prepare_setting("toggle_worker_menu", ["boolean"], toggle_worker_menu, [MainUI.ui.omni_worker_ui.visible], [{}], false)
+	console_settings.prepare_setting("toggle_command_history", ["boolean"], toggle_command_history, [console_history_mode], [{}], false)
+	console_settings.prepare_setting("toggle_file_browser", ["boolean"], toggle_file_browser, [console.file_browser_mode], [{}], false)
+	console_settings.prepare_setting("toggle_db_console", ["boolean"], toggle_db_console, [MainUI.ui.view_boot_box], [{}], false)
+	
+	console_settings.finish_prepare_settings()
+	finished_command_operation()
+
+func change_code_split_size(new_size:int) -> void: code_split.split_offset = new_size
+
+func directory_focus_changed(new_path:String) -> void: 
+	path_label.text = new_path
+	if console_settings: console_settings.set_setting_value("current_directory", [new_path], false, true)
 func thread_process_started() -> void: processing_command = true
 func started_command_operation() -> void: pass#line.editable = false
 func finished_command_operation(do_first_space:bool=false, do_after_space:bool=true) -> void:
@@ -158,6 +187,7 @@ func refresh() -> void:
 
 #region Toggle UI Sections
 func toggle_menu_bar_mode(toggle:bool = not console.menu_bar_mode) -> void:
+	if console_settings: console_settings.set_setting_value("toggle_menu_bar_mode", [toggle], false, true)
 	console.menu_bar_mode = toggle
 	toggle_section(
 		toggle, 
@@ -168,11 +198,13 @@ func toggle_menu_bar_mode(toggle:bool = not console.menu_bar_mode) -> void:
 		)
 
 func toggle_worker_menu(toggle:bool = not MainUI.ui.omni_worker_ui.visible) -> void:
-	MainUI.ui.toggle_omni_worker()
+	if console_settings: console_settings.set_setting_value("toggle_worker_menu", [toggle], false, true)
+	MainUI.ui.toggle_omni_worker(toggle)
 	toggle_section(toggle, worker_menu_toggler, [], app_theme.worker_menu_icon_on, app_theme.worker_menu_icon_off)
 
 func toggle_command_history(toggle:bool = not console_history_mode) -> void:
-	console_history_mode = !console_history_mode
+	if console_settings: console_settings.set_setting_value("toggle_command_history", [toggle], false, true)
+	console_history_mode = toggle
 	toggle_section(
 		toggle, 
 		console_history_toggler, 
@@ -182,6 +214,7 @@ func toggle_command_history(toggle:bool = not console_history_mode) -> void:
 		)
 
 func toggle_file_browser(toggle:bool = not console.file_browser_mode) -> void:
+	if console_settings: console_settings.set_setting_value("toggle_file_browser", [toggle], false, true)
 	console.file_browser_mode = toggle
 	MainUI.ui.toggle_file_browser(toggle)
 	toggle_section(
@@ -193,7 +226,8 @@ func toggle_file_browser(toggle:bool = not console.file_browser_mode) -> void:
 		)
 
 func toggle_db_console(toggle:bool = not MainUI.ui.view_boot_box) -> void:
-	MainUI.ui.toggle_boot_vbox()
+	if console_settings: console_settings.set_setting_value("toggle_db_console", [toggle], false, true)
+	MainUI.ui.toggle_boot_vbox(toggle)
 	toggle_section(
 		toggle, 
 		omni_button, 
@@ -322,3 +356,7 @@ func _on_line_gui_input(event: InputEvent) -> void:
 	line.caret_column = new_line.length()
 	
 	if not unentered_text.is_empty(): console.command_history.append(unentered_text)
+
+
+func _on_code_split_drag_ended() -> void:
+	if console_settings: console_settings.set_setting_value("code_split_size", [code_split.split_offset], false, true)

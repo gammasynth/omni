@@ -31,7 +31,18 @@ var unique_back_panel_stylebox: StyleBox = null
 var modified_back_panel: bool = false
 var unique_back_panel_color:Color=Color.BLACK
 
-func toggle_omni_worker() -> void: omni_worker_ui.visible = not omni_worker_ui.visible
+#const WINDOW_PANEL_COLORS : Dictionary = { "dark" : Color(0.03, 0.03, 0.03, 0.61), "light" : Color(1.0, 1.0, 1.0, 0.78)}
+var window_panel_color: Color = Color.WHITE:
+	set(c):
+		last_window_panel_color = window_panel_color
+		window_panel_color = c
+
+var last_window_panel_color: Color = Color.WHITE
+
+var view_boot_box:bool = true
+var boot_box_tweener:Tween
+
+func toggle_omni_worker(toggle:bool=not omni_worker_ui.visible) -> void: omni_worker_ui.visible = toggle
 
 func get_user_theme() -> Theme:
 	var base_theme: Theme = preload("res://lib/gd_app_ui/resource/theme/blank_theme.theme")
@@ -83,20 +94,6 @@ func theme_name_changed(theme_name:String) -> void:
 	pass
 
 
-
-
-#const WINDOW_PANEL_COLORS : Dictionary = { "dark" : Color(0.03, 0.03, 0.03, 0.61), "light" : Color(1.0, 1.0, 1.0, 0.78)}
-var window_panel_color: Color = Color.WHITE:
-	set(c):
-		last_window_panel_color = window_panel_color
-		window_panel_color = c
-
-var last_window_panel_color: Color = Color.WHITE
-
-var view_boot_box:bool = true
-var boot_box_tweener:Tween
-
-
 func change_window_panel_color(color:Color, enable:bool=true): 
 	if enable:
 		modified_back_panel = true
@@ -136,6 +133,9 @@ func change_window_panel_color(color:Color, enable:bool=true):
 	#Main.theme_name = "custom" # added disable for this color picker if not already in custom theme
 
 func _start():
+	
+	toggle_boot_vbox()
+	
 	console_ui = preload("res://src/scene/ui/console/omni_console_ui.tscn").instantiate()
 	file_browser_ui = preload("res://src/scene/ui/file_browser/omni_file_browser_ui.tscn").instantiate()
 	omni_worker_ui = preload("res://src/scene/ui/work_pc/work_pc.tscn").instantiate()
@@ -153,15 +153,14 @@ func _start():
 	Main.console.open_directory()
 	Main.file_browser.directory_focus_changed.connect(console_ui.file_browser_directory_changed)
 	
-	omni_worker_ui.visible = false
 	await Make.child(omni_worker_ui, h_split)
 	
-	toggle_boot_vbox()
-	
+	console_ui.setup_console_settings()
+	file_browser_ui.setup_file_browser_settings()
 
-func toggle_boot_vbox() -> void:
+func toggle_boot_vbox(toggle = not view_boot_box) -> void:
 	if boot_box_tweener: boot_box_tweener.kill()
-	view_boot_box = not view_boot_box
+	view_boot_box = toggle
 	if view_boot_box:
 		boot_vbox.visible = true
 		boot_box_tweener = Make.fade_in(boot_vbox, 1.5, false)
@@ -297,3 +296,13 @@ func _process(_delta: float) -> void:
 		get_window().grab_focus()
 
 func print_out(text:String) -> void: console_ui.print_out(text)
+
+func resize_h_split(new_size:int) -> void: h_split.split_offset = new_size
+func resize_v_split(new_size:int) -> void: v_split.split_offset = new_size
+
+func _on_h_split_drag_ended() -> void:
+	if Main.main.app_settings: Main.main.app_settings.set_setting_value("h_split_size", [h_split.split_offset], false, true)
+
+
+func _on_v_split_drag_ended() -> void:
+	if Main.main.app_settings: Main.main.app_settings.set_setting_value("v_split_size", [v_split.split_offset], false, true)

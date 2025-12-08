@@ -256,6 +256,7 @@ expand_icon = true
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
+[connection signal="drag_ended" from="vbox/code_split" to="." method="_on_code_split_drag_ended"]
 [connection signal="editing_toggled" from="vbox/line_hbox/line" to="." method="_on_line_editing_toggled"]
 [connection signal="gui_input" from="vbox/line_hbox/line" to="." method="_on_line_gui_input"]
 [connection signal="mouse_entered" from="vbox/line_hbox/line" to="." method="_on_line_mouse_entered"]

@@ -34,6 +34,7 @@ const FILE_BROWSER_LIST_ITEM = preload("res://src/scene/prefab/ui/file_browser/f
 @onready var file_list: VBoxContainer = $vbox/h_split/list_pc/scroll_box/file_list
 
 @onready var favorites_pc: PanelContainer = $vbox/h_split/favorites_pc
+@onready var h_split: HSplitContainer = $vbox/h_split
 
 var shifting:bool = false
 var controlling:bool = false
@@ -81,7 +82,7 @@ func _ready():
 	file_browser.favorite_removed.connect(update_favorites_setting)
 	
 	setup_context_menu()
-	setup_file_browser_settings()
+	
 
 
 func new_file() -> void:
@@ -115,6 +116,9 @@ func setup_context_menu() -> void:
 func setup_file_browser_settings() -> void:
 	browser_settings = Settings.initialize_settings("browser", true, "user://settings/app/browser/")
 	browser_settings.prepare_setting("favorite_paths", [], (func(_x): return), [{}], [{}], false)
+	browser_settings.prepare_setting("grid_mode", ["boolean"], change_grid_mode, [grid_mode], [{}], false)
+	browser_settings.prepare_setting("favorites_mode", ["boolean"], change_favorites_mode, [favorites_window_visible], [{}], false)
+	browser_settings.prepare_setting("favorites_size", ["int"], change_favorites_slider_size, [h_split.split_offset], [{}], false)
 	
 	browser_settings.finish_prepare_settings()
 	# BUGFIX for settings turning everything to strings
@@ -236,11 +240,14 @@ func grid_mode_change() -> void:
 	directory_focused()
 #endregion
 
+func change_grid_mode(new_grid_mode:bool) -> void: grid_mode = new_grid_mode
+func change_favorites_mode(new_favorites_mode:bool) -> void: favorites_window_visible = new_favorites_mode
+func change_favorites_slider_size(new_size:int) -> void: h_split.split_offset = new_size
 
 #region UI Button Triggers
-func _on_grid_mode_toggler_button_down() -> void: grid_mode = not file_browser.grid_mode
+func _on_grid_mode_toggler_button_down() -> void: change_grid_mode(not file_browser.grid_mode)
 
-func _on_favorites_button_button_down() -> void: favorites_window_visible = not favorites_window_visible
+func _on_favorites_button_button_down() -> void: change_favorites_mode(not favorites_window_visible)
 
 func _on_d_back_button_button_down() -> void: file_browser.go_back_directory()
 func _on_d_up_button_button_down() -> void: file_browser.go_up_directory()
@@ -254,3 +261,7 @@ func _on_d_forward_button_button_up() -> void: pass
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event.is_action_pressed("lmb") and not event.is_echo(): file_browser.deselect_all_items()
+
+
+func _on_h_split_drag_ended() -> void:
+	if browser_settings: browser_settings.set_setting_value("favorites_size", [h_split.split_offset], false, true)
