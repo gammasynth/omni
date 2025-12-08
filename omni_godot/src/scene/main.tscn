@@ -11,11 +11,16 @@ ui_scene_path = "res://src/scene/ui/main_ui.tscn"
 [node name="ToolNode" parent="." instance=ExtResource("2_48vbg")]
 
 [node name="ScriptTool" parent="ToolNode" index="0"]
-search_path = "res://lib/g_libs/"
-control_license_path = "res://lib/g_libs/LICENSE.md"
-licensed_file_header = "This file is part of g_libs. 
-g_libs is an open-source software codebase.
-g_libs is licensed under the MIT license."
+filename_begins_with = ""
+blacklist_folder_names = Array[String](["lib", "g_libs", "gd_app", "gd_app_ui"])
+blacklist_file_names = Array[String](["LICENSE.MD", "README.MD"])
+include_hidden_folders = false
+control_script_path = ""
+licensed_file_header = "This file is part of omni. 
+https://github.com/gammasynth/omni
+
+omni is an open-source software.
+omni is licensed under the MIT license."
 header_licensed_files = true
 name_licensed_files = true
 license_files = true

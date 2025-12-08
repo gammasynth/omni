@@ -1,5 +1,5 @@
 #|*******************************************************************
-# new_folder.gd
+# LICENSE.md
 #*******************************************************************
 # This file is part of omni. 
 # https://github.com/gammasynth/omni
@@ -19,49 +19,13 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # 
 #|*******************************************************************
-extends ConsoleCommand
+Copyright (c) 2025 AD - present; 1447 AH - present, Gammasynth.  
+Gammasynth (Gammasynth Software), Texas, U.S.A.
 
+# This software is licensed under the MIT license.
 
-func _setup_command() -> void:
-	is_base_command = true
-	has_args = true
-	keywords = ["folder"]
-	command_description = "Create a new folder (directory), give a folder name as argument to name the folder."
-	return
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-func _perform_command(text_line:String) -> bool:
-	# this command is meant for an ExecutiveConsole, or at least a FileConsole
-	var keyword:String = ""
-	for kw:String in keywords:
-		if text_line.begins_with(kw):
-			keyword = kw
-			break
-	
-	var remaining_text:String = text_line.substr(keyword.length())
-	while remaining_text.begins_with(" "): remaining_text = remaining_text.substr(1)
-	
-	if remaining_text.length() == 0: remaining_text = "new_folder"
-	
-	var path:String = ((console as OmniConsole).current_directory_path)
-	var file_name:String = remaining_text
-	var used_file_name:String = file_name
-	var r:int = 1
-	while DirAccess.dir_exists_absolute(str(path + used_file_name)):
-		used_file_name = str(file_name + "_" + str(r))
-		r += 1
-	
-	var final_path:String = str(used_file_name)
-	var output = final_path
-	#var file: FileAccess = FileAccess.open(final_path, FileAccess.WRITE_READ)
-	#print(FileAccess.get_open_error())
-	#file.store_line(" ")
-	#file = null
-	console.print_out(text_line)
-	console.print_out(str("Making new folder: " + final_path))
-	match OS.get_name():
-		"Windows": (console as OmniConsole).execute.call_deferred(str("mkdir " + output))
-		"Linux": (console as OmniConsole).execute.call_deferred(str("mkdir " + output))
-		"Android": (console as OmniConsole).execute.call_deferred(str("mkdir " + output))
-	#(console as OmniConsole).refresh()
-	return true
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
