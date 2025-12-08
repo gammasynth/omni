@@ -9,9 +9,11 @@ Omni is an open-source, moddable, high-level programming console.
   
 - A simple, skinnable, command terminal UI.  
   
-- Console output history can be hidden/toggled.
+- Console output history can be hidden/toggled.  
   
-- Window can be resized and UI elements minimized, allowing for a simple single line-entry terminal.
+- Window can be resized and UI elements minimized, allowing for a simple single line-entry terminal.  
+  
+- Current directory, theme, color, UI element size, and UI element visibilities are saved to disk and persistent between runtime sessions.  
   
 - User-added command execution via high-level programming.  
   
