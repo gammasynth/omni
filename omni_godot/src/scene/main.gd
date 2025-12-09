@@ -50,11 +50,21 @@ var changing_window_size: bool = false
 func _pre_registry_start() -> Error: 
 	main = self
 	establish_user_filebase()
-	print(File.search_for_file_paths_recursively("res://", false, true, false, ["lib", "g_libs", "gd_app", "gd_app_ui"], ["LICENSE.md", "README.md"]))
+	#print(File.search_for_file_paths_recursively("res://", false, true, false, ["lib", "g_libs", "gd_app", "gd_app_ui"], ["LICENSE.md", "README.md"]))
 	return OK
 
 func establish_user_filebase() -> void:
-	DirAccess.make_dir_absolute("user://commands/")
+	# User content directories + base template user content from res://
+	for directory_name:String in DirAccess.get_directories_at("res://user/"):
+		var other_dir:String = File.ends_with_slash(str("user://" + directory_name))
+		DirAccess.make_dir_absolute(other_dir)
+		for file:String in File.get_all_filepaths_from_directory(File.ends_with_slash(str("res://user/" + directory_name)), "", true):
+			if file.ends_with(".uid"): continue
+			var other_file:String = str(other_dir + File.get_file_name_from_file_path(file, true))
+			if FileAccess.file_exists(other_file): continue
+			DirAccess.copy_absolute(file, other_file)
+	
+	# Application settings data directories
 	DirAccess.make_dir_absolute("user://settings/")
 	DirAccess.make_dir_absolute("user://settings/app/")
 	DirAccess.make_dir_absolute("user://settings/app/theme/")
@@ -86,6 +96,15 @@ func gather_all_app_themes() -> void:
 			all_app_themes.set(new_app_theme.theme_name, new_app_theme)
 			all_app_theme_indexes.set(idx, new_app_theme.theme_name)
 			idx += 1
+		elif value is RegistryEntry:
+			for keyatu in value.data:
+				var valuetu:Variant = value.data.get(keyatu)
+				if valuetu is GDScript and (valuetu.new() is AppTheme):
+					var new_app_theme:AppTheme = valuetu.new()
+					new_app_theme.setup()
+					all_app_themes.set(new_app_theme.theme_name, new_app_theme)
+					all_app_theme_indexes.set(idx, new_app_theme.theme_name)
+					idx += 1
 
 func setup_app_settings():
 	app_settings = Settings.initialize_settings("app", true, APP_SETTINGS_PATH)

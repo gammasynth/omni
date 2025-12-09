@@ -33,8 +33,10 @@ func _boot_registry():
 	#multiple_elements_in_folder = true
 	#uses_entry_groups = false
 	#entry_class = RegistryEntry.new()
+	DirAccess.make_dir_recursive_absolute("user://app_themes/")
 	directories_to_load = [
-		"res://src/class/app_themes/"
+		"res://src/class/app_themes/",
+		"user://app_themes/"
 		#"res://resource/theme/"
 	]
 	#search_for_loadable_content_by_name("res://", "themes")
