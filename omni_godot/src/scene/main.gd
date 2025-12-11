@@ -46,10 +46,13 @@ var theme_settings: Settings
 var app_settings: Settings
 
 var changing_window_size: bool = false
+var changing_window_position:bool = false
+var last_window_position:Vector2i = Vector2i.ZERO
 
 func _pre_registry_start() -> Error: 
 	main = self
 	establish_user_filebase()
+	setup_app_settings()
 	#print(File.search_for_file_paths_recursively("res://", false, true, false, ["lib", "g_libs", "gd_app", "gd_app_ui"], ["LICENSE.md", "README.md"]))
 	return OK
 
@@ -78,7 +81,7 @@ func _start() -> Error:
 	
 	gather_all_app_themes()
 	setup_theme_settings()
-	setup_app_settings()
+	
 	
 	return await ui.start()
 
@@ -109,6 +112,7 @@ func gather_all_app_themes() -> void:
 func setup_app_settings():
 	app_settings = Settings.initialize_settings("app", true, APP_SETTINGS_PATH)
 	app_settings.prepare_setting("window_size", [], force_update_change_window_size, [get_window().size], [{}], false)
+	app_settings.prepare_setting("window_position", [], force_update_change_window_position, [get_window().position], [{}], false)
 	
 	app_settings.prepare_setting("h_split_size", [], ui.resize_h_split, [ui.h_split.split_offset], [{}], false)
 	app_settings.prepare_setting("v_split_size", [], ui.resize_v_split, [ui.v_split.split_offset], [{}], false)
@@ -125,6 +129,15 @@ func force_update_change_window_size(new_size:Variant) -> void:
 	var b:int = int(t.substr(t.find(",")+1).left(-1))
 	var vec: Vector2i = Vector2i(a,b)
 	get_window().size = vec
+
+func force_update_change_window_position(new_position:Variant) -> void:
+	# TODO fix string vector conversion probably in g_libs File classes (or maybe in gd_app_ui Settings)
+	changing_window_position = true
+	var t:String = new_position
+	var a:int = int(t.substr(1).left(t.find(",")-1))
+	var b:int = int(t.substr(t.find(",")+1).left(-1))
+	var vec: Vector2i = Vector2i(a,b)
+	get_window().position = vec
 
 func setup_theme_settings():
 	theme_settings = Settings.initialize_settings("theme", true, THEME_SETTINGS_PATH)
@@ -239,6 +252,24 @@ func window_size_changed() -> void:
 		changing_window_size = false
 		return
 	app_settings.set_setting_value("window_size", [get_window().size], false, true)
+
+func window_position_changed() -> void: 
+	if changing_window_position: 
+		changing_window_position = false
+		return
+	if app_settings: app_settings.set_setting_value("window_position", [get_window().position], false, true)
+
+func track_window_position() -> void:
+	var window:Window = get_window()
+	var window_position:Vector2i = window.position
+	if last_window_position != window_position: window_position_changed()
+	last_window_position = window_position
+
+func _process(_delta: float) -> void:
+	track_window_position()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action("focus_omni") and event.is_pressed() and not event.is_echo(): get_window().position = DisplayServer.mouse_get_position()
 
 func reset_theme_settings(b):
 	if not b: return

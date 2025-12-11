@@ -7,7 +7,7 @@
 
 [node name="main_ui" type="MarginContainer"]
 texture_filter = 1
-custom_minimum_size = Vector2(256, 192)
+custom_minimum_size = Vector2(256, 32)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,7 +17,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_mwyax")
-window_minimum_size = Vector2(256, 192)
+window_minimum_size = Vector2(256, 32)
 loading_screen_ui_path = "res://src/scene/ui/modular_ui/omni_loading_screen.tscn"
 alert_system_ui_path = "res://src/scene/ui/alert_system_ui.tscn"
 
@@ -45,7 +45,6 @@ theme_override_constants/separation = 0
 [node name="boot_vbox" type="VBoxContainer" parent="."]
 z_index = 1
 layout_mode = 2
-size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="boot_vbox"]
@@ -57,7 +56,7 @@ stretch_mode = 5
 
 [node name="console_pc" type="PanelContainer" parent="boot_vbox"]
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="boot_vbox/console_pc"]
@@ -65,7 +64,6 @@ layout_mode = 2
 
 [node name="console_margin" type="MarginContainer" parent="boot_vbox/console_pc"]
 layout_mode = 2
-size_flags_vertical = 8
 mouse_filter = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2

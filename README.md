@@ -15,6 +15,8 @@ Omni is an open-source, moddable, high-level programming console.
   
 - Current directory, theme, color, UI element size, and UI element visibilities are saved to disk and persistent between runtime sessions.  
   
+- Users can add custom Godot .theme for omni to use as skins.  
+  
 - User-added command execution via high-level programming.  
   
 - The command terminal will call an entered command via the OS terminal, if it does not recognize the entered command as an existing user-added command.  
