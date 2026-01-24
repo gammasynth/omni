@@ -61,6 +61,7 @@ var window_panel_color: Color = Color.WHITE:
 var last_window_panel_color: Color = Color.WHITE
 
 var view_boot_box:bool = true
+var view_raw_console:bool = true
 var boot_box_tweener:Tween
 
 func toggle_omni_worker(toggle:bool=not omni_worker_ui.visible) -> void: omni_worker_ui.visible = toggle
@@ -184,6 +185,19 @@ func toggle_boot_vbox(toggle = not view_boot_box) -> void:
 	view_boot_box = toggle
 	if view_boot_box:
 		boot_vbox.visible = true
+		raw_console.visible = true
+		boot_box_tweener = Make.fade_in(boot_vbox, 1.5, false)
+	else: 
+		boot_box_tweener = Make.fade(boot_vbox, 1.5, false)
+		boot_box_tweener.tween_callback(boot_vbox.set_visible.bind(false)).set_delay(1.5)
+	
+
+func toggle_raw_console(toggle = not view_raw_console) -> void:
+	if boot_box_tweener: boot_box_tweener.kill()
+	view_raw_console = toggle
+	if view_raw_console:
+		boot_vbox.visible = true
+		raw_console.visible = true
 		boot_box_tweener = Make.fade_in(boot_vbox, 1.5, false)
 	else: 
 		boot_box_tweener = Make.fade(boot_vbox, 1.5, false)

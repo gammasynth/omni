@@ -128,6 +128,7 @@ func setup_console_settings() -> void:
 		toggle_db_console(false)
 	
 	console_settings.prepare_setting("current_directory", ["string"], console.change_directory, [console.current_directory_path], [{}], false)
+	console_settings.prepare_setting("command_history", [], set_command_history, [console.command_history], [{}], false)
 	
 	console_settings.prepare_setting("code_split_size", ["int"], change_code_split_size, [code_split.split_offset], [{}], false)
 	
@@ -139,6 +140,9 @@ func setup_console_settings() -> void:
 	
 	console_settings.finish_prepare_settings()
 	finished_command_operation()
+
+func set_command_history(value:Variant):
+	console.command_history = value
 
 func change_code_split_size(new_size:int) -> void: code_split.split_offset = new_size
 
@@ -246,9 +250,9 @@ func toggle_file_browser(toggle:bool = not console.file_browser_mode) -> void:
 		app_theme.file_browser_icon_off
 		)
 
-func toggle_db_console(toggle:bool = not MainUI.ui.view_boot_box) -> void:
+func toggle_db_console(toggle:bool = not MainUI.ui.view_raw_console) -> void:
 	if console_settings: console_settings.set_setting_value("toggle_db_console", [toggle], false, true)
-	MainUI.ui.toggle_boot_vbox(toggle)
+	MainUI.ui.toggle_raw_console(toggle)
 	toggle_section(
 		toggle, 
 		omni_button, 
@@ -285,6 +289,7 @@ func _on_line_text_submitted(new_text: String) -> void:
 	line.clear()
 	play_line_icon_anim()
 	console.parse_text_line(new_text)
+	console_settings.set_setting_value("command_history", [console.command_history], false, true)
 
 func _on_console_menu_toggler_button_down() -> void: toggle_menu_bar_mode()
 func _on_worker_menu_toggler_button_down() -> void: toggle_worker_menu()

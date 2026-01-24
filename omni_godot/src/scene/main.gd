@@ -49,6 +49,10 @@ var changing_window_size: bool = false
 var changing_window_position:bool = false
 var last_window_position:Vector2i = Vector2i.ZERO
 
+func _new_version_found_online(_new_version:String) -> void: 
+	AlertSystem.do_alert(Alert.ALERT_TYPES.TIP, "Update available!", "There is a new version of omni available to download online, click the OMNI text at the bottom right for the store page.", 2.5, 2.5)
+	return
+
 func _pre_registry_start() -> Error: 
 	main = self
 	establish_user_filebase()

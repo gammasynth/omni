@@ -5,24 +5,35 @@
 
 [node name="main" type="Node"]
 script = ExtResource("1_lorpx")
+versions_manifest_url = "https://raw.githubusercontent.com/gammasynth/software/main/versions_manifest.json"
 registry_system = true
 ui_scene_path = "res://src/scene/ui/main_ui.tscn"
 
 [node name="ToolNode" parent="." instance=ExtResource("2_48vbg")]
 
-[node name="ScriptTool" parent="ToolNode" index="0"]
+[node name="FileTool" parent="ToolNode" index="0"]
+search_path = "res://lib/g_libs/"
 filename_begins_with = ""
-blacklist_folder_names = Array[String](["lib", "g_libs", "gd_app", "gd_app_ui"])
-blacklist_file_names = Array[String](["LICENSE.MD", "README.MD"])
+filename_ends_with = ""
 include_hidden_folders = false
 control_script_path = ""
-licensed_file_header = "This file is part of omni. 
-https://github.com/gammasynth/omni
+control_license_path = "res://lib/g_libs/LICENSE.md"
+licensed_file_header = "This file is part of g_libs.
 
-omni is an open-source software.
-omni is licensed under the MIT license."
+g_libs is an open-source software library.
+g_libs is licensed under the MIT license.
+
+https://github.com/gammasynth/g_libs"
 header_licensed_files = true
 name_licensed_files = true
+only_license_gd_files = true
 license_files = true
+
+[node name="JsonTool" parent="ToolNode" index="3"]
+json_file = ""
+new_file_path = "C:\\Files\\github\\gamma_work\\software\\versions_manifest.json"
+
+[node name="AppTool" parent="ToolNode" index="4"]
+versions_manifest = "C:/Files/github/gamma_work/software/versions_manifest.json"
 
 [editable path="ToolNode"]

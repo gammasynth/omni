@@ -61,6 +61,7 @@ mouse_filter = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="boot_vbox/console_pc"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="console_margin" type="MarginContainer" parent="boot_vbox/console_pc"]
 layout_mode = 2
@@ -77,6 +78,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 scroll_following = true
+
+[node name="Control" type="Control" parent="boot_vbox"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+mouse_filter = 2
 
 [node name="query_confirmation_pc" parent="." instance=ExtResource("4_n540d")]
 visible = false

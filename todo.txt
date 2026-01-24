@@ -1,0 +1,27 @@
+omni todo
+
+- favorites icons get way too big when expanding on hover
+
+- file browser should optionally be able to see hidden folders such as .git
+
+- file browser shift select should select in a connected list to the last selection, instead of mimicking the control key
+
+- file browser delete function only deletes the last selected item and not all selected items, if you right clicked on that item instead of background (good?)
+
+
+
+- file browser list view should have button toggle for tree mode
+- file browser tree mode should allow a folder to become tree root
+- file browser tree mode should allow resetting tree root (ex: to C://)
+- file browser should append github relation text to github folder names
+
+
+- should be able to drag-box-select in filebrowser and favorites
+
+- should be able to copy directory path from bottom UI
+
+- should be able to right click on filebrowser or full directory string to "open in OS file browser"
+
+- files with .file or no extension appear as folders currently, but they are files, not actual folders
+
+- killing piped process does not free it's Ruby lock if there is one, but closing a CMD would free the lock.
